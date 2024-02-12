@@ -1,0 +1,14 @@
+<?php
+
+use App\Console\Commands\MakeControllerCommand;
+use App\Console\Commands\MakeModelCommand;
+use App\Console\Commands\MakeViewCommand;
+use Symfony\Component\Console\Application;
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+$app = new Application();
+$app->add(new MakeControllerCommand());
+$app->add(new MakeModelCommand());
+$app->add(new MakeViewCommand());
+$app->run();
