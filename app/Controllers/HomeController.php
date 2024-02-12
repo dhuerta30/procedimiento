@@ -2411,7 +2411,7 @@ class HomeController
 					$detalle_solicitud = DB::PDOCrud(true);
 					$detalle_solicitud->formDisplayInPopup();
 					$detalle_solicitud->where("id_datos_paciente", "null");
-					$detalle_solicitud->enqueueBtnTopActions("Report",  "", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud fa fa-plus-circle");
+					$detalle_solicitud->enqueueBtnTopActions("Report",  "<i class='fas fa-plus-circle'></i> Agregar", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud");
 					$detalle_solicitud->crudTableCol(array("codigo_fonasa","tipo_solicitud","tipo_examen","observacion", "contraste", "plano","extremidad"));
 					$detalle_solicitud->setLangData("add", "");
 					$detalle_solicitud->setLangData("actions", "Eliminar");
