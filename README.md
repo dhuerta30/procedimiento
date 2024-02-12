@@ -1,7 +1,7 @@
-para crear controladores use el comando por consola
+# Para crear controladores use el comando por consola
 
-# php artify make:controller nombrecontrolador (ejemplo: demo sin usar .php)
+php artify make:controller nombrecontrolador (ejemplo: demo sin usar .php)
 
-para crear modelos use el comando por consola
+# Para crear modelos use el comando por consola
 
-# php artify make:model nombremodelo (ejemplo: demo sin usar .php)
+php artify make:model nombremodelo (ejemplo: demo sin usar .php)
