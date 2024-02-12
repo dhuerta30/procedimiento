@@ -1729,7 +1729,7 @@ class PDOModel
 
                 //previous button
                 if ($page > 1)
-                    $pagination .= "<li><a class='pdomodel-page' href=\"$base_url?page=" . $prev . "\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></a></li>";
+                    $pagination .= "<li><a class='pdomodel-page' href=\"$base_url" . $prev . "\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></a></li>";
                 else
                     $pagination .= "<li class=\"disabled\"><span aria-hidden=\"true\">&laquo;</span></li>";
 
@@ -1740,7 +1740,7 @@ class PDOModel
                         if ($counter == $page)
                             $pagination .= "<li class=\"active\"><span>$counter</span></li>";
                         else
-                            $pagination .= "<li><a class='pdomodel-page' href=\"$base_url?page=" . $counter . "\">$counter</a></li>";
+                            $pagination .= "<li><a class='pdomodel-page' href=\"$base_url" . $counter . "\">$counter</a></li>";
                     }
                 } elseif ($lastpage >= 7 + ($adjacents * 2)) {
                     //enough pages to hide some

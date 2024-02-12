@@ -33,6 +33,16 @@ class HomeController
 		$fecha_registro = date('d-m-Y H:i');
 
 		$pdocrud = DB::PDOCrud();
+		/*$pagina_actual = isset($params[1]) ? $params[1] : null;
+		$pdomodel = $pdocrud->getPDOModelObj();
+		$registros_por_pagina = 5;
+		$inicio = ($pagina_actual - 1) * $registros_por_pagina;
+		$query = "SELECT * FROM menu LIMIT $inicio, $registros_por_pagina";
+		$resultados = $pdomodel->executeQuery($query);
+		print_r($resultados);
+		
+		DB::Pagination($pdomodel, $pagina_actual, $registros_por_pagina, "menu", );*/
+
 		$pdocrud->setSettings("required", false);
 		$pdocrud->addCallback("before_insert", "insertar_procedimientos");
 		$pdocrud->addPlugin("bootstrap-inputmask");
