@@ -2402,15 +2402,15 @@ class HomeController
 						$sql['plano'] = $sesionVal['plano'];
 						$sql['extremidad'] = $sesionVal['extremidad'];
 						$sql['observacion'] = $sesionVal['observacion'];
-						$sql['contraste'] = implode(", ",$sesionVal['contraste']);
+						$sql['contraste'] = $sesionVal['contraste'];
 						$sql['creatinina'] = $sesionVal['creatinina'];
 						$pdomodel->insertBatch("detalle_de_solicitud", array($sql));
 					}
 					 unset($_SESSION['detalle_de_solicitud']);
 
-					/*$detalle_solicitud = DB::PDOCrud(true);
+					$detalle_solicitud = DB::PDOCrud(true);
 					$detalle_solicitud->formDisplayInPopup();
-					$detalle_solicitud->where("id_datos_paciente", $id);
+					$detalle_solicitud->where("id_datos_paciente", "null");
 					$detalle_solicitud->enqueueBtnTopActions("Report",  "", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud fa fa-plus-circle");
 					$detalle_solicitud->crudTableCol(array("codigo_fonasa","tipo_solicitud","tipo_examen","observacion", "contraste", "plano","extremidad"));
 					$detalle_solicitud->setLangData("add", "");
@@ -2511,9 +2511,9 @@ class HomeController
 					$detalle_solicitud->fieldCssClass("plano", array("plano"));
 					$detalle_solicitud->fieldCssClass("extremidad", array("extremidad"));
 					$detalle_solicitud->fieldAttributes("observacion", array("style"=>"min-height: 150px"));
-					$render3 = $detalle_solicitud->dbTable("detalle_de_solicitud")->render();*/
+					$render3 = $detalle_solicitud->dbTable("detalle_de_solicitud")->render();
 
-					echo json_encode(['success' => 'Datos Ingresados con éxito']);
+					echo json_encode(['success' => 'Datos Ingresados con éxito', 'render3' => $render3]);
 					return;
 				} else {
 					echo json_encode(['error' => 'Ingrese al menos 1 Detalle de Solicitud']);
