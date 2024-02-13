@@ -2531,16 +2531,6 @@ class HomeController
 		$request = new Request();
 	
 		if ($request->getMethod() === 'POST') {
-			// Validar que los campos no estén vacíos
-			$requiredFields = ['codigo_fonasa', 'paciente', 'tipo_solicitud', 'tipo_examen', 'examen', 'plano', 'extremidad', 'observacion', 'contraste', 'creatinina'];
-	
-			foreach ($requiredFields as $field) {
-				if (empty($request->post($field))) {
-					echo json_encode(['error' => 'Todos los campos son obligatorios']);
-					return;
-				}
-			}
-	
 			$codigo_fonasa = $request->post('codigo_fonasa');
 			$paciente = $request->post('paciente') ?? null;
 			$tipo_solicitud = $request->post('tipo_solicitud');
@@ -2550,8 +2540,19 @@ class HomeController
 			$extremidad = $request->post('extremidad');
 			$observacion = $request->post('observacion');
 			$contraste = $request->post('contraste');
-			$creatinina = $request->post('creatinina') ?? null;
-	
+			$contrasteValue = isset($contraste) ? (array)$contraste : [];
+			$creatinina = $request->post('creatinina') ?? null; 
+
+			// Validar que los campos no estén vacíos
+			$requiredFields = ['codigo_fonasa', 'tipo_solicitud', 'tipo_examen', 'examen', 'plano', 'extremidad', 'observacion', 'contraste'];
+
+			foreach ($requiredFields as $field) {
+				if (empty($$field)) {
+					echo json_encode(['error' => 'Todos los campos son obligatorios']);
+					return;
+				}
+			}
+
 			if (!isset($_SESSION['detalle_de_solicitud']) || !is_array($_SESSION['detalle_de_solicitud'])) {
 				$_SESSION['detalle_de_solicitud'] = [];
 			}
@@ -2570,7 +2571,7 @@ class HomeController
 			}
 	
 			if ($duplicateSolicitud) {
-				echo json_encode(['error' => 'El paciente no puede poseer más de una solicitud activa con esta prestación']);
+				echo json_encode(['error' => 'El paciente no puede poseer mas de una solicitud activa con esta prestación']);
 				return;
 			} else {
 				$detalle_de_solicitud = [
@@ -2582,7 +2583,7 @@ class HomeController
 					"plano" => $plano,
 					"extremidad" => $extremidad,
 					"observacion" => $observacion,
-					"contraste" => implode(", ", (array)$contraste),
+					"contraste" => implode(", ", $contrasteValue),
 					"creatinina" => $creatinina
 				];
 	
@@ -2590,7 +2591,7 @@ class HomeController
 				$_SESSION['detalle_de_solicitud'][] = $detalle_de_solicitud;
 	
 				$response = [
-					'success' => 'Datos Guardados con éxito Temporalmente',
+					'success' => 'Datos Guardado con éxito Temporalmente',
 					'data' => $_SESSION['detalle_de_solicitud']
 				];
 	
