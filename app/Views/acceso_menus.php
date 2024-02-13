@@ -40,14 +40,14 @@
                                                     ?>
                                                     <li>
                                                         <?php if ($tieneSubmenus): ?>
-                                                            <input type="checkbox" id="menu<?= $item['id_menu'] ?>" class="menu-checkbox">
+                                                            <input type="checkbox" id="<?= $item['id_menu'] ?>" class="menu-checkbox">
                                                                 <span><i class="<?= $item['icono_menu'] ?>"></i> <?= $item['nombre_menu'] ?></span>
                                                             </label>
                                                             <ul class="list-none">
                                                                 <?php foreach ($submenus as $submenu): ?>
                                                                     <?php if($submenu["visibilidad_submenu"] != "Ocultar"): ?>
                                                                     <li>
-                                                                        <input type="checkbox" id="submenu<?= $submenu['id_submenu'] ?>" class="submenu-checkbox">
+                                                                        <input type="checkbox" id="<?= $submenu['id_menu'] ?>" class="submenu-checkbox">
                                                                             <span><i class="<?= $submenu['icono_submenu'] ?>"></i> <?= $submenu['nombre_submenu'] ?></span>
                                                                         </label>
                                                                     </li>
@@ -55,7 +55,7 @@
                                                                 <?php endforeach; ?>
                                                             </ul>
                                                         <?php else: ?>
-                                                            <input type="checkbox" id="menu<?= $item['id_menu'] ?>" class="menu-checkbox">
+                                                            <input type="checkbox" id="<?= $item['id_menu'] ?>" class="menu-checkbox">
                                                                 <span><i class="<?= $item['icono_menu'] ?>"></i> <?= $item['nombre_menu'] ?></span>
                                                             </label>
                                                         <?php endif; ?>
@@ -80,6 +80,7 @@
         <div id="pdocrud-ajax-loader">
             <img width="300" src="<?=$_ENV["BASE_URL"]?>app/libs/script/images/ajax-loader.gif" class="pdocrud-img-ajax-loader"/>
         </div>
+        <script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>
         <script>
             $(document).ready(function () {
                 // Toggle all checkboxes when "Marcar Todos" is clicked
@@ -95,6 +96,51 @@
                         $('.pdocrud-select-all').prop('checked', false);
                     }
                 });
+
+                $(document).on('click', '.asignar_menu_usuario', function () {
+                    var userId = $(this).data('id');
+                    var selectedMenus = [];
+
+                    // Iterar sobre las casillas marcadas y recopilar datos
+                    $('.menu-checkbox:checked, .submenu-checkbox:checked').each(function () {
+                        var checkboxId = $(this).attr('id');
+                        var menuId = checkboxId.replace('menu', ''); // Extract menuId from checkboxId
+                        selectedMenus.push({
+                            menuId: menuId
+                        });
+                    });
+
+                    //Envía datos al servidor usando Ajax
+                    $.ajax({
+                        url: "<?=$_ENV["BASE_URL"]?>home/asignar_menus_usuario",
+                        type: 'POST',
+                        dataType: "json",
+                        data: {
+                            userId: userId,
+                            selectedMenus: selectedMenus
+                        },
+                        success: function (response) {
+                            //console.log(response);
+
+                            if(response['success']){
+                                Swal.fire({
+                                    title: "Genial!",
+                                    text: response['success'],
+                                    icon: "success",
+                                    confirmButtonText: "Aceptar"
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: "Lo siento!",
+                                    text: response['error'],
+                                    icon: "error",
+                                    confirmButtonText: "Aceptar"
+                                });
+                            }
+                        }
+                    });
+                });
+
             });
         </script>
         <?php require "layouts/footer.php"; ?>

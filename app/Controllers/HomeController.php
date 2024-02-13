@@ -150,6 +150,34 @@ class HomeController
 		);
 	}
 
+	public function asignar_menus_usuario(){
+		
+		$request = new Request();
+
+		if ($request->getMethod() === 'POST') {
+			$userId = $request->post("userId");
+    		$selectedMenus = $request->post("selectedMenus");
+
+			$pdocrud = DB::PDOCrud();
+        	$pdomodel = $pdocrud->getPDOModelObj();
+
+			foreach ($selectedMenus as $menu) {
+				$menuId = $menu["menuId"];
+	
+				$usuarioMenuSql = array(
+					'id_usuario' => $userId,
+					'id_menu' => $menuId
+				);
+	
+				$pdomodel->insertBatch("usuario_menu", array($usuarioMenuSql));
+			}
+
+			echo json_encode(['success' => 'Menu Asignado correctamente']);
+		} else {
+ 			echo json_encode(['error' => 'Error al Asignar el o los menus al usuario']);
+		}
+	}
+
 	public function acceso_menus(){
 		$pdocrud = DB::PDOCrud();
 		$pdocrud->colRename("idrol", "Rol");
