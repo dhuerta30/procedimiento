@@ -5,3 +5,7 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [QSA,L]
 </IfModule>
+
+<Files ".env">
+    Require all denied
+</Files>
