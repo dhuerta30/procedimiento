@@ -39,7 +39,7 @@
                     <div class="col-md-12">
                         <h5>Formulario de Solicitud de Exámen</h5>
                         <hr>
-                        <h5 class="bg-default border w-25 p-2 text-center bg-light">Datos Paciente</h5>
+                        <h5 class="bg-default border w-lg-25 w-md-100 p-2 text-center bg-light">Datos Paciente</h5>
                         <?=$render;?>
                         <?=$mask;?>
 
@@ -51,7 +51,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <hr>
-                        <h5 class="bg-default border w-50 p-2 text-center bg-light">Diagnóstico y antecedentes clínicos del paciente</h5>
+                        <h5 class="bg-default border w-lg-50 w-md-100 p-2 text-center bg-light">Diagnóstico y antecedentes clínicos del paciente</h5>
                         <?=$render2;?>
                         <?=$chosen;?>
                     </div>
@@ -60,7 +60,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <hr>
-                        <h5 class="bg-default border w-25 p-2 text-center bg-light">Detalle de Solicitud</h5>
+                        <h5 class="bg-default border w-lg-25 w-md-100 p-2 text-center bg-light">Detalle de Solicitud</h5>
                         <div class="agregar_detalle">
                             <?=$render4;?>
                         </div>

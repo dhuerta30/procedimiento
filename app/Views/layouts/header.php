@@ -12,6 +12,7 @@
 	<link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>theme/plugins/fontawesome-free/css/all.min.css">
 	<!-- Theme style -->
 	<link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>theme/dist/css/adminlte.min.css">
+	<link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>css/style.css">
 </head>
 
 <body class="hold-transition sidebar-mini">
