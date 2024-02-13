@@ -21,48 +21,50 @@
                                             </li>
                                         </ul>
 
-                                        <ul class="list-none">
-                                            <?php foreach ($menu as $item): ?>
-                                                <?php if (($_SESSION["usuario"][0]["idrol"] == 1 || $item["nombre_menu"] != "usuarios") && $item["visibilidad_menu"] != "Ocultar" ): ?>
-                                                    <?php
-                                                        // Obtiene submenús
-                                                        $submenus = App\Controllers\HomeController::submenuDB($item['id_menu']);
-                                                        $tieneSubmenus = ($item["submenu"] == "Si");
-                                                        $subMenuAbierto = false;
+                                        <div class="menu_list">
+                                            <ul class="list-none">
+                                                <?php foreach ($menu as $item): ?>
+                                                    <?php if (($_SESSION["usuario"][0]["idrol"] == 1 || $item["nombre_menu"] != "usuarios") && $item["visibilidad_menu"] != "Ocultar" ): ?>
+                                                        <?php
+                                                            // Obtiene submenús
+                                                            $submenus = App\Controllers\HomeController::submenuDB($item['id_menu']);
+                                                            $tieneSubmenus = ($item["submenu"] == "Si");
+                                                            $subMenuAbierto = false;
 
-                                                        // Verifica si algún submenú está activo
-                                                        foreach ($submenus as $submenu) {
-                                                            if (strpos($current_url, $submenu['url_submenu']) !== false) {
-                                                                $subMenuAbierto = true;
-                                                                break;
+                                                            // Verifica si algún submenú está activo
+                                                            foreach ($submenus as $submenu) {
+                                                                if (strpos($current_url, $submenu['url_submenu']) !== false) {
+                                                                    $subMenuAbierto = true;
+                                                                    break;
+                                                                }
                                                             }
-                                                        }
-                                                    ?>
-                                                    <li>
-                                                        <?php if ($tieneSubmenus): ?>
-                                                            <input type="checkbox" id="<?= $item['id_menu'] ?>" class="menu-checkbox">
-                                                                <span><i class="<?= $item['icono_menu'] ?>"></i> <?= $item['nombre_menu'] ?></span>
-                                                            </label>
-                                                            <ul class="list-none">
-                                                                <?php foreach ($submenus as $submenu): ?>
-                                                                    <?php if($submenu["visibilidad_submenu"] != "Ocultar"): ?>
-                                                                    <li>
-                                                                        <input type="checkbox" id="<?= $submenu['id_menu'] ?>" class="submenu-checkbox">
-                                                                            <span><i class="<?= $submenu['icono_submenu'] ?>"></i> <?= $submenu['nombre_submenu'] ?></span>
-                                                                        </label>
-                                                                    </li>
-                                                                    <?php endif; ?>
-                                                                <?php endforeach; ?>
-                                                            </ul>
-                                                        <?php else: ?>
-                                                            <input type="checkbox" id="<?= $item['id_menu'] ?>" class="menu-checkbox">
-                                                                <span><i class="<?= $item['icono_menu'] ?>"></i> <?= $item['nombre_menu'] ?></span>
-                                                            </label>
-                                                        <?php endif; ?>
-                                                    </li>
-                                                <?php endif; ?>
-                                            <?php endforeach; ?>
-                                        </ul>
+                                                        ?>
+                                                        <li>
+                                                            <?php if ($tieneSubmenus): ?>
+                                                                <input type="checkbox" id="<?= $item['id_menu'] ?>" class="menu-checkbox">
+                                                                    <span><i class="<?= $item['icono_menu'] ?>"></i> <?= $item['nombre_menu'] ?></span>
+                                                                </label>
+                                                                <ul class="list-none">
+                                                                    <?php foreach ($submenus as $submenu): ?>
+                                                                        <?php if($submenu["visibilidad_submenu"] != "Ocultar"): ?>
+                                                                        <li>
+                                                                            <input type="checkbox" id="<?= $submenu['id_menu'] ?>" class="submenu-checkbox">
+                                                                                <span><i class="<?= $submenu['icono_submenu'] ?>"></i> <?= $submenu['nombre_submenu'] ?></span>
+                                                                            </label>
+                                                                        </li>
+                                                                        <?php endif; ?>
+                                                                    <?php endforeach; ?>
+                                                                </ul>
+                                                            <?php else: ?>
+                                                                <input type="checkbox" id="<?= $item['id_menu'] ?>" class="menu-checkbox">
+                                                                    <span><i class="<?= $item['icono_menu'] ?>"></i> <?= $item['nombre_menu'] ?></span>
+                                                                </label>
+                                                            <?php endif; ?>
+                                                        </li>
+                                                    <?php endif; ?>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        </div>
 
                                     </div>
                                     <div class="col-md-8">
