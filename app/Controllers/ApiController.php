@@ -6,6 +6,7 @@ use App\core\DB;
 use App\core\Request;
 use App\core\JsonResponse;
 use Firebase\JWT\JWT;
+use App\Models\UserModel;
 
 class ApiController
 {
@@ -32,8 +33,8 @@ class ApiController
                 $email = $content->email;
                 $password = $content->password;
 
-                $pdomodel = DB::PDOModel();
-                $data = $pdomodel->where("email", $email)->select("usuario");
+                $usuario = new UserModel();
+                $data = $usuario->select_userBy_email($email);
 
                 if (password_verify($password, $data[0]["password"])) {
                     
@@ -45,7 +46,7 @@ class ApiController
 
                     $token = JWT::encode($tokenData, $this->secretKey, 'HS256');
 
-                    $pdomodel->where("email", $data[0]["email"])->update("usuario", array("token_api" => $token));
+                    $usuario->update_userBy_email($data[0]["email"], array("token_api" => $token));
                     echo json_encode(['token' => $token]);
                 } else {
                     echo json_encode(['error' => 'No tiene permisos para acceder a esta Api']);
