@@ -150,6 +150,34 @@ class HomeController
 		);
 	}
 
+	public function acceso_menus(){
+		$pdocrud = DB::PDOCrud();
+		$pdocrud->colRename("idrol", "Rol");
+		$pdocrud->colRename("id", "ID");
+		$pdocrud->relatedData('idrol','rol','idrol','nombre_rol');
+		$pdocrud->tableColFormatting("avatar", "html",array("type" =>"html","str"=>'<img width="50" src="'.$_ENV["BASE_URL"].'app/libs/script/uploads/{col-name}">'));
+		$pdocrud->crudRemoveCol(array("rol","estatus","password", "token", "token_api", "expiration_token"));
+		$pdocrud->setSearchCols(array("id","nombre","email", "usuario", "idrol"));
+		$pdocrud->setSettings("addbtn", false);
+		//$pdocrud->setSettings("editbtn", false);
+		$pdocrud->setSettings("viewbtn", false);
+		$pdocrud->setSettings("delbtn", false);
+		$pdocrud->setSettings("printBtn", false);
+		$pdocrud->setSettings("pdfBtn", false);
+		$pdocrud->setSettings("csvBtn", false);
+		$pdocrud->setSettings("excelBtn", false);
+		$pdocrud->setSettings("template", "acceso_usuarios_menus");
+		$pdocrud->setSettings("deleteMultipleBtn", false);
+		$pdocrud->setSettings("checkboxCol", false);
+		$render = $pdocrud->dbTable("usuario")->render();
+
+		View::render(
+			'acceso_menus',[
+				'render' => $render
+			]
+		);
+	}
+
 	public function registrar_e_imprimir_pdf(){
 
 		$request = new Request();

@@ -25,6 +25,10 @@
 			font-size: 12px!important;
 		}
 
+		.list-none {
+			list-style: none;
+		}
+
 		#loader {  
 			position:fixed;
 			top:0;
