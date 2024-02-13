@@ -5787,7 +5787,7 @@ Class PDOCrud {
             }
         }
         $search .= "</select></div>";
-        $search .= "<div class=\"col-md-5 col-sm-10 col-xs-10 pdo-table-search form-group no-padding-right\">";
+        $search .= "<div class=\"col-md-5 col-10 col-xs-10 pdo-table-search form-group no-padding-right\">";
         if (isset($data["search_col"]))
             $searchContent = array(
                 $data["search_text"]
@@ -5815,7 +5815,7 @@ Class PDOCrud {
             $class = "btn btn-primary";
 
         $search .= "</div>";
-        $search .= "<div class=\"col-md-1 col-sm-1 col-xs-1 pdo-search-cols no-padding\">";
+        $search .= "<div class=\"col-md-1 col-2 col-xs-1 pdo-search-cols no-padding\">";
         $search .= "<a href=\"javascript:;\" id=\"pdocrud_search_btn\" name=\"pdocrud_search_btn\" class=\"pdocrud-form-control btn btn-primary pdocrud-actions $class\" data-action=\"search\">";
         $search .= $this->langData["go"];
         $search .= "</a>";
