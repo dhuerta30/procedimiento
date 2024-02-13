@@ -120,9 +120,13 @@
                                 userId: userId,
                                 selectedMenus: selectedMenus
                             },
+                            beforeSend: function() {
+                                $("#pdocrud-ajax-loader").show();
+                            },
                             success: function (response) {
-                               
+                                $("#pdocrud-ajax-loader").hide();
                                 if(response['success']){
+                                    $('.pdocrud-select-all').click();
                                     Swal.fire({
                                         title: "Genial!",
                                         text: response['success'],
@@ -147,6 +151,27 @@
                             confirmButtonText: "Aceptar"
                         });
                     }
+                });
+
+                $(document).on("click", ".ver_menu_usuario", function(){
+                    var userId = $(this).data('id');
+
+                    $.ajax({
+                        type: "POST",
+                        url: "<?=$_ENV["BASE_URL"]?>home/obtener_menu_usuario",
+                        dataType: "html",
+                        data: {
+                            userId: userId
+                        },
+                        beforeSend: function() {
+                            $("#pdocrud-ajax-loader").show();
+                        },
+                        success: function(data){
+                            $("#pdocrud-ajax-loader").hide();
+                            $('.menu_list').html(data);
+                            //console.log(data);
+                        }
+                    });
                 });
 
             });

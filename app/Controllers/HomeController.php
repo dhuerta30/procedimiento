@@ -150,6 +150,58 @@ class HomeController
 		);
 	}
 
+	public function obtener_menu_usuario(){
+		$request = new Request();
+
+		if($request->getMethod() === 'POST'){
+			$userId = $request->post('userId');
+
+			$pdocrud = DB::PDOCrud();
+			$pdomodel = $pdocrud->getPDOModelObj();
+			$pdomodel->where("id_usuario", $userId);
+			$pdomodel->joinTables("usuario", "usuario.id = usuario_menu.id_usuario", "INNER JOIN");
+			$pdomodel->joinTables("menu", "menu.id_menu = usuario_menu.id_menu", "INNER JOIN");
+
+			$data_usuario_menu = $pdomodel->select("usuario_menu");
+
+			$html = '<ul class="list-none">';
+
+			foreach ($data_usuario_menu as $item) {
+				if ($_SESSION["usuario"][0]["idrol"] == 1 || $item["nombre_menu"] != "usuarios" && $item["visibilidad_menu"] != "Ocultar") {
+					$html .= '<li>';
+
+					if ($item["submenu"] == "Si") {
+						$html .= '<input type="checkbox" id="' . $item['id_menu'] . '" class="menu-checkbox">';
+						$html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span></label>';
+						$html .= '<ul class="list-none">';
+
+						$submenus = HomeController::submenuDB($item['id_menu']);
+						foreach ($submenus as $submenu) {
+							if ($submenu["visibilidad_submenu"] != "Ocultar") {
+								$html .= '<li>';
+								$html .= '<input type="checkbox" id="' . $submenu['id_menu'] . '" class="submenu-checkbox">';
+								$html .= '<span><i class="' . $submenu['icono_submenu'] . '"></i> ' . $submenu['nombre_submenu'] . '</span></label>';
+								$html .= '</li>';
+							}
+						}
+
+						$html .= '</ul>';
+					} else {
+						$html .= '<input type="checkbox" id="' . $item['id_menu'] . '" class="menu-checkbox">';
+						$html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span></label>';
+					}
+
+					$html .= '</li>';
+				}
+			}
+
+			$html .= '</ul>';
+
+			echo $html;
+
+		}
+	}
+
 	public function asignar_menus_usuario(){
 		
 		$request = new Request();
@@ -161,15 +213,22 @@ class HomeController
 			$pdocrud = DB::PDOCrud();
         	$pdomodel = $pdocrud->getPDOModelObj();
 
+			$dataUser = $pdomodel->where("id_usuario", $userId)->select("usuario_menu");
+
+			if($dataUser){
+				echo json_encode(['error' => 'Los menus ya fueron asignados']);
+				return;
+			}
+
 			foreach ($selectedMenus as $menu) {
 				$menuId = $menu["menuId"];
-	
+
 				$usuarioMenuSql = array(
 					'id_usuario' => $userId,
 					'id_menu' => $menuId
 				);
-	
-				$pdomodel->insertBatch("usuario_menu", array($usuarioMenuSql));
+
+				$pdomodel->insert('usuario_menu', $usuarioMenuSql);
 			}
 
 			echo json_encode(['success' => 'Menu Asignado correctamente']);
