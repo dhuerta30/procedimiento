@@ -83,12 +83,10 @@
         <script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>
         <script>
             $(document).ready(function () {
-                // Toggle all checkboxes when "Marcar Todos" is clicked
                 $('.pdocrud-select-all').change(function () {
                     $('.menu-checkbox, .submenu-checkbox').prop('checked', $(this).prop('checked'));
                 });
 
-                // Toggle "Marcar Todos" checkbox based on the individual checkboxes
                 $('.menu-checkbox, .submenu-checkbox').change(function () {
                     if ($('.menu-checkbox:checked, .submenu-checkbox:checked').length === $('.menu-checkbox, .submenu-checkbox').length) {
                         $('.pdocrud-select-all').prop('checked', true);
@@ -104,7 +102,7 @@
                     // Iterar sobre las casillas marcadas y recopilar datos
                     $('.menu-checkbox:checked, .submenu-checkbox:checked').each(function () {
                         var checkboxId = $(this).attr('id');
-                        var menuId = checkboxId.replace('menu', ''); // Extract menuId from checkboxId
+                        var menuId = checkboxId.replace('menu', '');
                         selectedMenus.push({
                             menuId: menuId
                         });
@@ -121,8 +119,7 @@
                                 selectedMenus: selectedMenus
                             },
                             success: function (response) {
-                                //console.log(response);
-
+                               
                                 if(response['success']){
                                     Swal.fire({
                                         title: "Genial!",
