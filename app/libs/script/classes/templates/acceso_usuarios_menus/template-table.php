@@ -81,7 +81,8 @@
                     if (is_array($btnActions) && count($btnActions)) {
                     ?>
                         <td class="pdocrud-row-actions">
-                            <a href="javascript:;" title="Asignar" class="btn btn-primary btn-sm asignar_menu_usuario" data-id="<?=$rows[$pk];?>"><i class="far fa-eye"></i></a>
+                            <a href="javascript:;" title="Ver" class="btn btn-info btn-sm ver_menu_usuario" data-id="<?=$rows[$pk];?>"><i class="far fa-eye"></i></a>    
+                            <a href="javascript:;" title="Asignar" class="btn btn-success btn-sm asignar_menu_usuario" data-id="<?=$rows[$pk];?>"><i class="far fa-save"></i></a>
                         </td>
                     <?php } ?>
                 </tr>

@@ -159,7 +159,6 @@ class HomeController
 		$pdocrud->crudRemoveCol(array("rol","estatus","password", "token", "token_api", "expiration_token"));
 		$pdocrud->setSearchCols(array("id","nombre","email", "usuario", "idrol"));
 		$pdocrud->setSettings("addbtn", false);
-		//$pdocrud->setSettings("editbtn", false);
 		$pdocrud->setSettings("viewbtn", false);
 		$pdocrud->setSettings("delbtn", false);
 		$pdocrud->setSettings("printBtn", false);
