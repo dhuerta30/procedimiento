@@ -110,35 +110,44 @@
                         });
                     });
 
-                    //Envía datos al servidor usando Ajax
-                    $.ajax({
-                        url: "<?=$_ENV["BASE_URL"]?>home/asignar_menus_usuario",
-                        type: 'POST',
-                        dataType: "json",
-                        data: {
-                            userId: userId,
-                            selectedMenus: selectedMenus
-                        },
-                        success: function (response) {
-                            //console.log(response);
+                    if (selectedMenus.length !== 0) {
+                        //Envía datos al servidor usando Ajax
+                        $.ajax({
+                            url: "<?=$_ENV["BASE_URL"]?>home/asignar_menus_usuario",
+                            type: 'POST',
+                            dataType: "json",
+                            data: {
+                                userId: userId,
+                                selectedMenus: selectedMenus
+                            },
+                            success: function (response) {
+                                //console.log(response);
 
-                            if(response['success']){
-                                Swal.fire({
-                                    title: "Genial!",
-                                    text: response['success'],
-                                    icon: "success",
-                                    confirmButtonText: "Aceptar"
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: "Lo siento!",
-                                    text: response['error'],
-                                    icon: "error",
-                                    confirmButtonText: "Aceptar"
-                                });
+                                if(response['success']){
+                                    Swal.fire({
+                                        title: "Genial!",
+                                        text: response['success'],
+                                        icon: "success",
+                                        confirmButtonText: "Aceptar"
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: "Lo siento!",
+                                        text: response['error'],
+                                        icon: "error",
+                                        confirmButtonText: "Aceptar"
+                                    });
+                                }
                             }
-                        }
-                    });
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Atención!",
+                            text: 'Selecciona al menos un menu de la izquierda antes de guardar',
+                            icon: "warning",
+                            confirmButtonText: "Aceptar"
+                        });
+                    }
                 });
 
             });
