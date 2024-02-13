@@ -17,7 +17,7 @@
                                         <ul class="list-none">
                                             <li>
                                                 <input type="checkbox" value="select-all" name="pdocrud_select_all" class="pdocrud-select-all">
-                                                <span>Marcar Todos</span>
+                                                <span>Marcar Todos / Desmarcar Todos</span>
                                             </li>
                                         </ul>
 
