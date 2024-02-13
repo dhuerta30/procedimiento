@@ -13,6 +13,14 @@
 
                                 <div class="row">
                                     <div class="col-md-3 m-auto">
+
+                                        <ul class="list-none">
+                                            <li>
+                                                <input type="checkbox" value="select-all" name="pdocrud_select_all" class="pdocrud-select-all">
+                                                <span>Marcar Todos</span>
+                                            </li>
+                                        </ul>
+
                                         <ul class="list-none">
                                             <?php foreach ($menu as $item): ?>
                                                 <?php if (($_SESSION["usuario"][0]["idrol"] == 1 || $item["nombre_menu"] != "usuarios") && $item["visibilidad_menu"] != "Ocultar" ): ?>
@@ -72,4 +80,21 @@
         <div id="pdocrud-ajax-loader">
             <img width="300" src="<?=$_ENV["BASE_URL"]?>app/libs/script/images/ajax-loader.gif" class="pdocrud-img-ajax-loader"/>
         </div>
+        <script>
+            $(document).ready(function () {
+                // Toggle all checkboxes when "Marcar Todos" is clicked
+                $('.pdocrud-select-all').change(function () {
+                    $('.menu-checkbox, .submenu-checkbox').prop('checked', $(this).prop('checked'));
+                });
+
+                // Toggle "Marcar Todos" checkbox based on the individual checkboxes
+                $('.menu-checkbox, .submenu-checkbox').change(function () {
+                    if ($('.menu-checkbox:checked, .submenu-checkbox:checked').length === $('.menu-checkbox, .submenu-checkbox').length) {
+                        $('.pdocrud-select-all').prop('checked', true);
+                    } else {
+                        $('.pdocrud-select-all').prop('checked', false);
+                    }
+                });
+            });
+        </script>
         <?php require "layouts/footer.php"; ?>
