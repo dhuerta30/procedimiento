@@ -7,15 +7,14 @@ use App\core\Request;
 use App\core\JsonResponse;
 use Firebase\JWT\JWT;
 use App\Models\UserModel;
+use App\core\Decodejson;
 
 class ApiController
 {
     private $secretKey;
-    public $json;
 
     public function __construct()
 	{
-        $this->json = file_get_contents('php://input');
         $this->secretKey = $_ENV['CSRF_SECRET'];
 	}
 
@@ -26,8 +25,8 @@ class ApiController
         $request = new Request();
 
         if ($request->getMethod() === 'POST') {
-            $json = $this->json;
-            $content = json_decode($json);
+            
+            $content = Decodejson::getContentFromJson();
 
             if (isset($content)) {
                 $email = $content->email;
@@ -69,8 +68,8 @@ class ApiController
         $request = new Request();
 
         if ($request->getMethod() === 'GET') {
-            $json = $this->json;
-            $content = json_decode($json);
+           
+            $content = Decodejson::getContentFromJson();
 
             if (isset($content)) {
                 $token = $content->token;

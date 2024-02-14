@@ -163,6 +163,8 @@ class HomeController
 			$pdomodel->joinTables("menu", "menu.id_menu = usuario_menu.id_menu", "INNER JOIN");
 
 			$data_usuario_menu = $pdomodel->select("usuario_menu");
+			print_r($data_usuario_menu);
+			die();
 
 			$html = '<ul class="list-none">';
 
