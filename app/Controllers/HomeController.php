@@ -201,9 +201,7 @@ class HomeController
 			}
 
 			$html .= '</ul>';
-
 			echo $html;
-
 		}
 	}
 
