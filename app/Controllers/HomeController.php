@@ -202,7 +202,7 @@ class HomeController
 
 			$html .= '<div class="row mt-4">
 					<div class="col-md-12">
-						<a href="javascript:;" title="Actualizar" class="btn btn-success btn-sm actualizar_menu_usuario" data-id="'.$userId.'"><i class="far fa-save"></i> Actualizar</a>
+						<a href="javascript:;" title="Actualizar" class="btn btn-success btn-sm asignar_menu_usuario" data-id="'.$userId.'"><i class="far fa-save"></i> Actualizar</a>
 					</div>
 				</div>';
 			$html .= '</ul>';
@@ -243,6 +243,36 @@ class HomeController
 			echo json_encode(['success' => 'Menu Asignado correctamente']);
 		} else {
  			echo json_encode(['error' => 'Error al Asignar el o los menus al usuario']);
+		}
+	}
+
+	public function actualizar_menus_usuario(){
+		$request = new Request();
+
+		if ($request->getMethod() === 'POST') {
+			$userId = $request->post("userId");
+    		$selectedMenus = $request->post("selectedMenus");
+
+			$pdocrud = DB::PDOCrud();
+        	$pdomodel = $pdocrud->getPDOModelObj();
+
+			foreach ($selectedMenus as $menu) {
+				$menuId = $menu["menuId"];
+
+				$usuarioMenuSql = array(
+					'id_usuario' => $userId,
+					'id_menu' => null
+				);
+
+				$pdomodel->where("id_menu", $menuId);
+				print_r($menuId);
+				die();
+				$pdomodel->update('usuario_menu', $usuarioMenuSql);
+			}
+
+			echo json_encode(['success' => 'Menu Actualizado correctamente']);
+		} else {
+ 			echo json_encode(['error' => 'Error al Actualizar el menu']);
 		}
 	}
 
