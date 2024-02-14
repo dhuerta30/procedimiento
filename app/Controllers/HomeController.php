@@ -202,12 +202,12 @@ class HomeController
 
 			$html .= '<div class="row mt-4">
 					<div class="col-md-12">
-						<a href="javascript:;" title="Asignar" class="btn btn-success btn-sm asignar_menu_usuario" data-id="1"><i class="far fa-save"></i> Actualizar</a>
+						<a href="javascript:;" title="Actualizar" class="btn btn-success btn-sm actualizar_menu_usuario" data-id="'.$userId.'"><i class="far fa-save"></i> Actualizar</a>
 					</div>
 				</div>';
 			$html .= '</ul>';
 			$checkbox =  $html;
-			HomeController::modal("menus", "<i class='far fa-eye'></i> Ver Menus Asignados", $checkbox);
+			HomeController::modal("menus", "<i class='far fa-eye'></i> Actualizar Menus Asignados", $checkbox);
 		}
 	}
 

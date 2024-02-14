@@ -128,6 +128,7 @@
                                 if(response['success']){
                                     $('.pdocrud-select-all').removeAttr('checked', false);
                                     $('.menu-checkbox').removeAttr('checked', false);
+                                    $('#menus').modal('hide');
                                     Swal.fire({
                                         title: "Genial!",
                                         text: response['success'],
