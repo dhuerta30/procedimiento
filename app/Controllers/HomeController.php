@@ -158,43 +158,47 @@ class HomeController
 
 			$pdocrud = DB::PDOCrud();
 			$pdomodel = $pdocrud->getPDOModelObj();
-			$pdomodel->where("id_usuario", $userId);
-			$pdomodel->joinTables("usuario", "usuario.id = usuario_menu.id_usuario", "INNER JOIN");
-			$pdomodel->joinTables("menu", "menu.id_menu = usuario_menu.id_menu", "INNER JOIN");
+			//$pdomodel->where("id_usuario", $userId);
+			
+			$columns = "usuario_menu.*, usuario.*, menu.*";
 
-			$data_usuario_menu = $pdomodel->select("usuario_menu");
-			print_r($data_usuario_menu);
-			die();
+			$query = "SELECT $columns 
+				FROM usuario_menu
+				INNER JOIN usuario ON usuario.id = usuario_menu.id_usuario
+				INNER JOIN menu ON menu.id_menu = usuario_menu.id_menu
+				WHERE usuario_menu.id_usuario = :userId";
+
+			$data_usuario_menu = $pdomodel->executeQuery($query, [':userId' => $userId]);
 
 			$html = '<ul class="list-none">';
 
 			foreach ($data_usuario_menu as $item) {
-				if ($_SESSION["usuario"][0]["idrol"] == 1 || $item["nombre_menu"] != "usuarios" && $item["visibilidad_menu"] != "Ocultar") {
-					$html .= '<li>';
+				
+				$html .= '<li>';
 
-					if ($item["submenu"] == "Si") {
-						$html .= '<input type="checkbox" id="' . $item['id_menu'] . '" class="menu-checkbox">';
-						$html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span></label>';
-						$html .= '<ul class="list-none">';
+				if ($item["submenu"] == "Si") {
+					$html .= '<input type="checkbox" id="' . $item['id_menu'] . '" class="menu-checkbox mr-2">';
+					$html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span></label>';
+					$html .= '<ul class="list-none">';
 
-						$submenus = HomeController::submenuDB($item['id_menu']);
-						foreach ($submenus as $submenu) {
-							if ($submenu["visibilidad_submenu"] != "Ocultar") {
-								$html .= '<li>';
-								$html .= '<input type="checkbox" id="' . $submenu['id_menu'] . '" class="submenu-checkbox">';
-								$html .= '<span><i class="' . $submenu['icono_submenu'] . '"></i> ' . $submenu['nombre_submenu'] . '</span></label>';
-								$html .= '</li>';
-							}
+					$submenus = HomeController::submenuDB($item['id_menu']);
+					foreach ($submenus as $submenu) {
+						if ($submenu["visibilidad_submenu"] != "Ocultar") {
+							$html .= '<li>';
+							$html .= '<input type="checkbox" id="' . $submenu['id_menu'] . '" class="submenu-checkbox mr-2">';
+							$html .= '<span><i class="' . $submenu['icono_submenu'] . '"></i> ' . $submenu['nombre_submenu'] . '</span></label>';
+							$html .= '</li>';
 						}
-
-						$html .= '</ul>';
-					} else {
-						$html .= '<input type="checkbox" id="' . $item['id_menu'] . '" class="menu-checkbox">';
-						$html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span></label>';
 					}
 
-					$html .= '</li>';
+					$html .= '</ul>';
+				} else {
+					$html .= '<input type="checkbox" id="' . $item['id_menu'] . '" class="menu-checkbox mr-2">';
+					$html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span></label>';
 				}
+
+				$html .= '</li>';
+				
 			}
 
 			$html .= '</ul>';
@@ -215,9 +219,9 @@ class HomeController
 			$pdocrud = DB::PDOCrud();
         	$pdomodel = $pdocrud->getPDOModelObj();
 
-			$dataUser = $pdomodel->where("id_usuario", $userId)->select("usuario_menu");
+			$dataUsermenu = $pdomodel->where("id_usuario", $userId)->select("usuario_menu");
 
-			if($dataUser){
+			if($dataUsermenu){
 				echo json_encode(['error' => 'Los menus ya fueron asignados']);
 				return;
 			}

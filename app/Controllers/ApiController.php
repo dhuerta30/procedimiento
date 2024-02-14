@@ -6,6 +6,7 @@ use App\core\DB;
 use App\core\Request;
 use App\core\JsonResponse;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use App\Models\UserModel;
 use App\core\Decodejson;
 
@@ -53,6 +54,43 @@ class ApiController
             }
         }
     }
+
+    /*public function validarToken()
+    {
+        $jwt = "";
+        if (isset($_SERVER["HTTP_AUTHORIZATION"])) {
+            $authorizationHeader = $_SERVER["HTTP_AUTHORIZATION"];
+            $bearerPrefix = 'Bearer ';
+
+            if (strpos($authorizationHeader, $bearerPrefix) !== false) {
+                $jwt = trim(substr($authorizationHeader, strlen($bearerPrefix)));
+            }
+        } else {
+            $header = apache_request_headers();
+            if (isset($header["Authorization"])) {
+                $authorizationHeader = $header["Authorization"];
+                $bearerPrefix = 'Bearer ';
+
+                if (strpos($authorizationHeader, $bearerPrefix) !== false) {
+                    $jwt = trim(substr($authorizationHeader, strlen($bearerPrefix)));
+                }
+            }
+        }
+
+        if (!empty($jwt)) {
+            try {
+                $decoded = JWT::decode($jwt, new Key($this->secretKey, 'HS256'));
+                return true;
+            } catch (\Firebase\JWT\ExpiredException $e) {
+                return false;
+            } catch (Exception $e) {
+                return false;
+            }
+        }
+
+        return false;
+    }*/
+
 
     public function validarToken($token)
     {

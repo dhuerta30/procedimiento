@@ -43,14 +43,13 @@
                                                             <?php if ($tieneSubmenus): ?>
                                                                 <input type="checkbox" id="<?= $item['id_menu'] ?>" class="menu-checkbox">
                                                                     <span><i class="<?= $item['icono_menu'] ?>"></i> <?= $item['nombre_menu'] ?></span>
-                                                                </label>
                                                                 <ul class="list-none">
                                                                     <?php foreach ($submenus as $submenu): ?>
                                                                         <?php if($submenu["visibilidad_submenu"] != "Ocultar"): ?>
                                                                         <li>
-                                                                            <input type="checkbox" id="<?= $submenu['id_menu'] ?>" class="submenu-checkbox">
+                                                                            <input type="checkbox" id="<?= $submenu['id_submenu'] ?>" class="submenu-checkbox">
                                                                                 <span><i class="<?= $submenu['icono_submenu'] ?>"></i> <?= $submenu['nombre_submenu'] ?></span>
-                                                                            </label>
+        
                                                                         </li>
                                                                         <?php endif; ?>
                                                                     <?php endforeach; ?>
@@ -58,7 +57,6 @@
                                                             <?php else: ?>
                                                                 <input type="checkbox" id="<?= $item['id_menu'] ?>" class="menu-checkbox">
                                                                     <span><i class="<?= $item['icono_menu'] ?>"></i> <?= $item['nombre_menu'] ?></span>
-                                                                </label>
                                                             <?php endif; ?>
                                                         </li>
                                                     <?php endif; ?>
@@ -126,7 +124,8 @@
                             success: function (response) {
                                 $("#pdocrud-ajax-loader").hide();
                                 if(response['success']){
-                                    $('.pdocrud-select-all').click();
+                                    $('.pdocrud-select-all').removeAttr('checked', false);
+                                    $('.menu-checkbox').removeAttr('checked', false);
                                     Swal.fire({
                                         title: "Genial!",
                                         text: response['success'],
