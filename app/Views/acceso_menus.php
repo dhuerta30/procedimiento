@@ -69,6 +69,8 @@
                                         <?=$render;?>
                                     </div>
                                 </div>
+
+                                <div class="cargar_modal"></div>
                             
                             </div>
                         </div>
@@ -167,7 +169,8 @@
                         },
                         success: function(data){
                             $("#pdocrud-ajax-loader").hide();
-                            $('.menu_list').html(data);
+                            $('.cargar_modal').html(data);
+                            $('#menus').modal('show');
                             //console.log(data);
                         }
                     });
