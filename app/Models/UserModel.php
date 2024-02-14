@@ -37,4 +37,10 @@ class UserModel
 		$pdomodel->update($this->table, $data);
 		return $pdomodel;
 	}
+
+	public function select_userBy_token($token){
+		$pdomodel = DB::PDOModel();
+        $data = $pdomodel->where($this->token_api, $token)->select($this->table);
+		return $data;
+	}
 }

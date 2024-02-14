@@ -74,8 +74,8 @@ class ApiController
             if (isset($content)) {
                 $token = $content->token;
 
-                $pdomodel = DB::PDOModel();
-                $data = $pdomodel->where("token_api", $token)->select("usuario");
+                $usuario = new UserModel();
+                $data = $usuario->select_userBy_token($token);
 
                 if ($data && !empty($token) && $this->validarToken($token)) {
                     echo json_encode(['data' => $data]);
