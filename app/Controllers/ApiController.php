@@ -56,8 +56,8 @@ class ApiController
 
     public function validarToken($token)
     {
-        $pdomodel = DB::PDOModel();
-        $data = $pdomodel->where("token_api", $token)->select("usuario");
+        $usuario = new UserModel();
+        $data = $usuario->select_userBy_token($token);
         return ($data) ? true : false;
     }
 
