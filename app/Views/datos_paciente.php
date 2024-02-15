@@ -666,7 +666,7 @@
 
         $(document).on("change", ".tipo_examen", function () {
             let tipo_examen = $(this).val();
-            
+
             // Llamar a la función para cargar el autocompletado
             cargarAutocompletado(tipo_examen);
         });
@@ -690,7 +690,16 @@
                         dataType: 'json',
                         data: { query: request.term, tipo_examen: tipo_examen }, // Enviar el tipo_examen
                         success: function (data) {
-                            response(data['glosa']);
+                            if (!data['error']) {
+                                response(data['glosa']);
+                            } else {
+                                Swal.fire({
+                                    title: "Lo siento!",
+                                    text: data['error'],
+                                    icon: "error",
+                                    confirmButtonText: "Aceptar"
+                                });
+                            }
                         }
                     });
                 },

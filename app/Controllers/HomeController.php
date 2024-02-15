@@ -2062,10 +2062,16 @@ class HomeController
 				$codigosFonasa[] = $row['codigo_fonasa'];
 			}
 	
-			$response = [
-				'glosa' => $glosas,
-				'codigo_fonasa' => $codigosFonasa
-			];
+			if (empty($result)) {
+				$response = [
+					'error' => 'No se encontraron resultados.'
+				];
+			} else {
+				$response = [
+					'glosa' => $glosas,
+					'codigo_fonasa' => $codigosFonasa
+				];
+			}
 	
 			echo json_encode($response, JSON_UNESCAPED_UNICODE);
 		}
