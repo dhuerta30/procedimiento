@@ -1169,7 +1169,7 @@ class HomeController
 				if($fechaNacimiento >= 0){
 					echo json_encode(['fecha_nacimiento' => $fechaNacimiento]);
 				} else {
-					echo json_encode(['error' => 'La fecha de nacimiento no se pudo calcular ingrese una mas antigua']);
+					echo json_encode(['error' => 'La fecha de nacimiento no se pudo calcular, ingrese una mas antigua']);
 				}
 			}
 		}
