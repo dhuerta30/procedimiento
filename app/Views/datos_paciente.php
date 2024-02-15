@@ -473,7 +473,8 @@
         $(document).on("change keyup", ".fecha_nacimiento", function(){
             let fecha_nac = $(this).val();
 
-            if(fecha_nac != ""){
+            if (fecha_nac) {
+                $("#pdocrud-ajax-loader").show();
                 $.ajax({
                     type: "POST",
                     url: "<?=$_ENV["BASE_URL"]?>home/generar_edad",
@@ -481,18 +482,20 @@
                     data: {
                         fecha_nac: fecha_nac
                     },
-                    beforeSend: function() {
-                        $("#pdocrud-ajax-loader").show();
-                    },
                     success: function(data){
                         $("#pdocrud-ajax-loader").hide();
-                        if(!data["error"]){
+                        if (!data.error) {
                             $('.limpiar').removeClass('d-none');
-                            $('.edad').val(data["fecha_nacimiento"]);
+                            if (data.fecha_nacimiento <= 0) {
+                                $('.edad').val("");
+                            } else {
+                                $('.edad').val(data.fecha_nacimiento);
+                            }
                         } else {
+                            $('.edad').val("");
                             Swal.fire({
                                 title: "Lo siento!",
-                                text: data['error'],
+                                text: data.error,
                                 icon: "error",
                                 confirmButtonText: "Aceptar"
                             });

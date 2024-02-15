@@ -171,30 +171,29 @@ class HomeController
 			foreach ($data_usuario_menu as $item) {
 
 				$html .= '<li>';
-				if ($item["visibilidad_menu"] != "Ocultar") {
-					if ($item["submenu"] == "Si") {
-						$isChecked = ($item['id_usuario'] ? 'checked' : ''); // Verificar si el menú está asignado al usuario
-						$html .= '<input type="checkbox" ' . $isChecked . ' id="' . $item['id_menu'] . '" class="menu-checkbox mr-2">';
-						$html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span>';
-						$html .= '<ul class="list-none">';
-	
-						$submenus = HomeController::submenuDB($item['id_menu']);
-						foreach ($submenus as $submenu) {
-							if ($submenu["visibilidad_submenu"] != "Ocultar") {
-								$isCheckedSubmenu = ($submenu['id_usuario'] ? 'checked' : ''); // Verificar si el submenu está asignado al usuario
-								$html .= '<li>';
-								$html .= '<input type="checkbox" ' . $isCheckedSubmenu . ' id="' . $submenu['id_menu'] . '" class="submenu-checkbox mr-2">';
-								$html .= '<span><i class="' . $submenu['icono_submenu'] . '"></i> ' . $submenu['nombre_submenu'] . '</span>';
-								$html .= '</li>';
-							}
+				
+				if ($item["submenu"] == "Si") {
+					$isChecked = ($item['id_usuario'] ? 'checked' : ''); // Verificar si el menú está asignado al usuario
+					$html .= '<input type="checkbox" ' . $isChecked . ' id="' . $item['id_menu'] . '" class="menu-checkbox mr-2">';
+					$html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span>';
+					$html .= '<ul class="list-none">';
+
+					$submenus = HomeController::submenuDB($item['id_menu']);
+					foreach ($submenus as $submenu) {
+						if ($submenu["visibilidad_submenu"] != "Ocultar") {
+							$isCheckedSubmenu = ($submenu['id_menu'] ? 'checked' : ''); // Verificar si el submenu está asignado al usuario
+							$html .= '<li>';
+							$html .= '<input type="checkbox" ' . $isCheckedSubmenu . ' id="' . $submenu['id_menu'] . '" class="submenu-checkbox mr-2">';
+							$html .= '<span><i class="' . $submenu['icono_submenu'] . '"></i> ' . $submenu['nombre_submenu'] . '</span>';
+							$html .= '</li>';
 						}
-	
-						$html .= '</ul>';
-					} else {
-						$isChecked = ($item['id_usuario'] ? 'checked' : ''); // Verificar si el menú está asignado al usuario
-						$html .= '<input type="checkbox" ' . $isChecked . ' id="' . $item['id_menu'] . '" class="menu-checkbox mr-2">';
-						$html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span>';
 					}
+
+					$html .= '</ul>';
+				} else {
+					$isChecked = ($item['id_usuario'] ? 'checked' : ''); // Verificar si el menú está asignado al usuario
+					$html .= '<input type="checkbox" ' . $isChecked . ' id="' . $item['id_menu'] . '" class="menu-checkbox mr-2">';
+					$html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span>';
 				}
 	
 				$html .= '</li>';
