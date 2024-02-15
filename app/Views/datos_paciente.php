@@ -331,7 +331,6 @@
                         $(".edad").val(data["data"][0]["edad"]);
                         $(".direccion").val(data["data"][0]["direccion"]);
                         $(".sexo").val(data["data"][0]["sexo"]);
-                        $(".fecha_y_hora_ingreso").val(data["data"][0]["fecha_y_hora_ingreso"]);
                         $('.paciente').val(data["data"][0]["id_datos_paciente"]);
                        
                         Swal.fire({
@@ -349,7 +348,6 @@
                         $(".edad").val("");
                         $(".direccion").val("");
                         $(".sexo").val("");
-                        $(".fecha_y_hora_ingreso").val("");
                         $('.paciente').val("");
                         Swal.fire({
                             title: "Atención!",
@@ -650,7 +648,6 @@
             $(".edad").val("");
             $(".direccion").val("");
             $(".sexo").val("");
-            $(".fecha_y_hora_ingreso").val("");
             $('.paciente').val("");
             $('.paciente').trigger('chosen:updated');
         });

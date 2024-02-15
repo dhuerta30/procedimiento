@@ -150,129 +150,112 @@ class HomeController
 		);
 	}
 
-	public function obtener_menu_usuario(){
+	public function obtener_menu_usuario()
+	{
 		$request = new Request();
-
-		if($request->getMethod() === 'POST'){
+	
+		if ($request->getMethod() === 'POST') {
 			$userId = $request->post('userId');
-
+	
 			$pdocrud = DB::PDOCrud();
 			$pdomodel = $pdocrud->getPDOModelObj();
-			
-			$columns = "usuario_menu.*, usuario.*, menu.*";
+	
+			$columns = "usuario_menu.id_usuario, usuario.*, menu.*";
 
 			$query = "SELECT $columns 
-				FROM usuario_menu
-				INNER JOIN usuario ON usuario.id = usuario_menu.id_usuario
-				INNER JOIN menu ON menu.id_menu = usuario_menu.id_menu
-				WHERE usuario_menu.id_usuario = :userId";
-
+					FROM usuario_menu
+					INNER JOIN usuario ON usuario.id = usuario_menu.id_usuario
+					INNER JOIN menu ON menu.id_menu = usuario_menu.id_menu
+					WHERE usuario_menu.id_usuario = :userId";
+	
 			$data_usuario_menu = $pdomodel->executeQuery($query, [':userId' => $userId]);
-
+	
 			$html = '<ul class="list-none">';
-
+	
 			foreach ($data_usuario_menu as $item) {
-				
+
 				$html .= '<li>';
-
-				if ($item["submenu"] == "Si") {
-					$html .= '<input type="checkbox" checked id="' . $item['id_menu'] . '" class="menu-checkbox mr-2">';
-					$html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span></label>';
-					$html .= '<ul class="list-none">';
-
-					$submenus = HomeController::submenuDB($item['id_menu']);
-					foreach ($submenus as $submenu) {
-						if ($submenu["visibilidad_submenu"] != "Ocultar") {
-							$html .= '<li>';
-							$html .= '<input type="checkbox" checked id="' . $submenu['id_menu'] . '" class="submenu-checkbox mr-2">';
-							$html .= '<span><i class="' . $submenu['icono_submenu'] . '"></i> ' . $submenu['nombre_submenu'] . '</span></label>';
-							$html .= '</li>';
+				if ($item["visibilidad_menu"] != "Ocultar") {
+					if ($item["submenu"] == "Si") {
+						$isChecked = ($item['id_usuario'] ? 'checked' : ''); // Verificar si el menú está asignado al usuario
+						$html .= '<input type="checkbox" ' . $isChecked . ' id="' . $item['id_menu'] . '" class="menu-checkbox mr-2">';
+						$html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span>';
+						$html .= '<ul class="list-none">';
+	
+						$submenus = HomeController::submenuDB($item['id_menu']);
+						foreach ($submenus as $submenu) {
+							if ($submenu["visibilidad_submenu"] != "Ocultar") {
+								$isCheckedSubmenu = ($submenu['id_usuario'] ? 'checked' : ''); // Verificar si el submenu está asignado al usuario
+								$html .= '<li>';
+								$html .= '<input type="checkbox" ' . $isCheckedSubmenu . ' id="' . $submenu['id_menu'] . '" class="submenu-checkbox mr-2">';
+								$html .= '<span><i class="' . $submenu['icono_submenu'] . '"></i> ' . $submenu['nombre_submenu'] . '</span>';
+								$html .= '</li>';
+							}
 						}
+	
+						$html .= '</ul>';
+					} else {
+						$isChecked = ($item['id_usuario'] ? 'checked' : ''); // Verificar si el menú está asignado al usuario
+						$html .= '<input type="checkbox" ' . $isChecked . ' id="' . $item['id_menu'] . '" class="menu-checkbox mr-2">';
+						$html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span>';
 					}
-
-					$html .= '</ul>';
-				} else {
-					$html .= '<input type="checkbox" checked id="' . $item['id_menu'] . '" class="menu-checkbox mr-2">';
-					$html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span></label>';
 				}
-
+	
 				$html .= '</li>';
-				
 			}
-
+	
 			$html .= '<div class="row mt-4">
-					<div class="col-md-12">
-						<a href="javascript:;" title="Actualizar" class="btn btn-success btn-sm asignar_menu_usuario" data-id="'.$userId.'"><i class="far fa-save"></i> Actualizar</a>
-					</div>
-				</div>';
+						<div class="col-md-12">
+							<a href="javascript:;" title="Actualizar" class="btn btn-success btn-sm asignar_menu_usuario" data-id="' . $userId . '"><i class="far fa-save"></i> Actualizar</a>
+						</div>
+					</div>';
 			$html .= '</ul>';
 			$checkbox =  $html;
 			HomeController::modal("menus", "<i class='far fa-eye'></i> Actualizar Menus Asignados", $checkbox);
 		}
 	}
+	
 
-	public function asignar_menus_usuario(){
-		
+
+	public function asignar_menus_usuario()
+	{
 		$request = new Request();
 
 		if ($request->getMethod() === 'POST') {
 			$userId = $request->post("userId");
-    		$selectedMenus = $request->post("selectedMenus");
+			$selectedMenus = $request->post("selectedMenus");
 
 			$pdocrud = DB::PDOCrud();
-        	$pdomodel = $pdocrud->getPDOModelObj();
+			$pdomodel = $pdocrud->getPDOModelObj();
 
-			$dataUsermenu = $pdomodel->where("id_usuario", $userId)->select("usuario_menu");
+			try {
+				// Eliminar todos los menús asignados previamente al usuario
+				$pdomodel->where('id_usuario', $userId)->delete('usuario_menu');
 
-			if($dataUsermenu){
-				echo json_encode(['error' => 'Los menus ya fueron asignados']);
-				return;
+				foreach ($selectedMenus as $menu) {
+					$menuId = $menu["menuId"];
+
+					// Verificar si ya existe el menú asignado al usuario
+					$existingMenu = $pdomodel->where('id_usuario', $userId)
+											->where('id_menu', $menuId)
+											->select('usuario_menu');
+
+					if (!$existingMenu) {
+						$usuarioMenuSql = array(
+							'id_usuario' => $userId,
+							'id_menu' => $menuId
+						);
+
+						$pdomodel->insert('usuario_menu', $usuarioMenuSql);
+					}
+				}
+
+				echo json_encode(['success' => 'Menús asignados correctamente']);
+			} catch (Exception $e) {
+				echo json_encode(['error' => 'Error al asignar los menús al usuario']);
 			}
-
-			foreach ($selectedMenus as $menu) {
-				$menuId = $menu["menuId"];
-
-				$usuarioMenuSql = array(
-					'id_usuario' => $userId,
-					'id_menu' => $menuId
-				);
-
-				$pdomodel->insert('usuario_menu', $usuarioMenuSql);
-			}
-
-			echo json_encode(['success' => 'Menu Asignado correctamente']);
 		} else {
- 			echo json_encode(['error' => 'Error al Asignar el o los menus al usuario']);
-		}
-	}
-
-	public function actualizar_menus_usuario(){
-		$request = new Request();
-
-		if ($request->getMethod() === 'POST') {
-			$userId = $request->post("userId");
-    		$selectedMenus = $request->post("selectedMenus");
-
-			$pdocrud = DB::PDOCrud();
-        	$pdomodel = $pdocrud->getPDOModelObj();
-
-			foreach ($selectedMenus as $menu) {
-				$menuId = $menu["menuId"];
-
-				$usuarioMenuSql = array(
-					'id_usuario' => $userId,
-					'id_menu' => null
-				);
-
-				$pdomodel->where("id_menu", $menuId);
-				print_r($menuId);
-				die();
-				$pdomodel->update('usuario_menu', $usuarioMenuSql);
-			}
-
-			echo json_encode(['success' => 'Menu Actualizado correctamente']);
-		} else {
- 			echo json_encode(['error' => 'Error al Actualizar el menu']);
+			echo json_encode(['error' => 'Error al procesar la solicitud']);
 		}
 	}
 
@@ -1224,6 +1207,9 @@ class HomeController
 
 	public function datos_paciente(){
 
+		date_default_timezone_set('America/Santiago');
+		$fecha_registro = date('Y-m-d H:i:s');
+
 		unset($_SESSION['detalle_de_solicitud']);
 
 		$pdocrud = DB::PDOCrud();
@@ -1260,7 +1246,7 @@ class HomeController
 				<div class='col-md-3'>
 					<label class='control-label col-form-label label_Fecha_y_hora_ingreso'>Fecha y hora ingreso</label> 
 					<div class='input-group'>
-					<input type='text' class='form-control pdocrud-form-control pdocrud-text fecha_y_hora_ingreso pdocrud-datetime flatpickr-input' data-type='datetime'>                
+					<input type='text' class='form-control pdocrud-form-control pdocrud-text fecha_y_hora_ingreso pdocrud-datetime' value='".$fecha_registro."'>                
 						<div class='input-group-append'>
 							<span class='input-group-text' id='basic-addon1'>
 								<i class='fa fa-calendar'></i>
@@ -2763,7 +2749,7 @@ class HomeController
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
 
-			$searchFields = ['rut', 'nombres', 'apellido_paterno', 'apellido_materno', 'fecha_nacimiento', 'edad', 'direccion', 'sexo', 'fecha_y_hora_ingreso'];
+			$searchFields = ['rut', 'nombres', 'apellido_paterno', 'apellido_materno', 'fecha_nacimiento', 'edad', 'direccion', 'sexo'];
 			$searchCriteria = [];
 
 			// Check if any search parameter is provided
@@ -2788,7 +2774,7 @@ class HomeController
 				if ($data) {
 					echo json_encode(['success' => 'Datos cargados con éxito', 'data' => $data]);
 				} else {
-					echo json_encode(['error' => 'Error al cargar los datos']);
+					echo json_encode(['error' => 'No se encontraron resultados']);
 				}
 			}
 			

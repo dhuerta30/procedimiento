@@ -156,56 +156,6 @@
                 });
 
 
-                $(document).on('click', '.actualizar_menu_usuario', function () {
-                    var userId = $(this).data('id');
-                    var selectedMenus = [];
-
-                    // Iterar sobre las casillas marcadas y recopilar datos
-                    $('.menu-checkbox:checked, .submenu-checkbox:checked').each(function () {
-                        var checkboxId = $(this).attr('id');
-                        var menuId = checkboxId.replace('menu', '');
-                        selectedMenus.push({
-                            menuId: menuId
-                        });
-                    });
-
-                    //Envía datos al servidor usando Ajax
-                    $.ajax({
-                        url: "<?=$_ENV["BASE_URL"]?>home/actualizar_menus_usuario",
-                        type: 'POST',
-                        dataType: "json",
-                        data: {
-                            userId: userId,
-                            selectedMenus: selectedMenus
-                        },
-                        beforeSend: function() {
-                            $("#pdocrud-ajax-loader").show();
-                        },
-                        success: function (response) {
-                            $("#pdocrud-ajax-loader").hide();
-                            if(response['success']){
-                                $('.pdocrud-select-all').prop('checked', false);
-                                $('.menu-checkbox').prop('checked', false);
-                                $('#menus').modal('hide');
-                                Swal.fire({
-                                    title: "Genial!",
-                                    text: response['success'],
-                                    icon: "success",
-                                    confirmButtonText: "Aceptar"
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: "Lo siento!",
-                                    text: response['error'],
-                                    icon: "error",
-                                    confirmButtonText: "Aceptar"
-                                });
-                            }
-                        }
-                    });
-
-                });
-
                 $(document).on("click", ".ver_menu_usuario", function(){
                     var userId = $(this).data('id');
 
