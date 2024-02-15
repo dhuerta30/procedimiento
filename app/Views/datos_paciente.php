@@ -487,6 +487,7 @@
                     success: function(data){
                         $("#pdocrud-ajax-loader").hide();
                         if(!data["error"]){
+                            $('.limpiar').removeClass('d-none');
                             $('.edad').val(data["fecha_nacimiento"]);
                         } else {
                             Swal.fire({
