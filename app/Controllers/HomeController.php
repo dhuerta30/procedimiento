@@ -2704,7 +2704,6 @@ class HomeController
 				}
 			}
 
-
 			if (!isset($_SESSION['detalle_de_solicitud']) || !is_array($_SESSION['detalle_de_solicitud'])) {
 				$_SESSION['detalle_de_solicitud'] = [];
 			}
