@@ -1171,7 +1171,11 @@ class HomeController
 
 			if(!empty($fecha_nac)){
 				$fechaNacimiento = HomeController::calcularFechaNacimiento($fecha_nac);
-				echo json_encode(['fecha_nacimiento' => $fechaNacimiento]);
+				if($fechaNacimiento >= 0){
+					echo json_encode(['fecha_nacimiento' => $fechaNacimiento]);
+				} else {
+					echo json_encode(['error' => 'La fecha de nacimiento no se pudo calcular ingrese una mas antigua']);
+				}
 			}
 		}
 	}
@@ -2688,7 +2692,7 @@ class HomeController
 
 			foreach ($requiredFields as $field) {
 				if (empty($$field)) {
-					echo json_encode(['error' => 'Todos los campos son con un (*) son obligatorios']);
+					echo json_encode(['error' => 'Todos los campos con un (*) son obligatorios']);
 					return;
 				}
 			}

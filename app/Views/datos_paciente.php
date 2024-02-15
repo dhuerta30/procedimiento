@@ -486,7 +486,16 @@
                     },
                     success: function(data){
                         $("#pdocrud-ajax-loader").hide();
-                        $('.edad').val(data["fecha_nacimiento"]);
+                        if(!data["error"]){
+                            $('.edad').val(data["fecha_nacimiento"]);
+                        } else {
+                            Swal.fire({
+                                title: "Lo siento!",
+                                text: data['error'],
+                                icon: "error",
+                                confirmButtonText: "Aceptar"
+                            });
+                        }
                     }
                 });
             } else {
