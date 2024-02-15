@@ -1313,9 +1313,10 @@ class HomeController
 		$crud->fieldDataAttr("codigo_fonasa", array("style"=>"display:none"));
 		$crud->fieldHideLable("id_datos_paciente");
 		$crud->fieldDataAttr("id_datos_paciente", array("style"=>"display:none"));
-		$crud->fieldRenameLable("tipo_examen", "Tipo Exámen");
-		$crud->fieldRenameLable("examen", "Exámen");
-		$crud->fieldRenameLable("observacion", "Observación");
+		$crud->fieldRenameLable("tipo_solicitud", "Tipo Solicitud (*)");
+		$crud->fieldRenameLable("tipo_examen", "Tipo Exámen (*)");
+		$crud->fieldRenameLable("examen", "Exámen (*)");
+		$crud->fieldRenameLable("observacion", "Observación (*)");
 		//$crud->fieldTypes("id_datos_paciente", "select");
 		//$crud->fieldDataBinding("id_datos_paciente", "datos_paciente", "id_datos_paciente", array("nombres","apellido_paterno", "apellido_materno"), "db", " ");
 		$crud->formFields(array("id_datos_paciente","tipo_solicitud", "codigo_fonasa", "tipo_examen","examen","sintomas_principales", "diagnostico_libre", "plano", "extremidad", "observacion", "contraste"));
@@ -1416,7 +1417,7 @@ class HomeController
 		$detalle_solicitud->addPlugin("chosen");
 		$detalle_solicitud->formDisplayInPopup();
 		$detalle_solicitud->where("id_datos_paciente", "null");
-		$detalle_solicitud->enqueueBtnTopActions("Report",  "<i class='fas fa-plus-circle'></i> Agregar", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud");
+		$detalle_solicitud->enqueueBtnTopActions("Report",  "<i class='fas fa-plus-circle'></i> Agregar Procedimiento", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud");
 		$detalle_solicitud->crudTableCol(array("codigo_fonasa","tipo_solicitud","tipo_examen","observacion", "contraste", "plano","extremidad"));
 		$detalle_solicitud->setLangData("add", "");
 		$detalle_solicitud->setLangData("actions", "Eliminar");
@@ -2683,11 +2684,11 @@ class HomeController
 			$creatinina = $request->post('creatinina') ?? null; 
 
 			// Validar que los campos no estén vacíos
-			$requiredFields = ['codigo_fonasa', 'tipo_solicitud', 'tipo_examen', 'examen', 'plano', 'extremidad', 'observacion', 'contraste'];
+			$requiredFields = ['codigo_fonasa', 'tipo_solicitud', 'tipo_examen', 'examen', 'observacion'];
 
 			foreach ($requiredFields as $field) {
 				if (empty($$field)) {
-					echo json_encode(['error' => 'Todos los campos son obligatorios']);
+					echo json_encode(['error' => 'Todos los campos son con un (*) son obligatorios']);
 					return;
 				}
 			}
@@ -2774,7 +2775,7 @@ class HomeController
 				if ($data) {
 					echo json_encode(['success' => 'Datos cargados con éxito', 'data' => $data]);
 				} else {
-					echo json_encode(['error' => 'No se encontraron resultados']);
+					echo json_encode(['error' => 'No se encontraron resultados para los datos buscados']);
 				}
 			}
 			
