@@ -639,6 +639,11 @@
                     $.each(data['tipo_examen'], function(key, value) {
                         if(tipo_solicitud != 0){
                             $('.tipo_examen').append('<option value="' + key + '">' + value + '</option>');
+                        } else {
+                            $('.tipo_examen').val("0");
+                            $('.tipo_examen').chosen("destroy");
+                            $('.tipo_examen').chosen();
+                            $(".examen").autocomplete("destroy");
                         }
                     });
 
@@ -667,9 +672,11 @@
 
         $(document).on("change", ".tipo_examen", function () {
             let tipo_examen = $(this).val();
-
-            // Llamar a la función para cargar el autocompletado
-            cargarAutocompletado(tipo_examen);
+            if(tipo_examen != 0){
+                cargarAutocompletado(tipo_examen);
+            } else {
+                $(".examen").autocomplete("destroy");
+            }
         });
 
 
