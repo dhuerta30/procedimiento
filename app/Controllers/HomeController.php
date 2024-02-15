@@ -12,6 +12,7 @@ use Xinvoice;
 use Coderatio\SimpleBackup\SimpleBackup;
 use App\Models\DatosPacienteModel;
 use App\Models\PageModel;
+use App\Models\UsuarioMenuModel;
 
 class HomeController
 {
@@ -153,18 +154,10 @@ class HomeController
 		if ($request->getMethod() === 'POST') {
 			$userId = $request->post('userId');
 	
-			$pdocrud = DB::PDOCrud();
-			$pdomodel = $pdocrud->getPDOModelObj();
-	
-			$columns = "usuario_menu.id_usuario, usuario.*, menu.*";
-
-			$query = "SELECT $columns 
-					FROM usuario_menu
-					INNER JOIN usuario ON usuario.id = usuario_menu.id_usuario
-					INNER JOIN menu ON menu.id_menu = usuario_menu.id_menu
-					WHERE usuario_menu.id_usuario = :userId";
-	
-			$data_usuario_menu = $pdomodel->executeQuery($query, [':userId' => $userId]);
+			$usuario_menu = new UsuarioMenuModel();
+			$data_usuario_menu = $usuario_menu->Obtener_menu_por_id_usuario($userId);
+			//print_r($data_usuario_menu);
+			//die();
 	
 			$html = '<ul class="list-none">';
 	
