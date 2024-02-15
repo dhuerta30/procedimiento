@@ -648,14 +648,6 @@
             });
         });
 
-        $(document).on("change", ".tipo_examen", function () {
-            let tipo_examen = $(this).val();
-            alert(tipo_examen);
-
-            // Llamar a la función para cargar el autocompletado
-            cargarAutocompletado(tipo_examen);
-        });
-
 
         $(document).on("click", ".limpiar", function(){
             $('.limpiar').addClass('d-none');
@@ -671,6 +663,16 @@
             $('.paciente').trigger('chosen:updated');
         });
 
+
+        $(document).on("change", ".tipo_examen", function () {
+            let tipo_examen = $(this).val();
+            alert(tipo_examen);
+
+            // Llamar a la función para cargar el autocompletado
+            cargarAutocompletado(tipo_examen);
+        });
+
+        
         $(".examen").on("keydown", function (e) {
             if (e.keyCode == 8 || e.keyCode == 46) {
                $('.codigo_fonasa').val("");
