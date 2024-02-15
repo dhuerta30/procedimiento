@@ -60,12 +60,24 @@ class DB {
 		return $pdocrud->sendEmail($to, $subject, $message, $from, $altMessage, $cc, $bcc, $attachments, $mode, $smtp, $isHTML);
 	}
 
-	public static function Pagination($pdomodel, $pagina_actual, $registros_por_pagina, $tabla)
+	public static function Pagination($pagina_actual, $registerPage, $tabla)
 	{
+		$pdomodel = DB::PDOModel();
+		$registros_por_pagina = $registerPage;
+		$pagina_actual = isset($params[1]) ? $params[1] : null;
+
 		$totalRegistros = $pdomodel->executeQuery("SELECT COUNT(*) as total FROM $tabla");
 		$pagination = $pdomodel->pagination($pagina_actual, $totalRegistros[0]["total"], $registros_por_pagina, 1, false);
+
+		echo $pagination;
+
 		$urlPrev = ($pagina_actual > 1) ? ($pagina_actual - 1) : null;
     	$urlNext = ($pagina_actual < ceil($totalRegistros[0]["total"] / $registros_por_pagina)) ? ($pagina_actual + 1) : null;
-		echo $pagination;
+		
+		$inicio = ($pagina_actual - 1) * $registros_por_pagina;
+		$query = "SELECT * FROM $tabla LIMIT $inicio, $registros_por_pagina";
+		$resultados = $pdomodel->executeQuery($query);
+
+		return $resultados;
 	}
 }

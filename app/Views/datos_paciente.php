@@ -559,10 +559,10 @@
                                     <td>${dato.codigo_fonasa}</td>
                                     <td>${dato.tipo_solicitud}</td>
                                     <td>${dato.tipo_examen}</td>
-                                    <td>${dato.observacion}</td>
-                                    <td>${dato.contraste}</td>
-                                    <td>${dato.plano}</td>
-                                    <td>${dato.extremidad}</td>
+                                    <td>${dato.examen}</td>
+                                    <td>${(dato.contraste != "") ? dato.contraste : '<div class="badge badge-danger">Sin Contraste</div>'}</td>
+                                    <td>${(dato.plano != "") ? dato.plano : '<div class="badge badge-danger">Sin Plano</div>'}</td>
+                                    <td>${(dato.extremidad) ? dato.extremidad : '<div class="badge badge-danger">Sin Extremidad</div>'}</td>
                                     <td>
                                         <a class="btn-danger btn-sm eliminar_dato" href="javascript:;" title="Eliminar" data-id="${index}"><i class="fa fa-times fa-fw"></i></a>
                                     </td>

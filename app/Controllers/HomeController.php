@@ -33,15 +33,11 @@ class HomeController
 		$fecha_registro = date('d-m-Y H:i');
 
 		$pdocrud = DB::PDOCrud();
+
 		/*$pagina_actual = isset($params[1]) ? $params[1] : null;
-		$pdomodel = $pdocrud->getPDOModelObj();
 		$registros_por_pagina = 5;
-		$inicio = ($pagina_actual - 1) * $registros_por_pagina;
-		$query = "SELECT * FROM menu LIMIT $inicio, $registros_por_pagina";
-		$resultados = $pdomodel->executeQuery($query);
-		print_r($resultados);
 		
-		DB::Pagination($pdomodel, $pagina_actual, $registros_por_pagina, "menu", );*/
+		DB::Pagination($pagina_actual, $registros_por_pagina, "menu");*/
 
 		$pdocrud->setSettings("required", false);
 		$pdocrud->addCallback("before_insert", "insertar_procedimientos");
@@ -1422,7 +1418,7 @@ class HomeController
 		$detalle_solicitud->formDisplayInPopup();
 		$detalle_solicitud->where("id_datos_paciente", "null");
 		$detalle_solicitud->enqueueBtnTopActions("Report",  "<i class='fas fa-plus-circle'></i> Agregar Procedimiento", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud");
-		$detalle_solicitud->crudTableCol(array("codigo_fonasa","tipo_solicitud","tipo_examen","observacion", "contraste", "plano","extremidad"));
+		$detalle_solicitud->crudTableCol(array("codigo_fonasa","tipo_solicitud","tipo_examen","examen", "contraste", "plano","extremidad"));
 		$detalle_solicitud->setLangData("add", "");
 		$detalle_solicitud->setLangData("actions", "Eliminar");
 		$detalle_solicitud->setLangData("save_and_back", "Guardar");
@@ -1449,6 +1445,7 @@ class HomeController
 		$detalle_solicitud->setSettings("viewbtn", false);
 		$detalle_solicitud->relatedData('id_datos_paciente','datos_paciente','id_datos_paciente', "CONCAT(nombres, ' ' ,apellido_paterno, ' ', apellido_materno)");
 		$detalle_solicitud->colRename("codigo_fonasa", "Código");
+		$detalle_solicitud->colRename("examen", "Exámen");
 		$detalle_solicitud->colRename("tipo_solicitud", "Tipo");
 		$detalle_solicitud->colRename("tipo_examen", "Nombre del Exámen");
 		$detalle_solicitud->colRename("observacion", "Observación");
@@ -2564,7 +2561,7 @@ class HomeController
 					$detalle_solicitud->formDisplayInPopup();
 					$detalle_solicitud->where("id_datos_paciente", "null");
 					$detalle_solicitud->enqueueBtnTopActions("Report",  "<i class='fas fa-plus-circle'></i> Agregar", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud");
-					$detalle_solicitud->crudTableCol(array("codigo_fonasa","tipo_solicitud","tipo_examen","observacion", "contraste", "plano","extremidad"));
+					$detalle_solicitud->crudTableCol(array("codigo_fonasa","tipo_solicitud","tipo_examen","examen", "contraste", "plano","extremidad"));
 					$detalle_solicitud->setLangData("add", "");
 					$detalle_solicitud->setLangData("actions", "Eliminar");
 					$detalle_solicitud->setLangData("save_and_back", "Guardar");
@@ -2589,6 +2586,7 @@ class HomeController
 					$detalle_solicitud->setSettings("viewbtn", false);
 					$detalle_solicitud->relatedData('id_datos_paciente','datos_paciente','id_datos_paciente', "CONCAT(nombres, ' ' ,apellido_paterno, ' ', apellido_materno)");
 					$detalle_solicitud->colRename("codigo_fonasa", "Código");
+					$detalle_solicitud->colRename("examen", "Exámen");
 					$detalle_solicitud->colRename("tipo_solicitud", "Tipo");
 					$detalle_solicitud->colRename("tipo_examen", "Nombre del Exámen");
 					$detalle_solicitud->colRename("observacion", "Observación");
