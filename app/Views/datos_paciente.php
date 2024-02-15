@@ -576,6 +576,7 @@
                         $('.tipo_solicitud').val("");
 
                         $('.tipo_examen').val("");
+                        $('.tipo_examen').html("<option value>Seleccionar</option>");
                         $('.tipo_examen').chosen('destroy');
                         $('.tipo_examen').chosen();
 
