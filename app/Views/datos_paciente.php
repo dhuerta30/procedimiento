@@ -648,6 +648,15 @@
             });
         });
 
+        $(document).on("change", ".tipo_examen", function () {
+            let tipo_examen = $(this).val();
+            alert(tipo_examen);
+
+            // Llamar a la función para cargar el autocompletado
+            cargarAutocompletado(tipo_examen);
+        });
+
+
         $(document).on("click", ".limpiar", function(){
             $('.limpiar').addClass('d-none');
             $(".rut").val("");
@@ -668,51 +677,54 @@
             }
         });
 
-        $(".examen").autocomplete({
-            minLength: 1,
-            delay: 0,
-            autoFocus: true,
-            source: function(request, response) {
-                $.ajax({
-                    url: "<?=$_ENV["BASE_URL"]?>home/buscar_examenes_prestacion",
-                    type: 'POST',
-                    dataType: 'json',
-                    data: { query: request.term },
-                    success: function(data) {
-                        response(data['glosa']);
-                    }
-                });
-            },
-            open: function (event, ui) {
-                var term = $(".examen").val();
-                var matcher = new RegExp("(" + $.ui.autocomplete.escapeRegex(term) + ")", "ig");
-                $(".ui-autocomplete").find("li").each(function () {
-                    var text = $(this).text();
-                    $(this).html(text.replace(matcher, "<span style='color:black; font-weight: bold;'>$1</span>"));
-                });
-            },
-            select: function (event, ui){
-                let val = ui['item']['value'];
-                
-                $.ajax({
-                    type: "POST",
-                    url: "<?=$_ENV["BASE_URL"]?>home/buscar_examenes_prestacion",
-                    dataType: "json",
-                    data: {
-                        query: val
-                    },
-                    beforeSend: function() {
-                        $("#pdocrud-ajax-loader").show();
-                    },
-                    success: function(data){
-                        if(data['codigo_fonasa']){
-                            $("#pdocrud-ajax-loader").hide();
-                            $('.codigo_fonasa').val(data['codigo_fonasa']);
+        function cargarAutocompletado(tipo_examen) {
+            $(".examen").autocomplete({
+                minLength: 1,
+                delay: 0,
+                autoFocus: true,
+                source: function (request, response) {
+                    $.ajax({
+                        url: "<?=$_ENV["BASE_URL"]?>home/buscar_examenes_prestacion",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: { query: request.term, tipo_examen: tipo_examen }, // Enviar el tipo_examen
+                        success: function (data) {
+                            response(data['glosa']);
                         }
-                    }
-                });
-            }
-        });
+                    });
+                },
+                open: function (event, ui) {
+                    var term = $(".examen").val();
+                    var matcher = new RegExp("(" + $.ui.autocomplete.escapeRegex(term) + ")", "ig");
+                    $(".ui-autocomplete").find("li").each(function () {
+                        var text = $(this).text();
+                        $(this).html(text.replace(matcher, "<span style='color:black; font-weight: bold;'>$1</span>"));
+                    });
+                },
+                select: function (event, ui) {
+                    let val = ui['item']['value'];
+
+                    $.ajax({
+                        type: "POST",
+                        url: "<?=$_ENV["BASE_URL"]?>home/buscar_examenes_prestacion",
+                        dataType: "json",
+                        data: {
+                            query: val,
+                            tipo_examen: tipo_examen // Enviar el tipo_examen
+                        },
+                        beforeSend: function () {
+                            $("#pdocrud-ajax-loader").show();
+                        },
+                        success: function (data) {
+                            if (data['codigo_fonasa']) {
+                                $("#pdocrud-ajax-loader").hide();
+                                $('.codigo_fonasa').val(data['codigo_fonasa']);
+                            }
+                        }
+                    });
+                }
+            });
+        }
 
         $(".diagnostico").autocomplete({
             minLength: 3,

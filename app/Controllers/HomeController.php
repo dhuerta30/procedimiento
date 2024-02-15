@@ -2042,33 +2042,35 @@ class HomeController
 	}
 
 	public function buscar_examenes_prestacion(){
-        
 		$request = new Request();
-
-    	if ($request->getMethod() === 'POST') {
+	
+		if ($request->getMethod() === 'POST') {
 			$query = $request->post('query');
-
+			$tipo_examen = $request->post('tipo_examen'); // Nuevo parámetro
+	
 			$pdocrud = DB::PDOCrud();
 			$pdomodel = $pdocrud->getPDOModelObj();
-			$pdomodel->where("glosa", "%$query%", "LIKE");
+			$pdomodel->where("glosa", "%$query%", "LIKE", "AND");
+			$pdomodel->where("glosa", "%$tipo_examen%", "LIKE");
 			$result = $pdomodel->select("prestaciones");
-
+	
 			$glosas = [];
-            $codigosFonasa = [];
-
-            foreach ($result as $row) {
-                $glosas[] = $row['glosa'];
-                $codigosFonasa[] = $row['codigo_fonasa'];
-            }
-
-            $response = [
-                'glosa' => $glosas,
-                'codigo_fonasa' => $codigosFonasa
-            ];
-
-        	echo json_encode($response, JSON_UNESCAPED_UNICODE);
+			$codigosFonasa = [];
+	
+			foreach ($result as $row) {
+				$glosas[] = $row['glosa'];
+				$codigosFonasa[] = $row['codigo_fonasa'];
+			}
+	
+			$response = [
+				'glosa' => $glosas,
+				'codigo_fonasa' => $codigosFonasa
+			];
+	
+			echo json_encode($response, JSON_UNESCAPED_UNICODE);
 		}
 	}
+	
 
 	public function buscar_codigos_crud_daga(){
 		
