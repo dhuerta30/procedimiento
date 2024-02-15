@@ -2694,12 +2694,12 @@ class HomeController
 			$creatinina = $request->post('creatinina') ?? null; 
 
 			// Validar que los campos no estén vacíos
-			$requiredFields = ['tipo_solicitud', 'tipo_examen', 'examen', 'observacion'];
+			$requiredFields = ['tipo_solicitud' => 'Tipo de Solicitud', 'tipo_examen' => 'Tipo Exámen', 'examen' => 'Exámen', 'observacion' => 'Observación'];
 
-			foreach ($requiredFields as $field) {
-				if (empty($$field)) {
-					$mystring = str_replace('_', ' ', $field);
-					echo json_encode(['error' => "El campo $mystring es obligatorio"]);
+			foreach ($requiredFields as $fieldName => $fieldLabel) {
+				if (empty($$fieldName)) {
+					$campo = str_replace('_', ' ', $fieldLabel);
+					echo json_encode(['error' => "El campo $campo es obligatorio"]);
         			return;
 				}
 			}
