@@ -118,7 +118,7 @@ class ApiController
                 if ($data && !empty($token) && $this->validarToken($token)) {
                     echo json_encode(['data' => $data]);
                 } else {
-                    echo json_encode(['error' => 'Token inválido o no tiene permisos para acceder a esta Api']);
+                    echo json_encode(['error' => 'Token inválido no tiene permisos para acceder a esta Api']);
                 }
             }
         }
