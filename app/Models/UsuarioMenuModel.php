@@ -17,11 +17,10 @@ class UsuarioMenuModel
 
     public function Obtener_menu_por_id_usuario($id)
     {
-       
         $pdomodel = DB::PDOModel();
 		$query = "SELECT *
 				FROM menu
-				INNER JOIN usuario_menu ON menu.id_menu = usuario_menu.id_menu
+				INNER JOIN ".$this->table." ON menu.id_menu = usuario_menu.id_menu
 				INNER JOIN usuario ON usuario_menu.id_usuario = usuario.id
 				WHERE usuario_menu.id_usuario = :userId ORDER BY orden_menu asc";
 

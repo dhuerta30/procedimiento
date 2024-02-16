@@ -185,7 +185,6 @@
                             $("#pdocrud-ajax-loader").hide();
                             $('.cargar_modal').html(data);
                             $('#menus').modal('show');
-                            //console.log(data);
                         }
                     });
                 });
