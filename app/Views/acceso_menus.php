@@ -112,11 +112,12 @@
                         };
                     });
 
+
                     var selectedMenus = Object.values(checkboxValues).filter(function (checkbox) {
                         return checkbox.checked;
                     });
 
-                    if (checkboxValues.length !== 0) {
+                    if (selectedMenus.length > 0) {
                         //Envía datos al servidor usando Ajax
                         $.ajax({
                             url: "<?=$_ENV["BASE_URL"]?>home/asignar_menus_usuario",
@@ -124,7 +125,7 @@
                             dataType: "json",
                             data: {
                                 userId: userId,
-                                selectedMenus: selectedMenus
+                                selectedMenus: checkboxValues
                             },
                             beforeSend: function() {
                                 $("#pdocrud-ajax-loader").show();

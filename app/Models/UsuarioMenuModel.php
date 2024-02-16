@@ -23,7 +23,7 @@ class UsuarioMenuModel
 				FROM menu
 				INNER JOIN usuario_menu ON menu.id_menu = usuario_menu.id_menu
 				INNER JOIN usuario ON usuario_menu.id_usuario = usuario.id
-				WHERE usuario_menu.id_usuario = :userId";
+				WHERE usuario_menu.id_usuario = :userId ORDER BY orden_menu asc";
 
 		$data = $pdomodel->executeQuery($query, [':userId' => $id]);
 		return $data;

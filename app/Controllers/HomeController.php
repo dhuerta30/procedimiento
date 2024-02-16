@@ -205,7 +205,6 @@ class HomeController
 	}
 	
 
-
 	public function asignar_menus_usuario()
 	{
 		$request = new Request();
@@ -219,17 +218,25 @@ class HomeController
 				$pdomodel = $pdocrud->getPDOModelObj();
 
 				$menuAsignado = false;
+				$menuDesmarcado = false;
 
 				foreach ($selectedMenus as $menu) {
 					$menuId = $menu["menuId"];
 					$checked = $menu["checked"];
 
-					// Verificar si no existe, insertar una nueva entrada
+					// Verificar si ya existe la asignación
 					$exist = $pdomodel->where('id_menu', $menuId)
 						->where('id_usuario', $userId)
 						->select('usuario_menu');
 
-					if (empty($exist) && $checked) {
+					if ($checked === "false") {
+						// Eliminar menú
+						$pdomodel->where('id_usuario', $userId)
+							->where('id_menu', $menuId)
+							->delete('usuario_menu');
+						$menuDesmarcado = true;
+					} elseif (empty($exist)) {
+						// Insertar nueva asignación
 						$usuarioMenuSql = array(
 							'id_usuario' => $userId,
 							'id_menu' => $menuId
@@ -240,16 +247,27 @@ class HomeController
 					}
 				}
 
+				$response = [];
+
 				if ($menuAsignado) {
-					echo json_encode(['success' => 'Menús asignados correctamente']);
-				} else {
-					echo json_encode(['error' => 'Todos los menús ya fueron asignados previamente']);
+					$response['success'][] = 'Menús asignados correctamente';
 				}
+
+				if ($menuDesmarcado) {
+					$response['success'][] = 'Menús Actualizados correctamente';
+				}
+
+				if (!$menuAsignado && !$menuDesmarcado) {
+					$response['error'][] = 'Todos los menús ya fueron asignados previamente';
+				}
+
+				echo json_encode($response);
 			} else {
 				echo json_encode(['error' => 'Debe seleccionar al menos 1 menú de la lista para continuar']);
 			}
 		}
 	}
+
 
 
 	public function acceso_menus(){
