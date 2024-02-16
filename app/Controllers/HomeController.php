@@ -275,7 +275,6 @@ class HomeController
 	}
 
 
-
 	public function acceso_menus(){
 		$pdocrud = DB::PDOCrud();
 		$pdocrud->colRename("idrol", "Rol");
