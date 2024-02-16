@@ -13,6 +13,7 @@ use Coderatio\SimpleBackup\SimpleBackup;
 use App\Models\DatosPacienteModel;
 use App\Models\PageModel;
 use App\Models\UsuarioMenuModel;
+use App\Models\UserModel;
 
 class HomeController
 {
@@ -156,11 +157,13 @@ class HomeController
 	
 			$usuario_menu = new UsuarioMenuModel();
 			$data_usuario_menu = $usuario_menu->Obtener_menu_por_id_usuario($userId);
-			//print_r($data_usuario_menu);
-			//die();
+
+			$usuario = new UserModel();
+			$data_user = $usuario->obtener_usuario_porId($userId);
 	
 			$html = '<ul class="list-none">';
-	
+			$html .= '<span>Menus Asignados a '.$data_user[0]["nombre"].'</span><br><br>';
+
 			foreach ($data_usuario_menu as $item) {
 
 				$html .= '<li>';
@@ -173,13 +176,11 @@ class HomeController
 
 					$submenus = HomeController::submenuDB($item['id_menu']);
 					foreach ($submenus as $submenu) {
-						if ($submenu["visibilidad_submenu"] != "Ocultar") {
-							$isCheckedSubmenu = ($submenu['id_submenu'] ? 'checked' : ''); // Verificar si el submenu está asignado al usuario
-							$html .= '<li>';
-							$html .= '<input type="checkbox" ' . $isCheckedSubmenu . ' id="' . $submenu['id_submenu'] . '" class="submenu-checkbox mr-2">';
-							$html .= '<span><i class="' . $submenu['icono_submenu'] . '"></i> ' . $submenu['nombre_submenu'] . '</span>';
-							$html .= '</li>';
-						}
+						$isCheckedSubmenu = ($submenu['id_submenu'] ? 'checked' : ''); // Verificar si el submenu está asignado al usuario
+						$html .= '<li>';
+						$html .= '<input type="checkbox" ' . $isCheckedSubmenu . ' id="' . $submenu['id_submenu'] . '" class="submenu-checkbox mr-2">';
+						$html .= '<span><i class="' . $submenu['icono_submenu'] . '"></i> ' . $submenu['nombre_submenu'] . '</span>';
+						$html .= '</li>';
 					}
 
 					$html .= '</ul>';
