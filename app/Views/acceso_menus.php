@@ -106,7 +106,7 @@
                     var checkboxValues = {};
 
                     // Iterar sobre las casillas marcadas y recopilar datos
-                    $('.menu-checkbox, .submenu-checkbox').each(function () {
+                    $('.menu-checkbox, .submenu-checkbox, .menu-checkbox-pr, .submenu-checkbox-pr').each(function () {
                         var checkboxId = $(this).attr('id');
                         var isChecked = $(this).prop('checked');
 
