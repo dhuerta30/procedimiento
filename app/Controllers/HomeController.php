@@ -263,7 +263,7 @@ class HomeController
 					$response['success'][] = 'Menús Actualizados correctamente';
 				}
 
-				if (!$menuAsignado && !$menuDesmarcado) {
+				if (!$menuDesmarcado) {
 					$response['error'][] = 'Todos los menús ya fueron asignados previamente';
 				}
 

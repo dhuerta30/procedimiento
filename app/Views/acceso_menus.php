@@ -92,21 +92,13 @@
                 $(document).on('change', '.select-all', function () {
                     $('.menu-checkbox-pr, .submenu-checkbox-pr').prop('checked', $(this).prop('checked'));
                 });
-
-                $('.menu-checkbox, .submenu-checkbox').change(function () {
-                    if ($('.menu-checkbox:checked, .submenu-checkbox:checked').length === $('.menu-checkbox, .submenu-checkbox').length) {
-                        $('.pdocrud-select-all').prop('checked', true);
-                    } else {
-                        $('.pdocrud-select-all').prop('checked', false);
-                    }
-                });
-
+            
                 $(document).on('click', '.asignar_menu_usuario', function () {
                     var userId = $(this).data('id');
                     var checkboxValues = {};
 
                     // Iterar sobre las casillas marcadas y recopilar datos
-                    $('.menu-checkbox, .submenu-checkbox, .menu-checkbox-pr, .submenu-checkbox-pr').each(function () {
+                    $('.menu-checkbox, .menu-checkbox-pr, .submenu-checkbox, .submenu-checkbox-pr').each(function () {
                         var checkboxId = $(this).attr('id');
                         var isChecked = $(this).prop('checked');
 
@@ -115,7 +107,6 @@
                             menuId: checkboxId
                         };
                     });
-
 
                     var selectedMenus = Object.values(checkboxValues).filter(function (checkbox) {
                         return checkbox.checked;
@@ -189,6 +180,9 @@
                     });
                 });
 
+                $(document).on('hidden.bs.modal', '#menus', function () {
+                    $('.cargar_modal').empty();
+                });
                 
 
             });
