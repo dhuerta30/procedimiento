@@ -163,7 +163,7 @@ class HomeController
 	
 			$html = '<ul class="list-none">
 				<li>
-					<input type="checkbox" value="select-all" name="pdocrud_select_all" class="pdocrud-select-all">
+					<input type="checkbox" value="select-all" name="select_all" class="select-all">
 					<span>Marcar Todos / Desmarcar Todos</span>
 				</li>
 			</ul>';
@@ -176,7 +176,7 @@ class HomeController
 				
 				if ($item["submenu"] == "Si") {
 					$isChecked = ($item['id_usuario'] ? 'checked' : ''); // Verificar si el menú está asignado al usuario
-					$html .= '<input type="checkbox" ' . $isChecked . ' id="' . $item['id_menu'] . '" class="menu-checkbox mr-2">';
+					$html .= '<input type="checkbox" ' . $isChecked . ' id="' . $item['id_menu'] . '" class="menu-checkbox-pr mr-2">';
 					$html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span>';
 					$html .= '<ul class="list-none">';
 
@@ -184,7 +184,7 @@ class HomeController
 					foreach ($submenus as $submenu) {
 						$isCheckedSubmenu = ($submenu['id_submenu'] ? 'checked' : ''); // Verificar si el submenu está asignado al usuario
 						$html .= '<li>';
-						$html .= '<input type="checkbox" ' . $isCheckedSubmenu . ' id="' . $submenu['id_submenu'] . '" class="submenu-checkbox mr-2">';
+						$html .= '<input type="checkbox" ' . $isCheckedSubmenu . ' id="' . $submenu['id_submenu'] . '" class="submenu-checkbox-pr mr-2">';
 						$html .= '<span><i class="' . $submenu['icono_submenu'] . '"></i> ' . $submenu['nombre_submenu'] . '</span>';
 						$html .= '</li>';
 					}
@@ -192,7 +192,7 @@ class HomeController
 					$html .= '</ul>';
 				} else {
 					$isChecked = ($item['id_usuario'] ? 'checked' : ''); // Verificar si el menú está asignado al usuario
-					$html .= '<input type="checkbox" ' . $isChecked . ' id="' . $item['id_menu'] . '" class="menu-checkbox mr-2">';
+					$html .= '<input type="checkbox" ' . $isChecked . ' id="' . $item['id_menu'] . '" class="menu-checkbox-pr mr-2">';
 					$html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span>';
 				}
 	

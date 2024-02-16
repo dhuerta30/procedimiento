@@ -89,6 +89,10 @@
                     $('.menu-checkbox, .submenu-checkbox').prop('checked', $(this).prop('checked'));
                 });
 
+                $(document).on('change', '.select-all', function () {
+                    $('.menu-checkbox-pr, .submenu-checkbox-pr').prop('checked', $(this).prop('checked'));
+                });
+
                 $('.menu-checkbox, .submenu-checkbox').change(function () {
                     if ($('.menu-checkbox:checked, .submenu-checkbox:checked').length === $('.menu-checkbox, .submenu-checkbox').length) {
                         $('.pdocrud-select-all').prop('checked', true);
@@ -133,8 +137,9 @@
                             success: function (response) {
                                 $("#pdocrud-ajax-loader").hide();
                                 if(response['success']){
-                                    $('.pdocrud-select-all').removeAttr('checked', false);
-                                    $('.menu-checkbox').removeAttr('checked', false);
+                                    $('.pdocrud-select-all').prop('checked', false);
+                                    $('.menu-checkbox').prop('checked', false);
+                                    $('.submenu-checkbox').prop('checked', false);
                                     $('#menus').modal('hide');
                                     Swal.fire({
                                         title: "Genial!",
