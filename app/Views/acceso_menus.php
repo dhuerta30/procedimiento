@@ -99,18 +99,24 @@
 
                 $(document).on('click', '.asignar_menu_usuario', function () {
                     var userId = $(this).data('id');
-                    var selectedMenus = [];
+                    var checkboxValues = {};
 
                     // Iterar sobre las casillas marcadas y recopilar datos
-                    $('.menu-checkbox:checked, .submenu-checkbox:checked').each(function () {
+                    $('.menu-checkbox, .submenu-checkbox').each(function () {
                         var checkboxId = $(this).attr('id');
-                        var menuId = checkboxId.replace('menu', '');
-                        selectedMenus.push({
-                            menuId: menuId
-                        });
+                        var isChecked = $(this).prop('checked');
+
+                        checkboxValues[checkboxId] = {
+                            checked: isChecked,
+                            menuId: checkboxId
+                        };
                     });
 
-                    if (selectedMenus.length !== 0) {
+                    var selectedMenus = Object.values(checkboxValues).filter(function (checkbox) {
+                        return checkbox.checked;
+                    });
+
+                    if (checkboxValues.length !== 0) {
                         //Envía datos al servidor usando Ajax
                         $.ajax({
                             url: "<?=$_ENV["BASE_URL"]?>home/asignar_menus_usuario",

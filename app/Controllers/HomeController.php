@@ -162,7 +162,7 @@ class HomeController
 			$data_user = $usuario->obtener_usuario_porId($userId);
 	
 			$html = '<ul class="list-none">';
-			$html .= '<span>Menus Asignados a '.$data_user[0]["nombre"].'</span><br><br>';
+			$html .= '<span>Menus Asignados a '.$data_user[0]["nombre"].'</span>';
 
 			foreach ($data_usuario_menu as $item) {
 
@@ -214,39 +214,43 @@ class HomeController
 			$userId = $request->post("userId");
 			$selectedMenus = $request->post("selectedMenus");
 
-			$pdocrud = DB::PDOCrud();
-			$pdomodel = $pdocrud->getPDOModelObj();
+			if (is_array($selectedMenus)) {
+				$pdocrud = DB::PDOCrud();
+				$pdomodel = $pdocrud->getPDOModelObj();
 
-			try {
-				// Eliminar todos los menús asignados previamente al usuario
-				$pdomodel->where('id_usuario', $userId)->delete('usuario_menu');
+				$menuAsignado = false;
 
 				foreach ($selectedMenus as $menu) {
 					$menuId = $menu["menuId"];
+					$checked = $menu["checked"];
 
-					// Verificar si ya existe el menú asignado al usuario
-					$existingMenu = $pdomodel->where('id_usuario', $userId)
-											->where('id_menu', $menuId)
-											->select('usuario_menu');
+					// Verificar si no existe, insertar una nueva entrada
+					$exist = $pdomodel->where('id_menu', $menuId)
+						->where('id_usuario', $userId)
+						->select('usuario_menu');
 
-					if (!$existingMenu) {
+					if (empty($exist) && $checked) {
 						$usuarioMenuSql = array(
 							'id_usuario' => $userId,
 							'id_menu' => $menuId
 						);
 
 						$pdomodel->insert('usuario_menu', $usuarioMenuSql);
+						$menuAsignado = true;
 					}
 				}
 
-				echo json_encode(['success' => 'Menús asignados correctamente']);
-			} catch (Exception $e) {
-				echo json_encode(['error' => 'Error al asignar los menús al usuario']);
+				if ($menuAsignado) {
+					echo json_encode(['success' => 'Menús asignados correctamente']);
+				} else {
+					echo json_encode(['error' => 'Todos los menús ya fueron asignados previamente']);
+				}
+			} else {
+				echo json_encode(['error' => 'Debe seleccionar al menos 1 menú de la lista para continuar']);
 			}
-		} else {
-			echo json_encode(['error' => 'Error al procesar la solicitud']);
 		}
 	}
+
 
 	public function acceso_menus(){
 		$pdocrud = DB::PDOCrud();
