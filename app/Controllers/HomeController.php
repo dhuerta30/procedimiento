@@ -162,7 +162,7 @@ class HomeController
 			$data_user = $usuario->obtener_usuario_porId($userId);
 	
 			$html = '<ul class="list-none">';
-			$html .= '<span>Menus Asignados a '.$data_user[0]["nombre"].'</span>';
+			$html .= '<span>Menus Asignados a '.$data_user[0]["nombre"].'</span><br><br>';
 
 			foreach ($data_usuario_menu as $item) {
 
