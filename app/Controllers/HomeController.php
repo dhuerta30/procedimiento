@@ -161,7 +161,13 @@ class HomeController
 			$usuario = new UserModel();
 			$data_user = $usuario->obtener_usuario_porId($userId);
 	
-			$html = '<ul class="list-none">';
+			$html = '<ul class="list-none">
+				<li>
+					<input type="checkbox" value="select-all" name="pdocrud_select_all" class="pdocrud-select-all">
+					<span>Marcar Todos / Desmarcar Todos</span>
+				</li>
+			</ul>';
+			$html .= '<ul class="list-none">';
 			$html .= '<span>Menus Asignados a '.$data_user[0]["nombre"].'</span><br><br>';
 
 			foreach ($data_usuario_menu as $item) {
