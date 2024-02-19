@@ -60,24 +60,23 @@ class DB {
 		return $pdocrud->sendEmail($to, $subject, $message, $from, $altMessage, $cc, $bcc, $attachments, $mode, $smtp, $isHTML);
 	}
 
-	public static function Pagination($pagina_actual, $registerPage, $tabla)
-	{
-		$pdomodel = DB::PDOModel();
-		$registros_por_pagina = $registerPage;
-		$pagina_actual = isset($params[1]) ? $params[1] : null;
+	public static function performPagination($registros_por_pagina, $pagina_actual, $tabla)
+    {
+        $pdomodel = DB::PDOModel();
+        $maxQueryResult = $pdomodel->executeQuery("SELECT id_client as max FROM $tabla WHERE id_client > :id_actual ORDER BY id_client ASC LIMIT 1", [':id_actual' => $pagina_actual]);
+        $minQueryResult = $pdomodel->executeQuery("SELECT id_client as min FROM $tabla WHERE id_client < :id_actual ORDER BY id_client DESC LIMIT 1", [':id_actual' => $pagina_actual]);
 
-		$totalRegistros = $pdomodel->executeQuery("SELECT COUNT(*) as total FROM $tabla");
-		$pagination = $pdomodel->pagination($pagina_actual, $totalRegistros[0]["total"], $registros_por_pagina, 1, false);
+        $urlNext = (isset($maxQueryResult[0]["max"]) ? $maxQueryResult[0]["max"] : null);
+        $urlPrev = (!empty($minQueryResult) ? $minQueryResult[0]["min"] : null);
 
-		echo $pagination;
-
-		$urlPrev = ($pagina_actual > 1) ? ($pagina_actual - 1) : null;
-    	$urlNext = ($pagina_actual < ceil($totalRegistros[0]["total"] / $registros_por_pagina)) ? ($pagina_actual + 1) : null;
-		
-		$inicio = ($pagina_actual - 1) * $registros_por_pagina;
-		$query = "SELECT * FROM $tabla LIMIT $inicio, $registros_por_pagina";
-		$resultados = $pdomodel->executeQuery($query);
-
-		return $resultados;
-	}
+        $totalRegistros = $pdomodel->executeQuery("SELECT COUNT(*) as total FROM $tabla");
+        $pagination = $pdomodel->simplepagination($pagina_actual, $totalRegistros[0]["total"], $registros_por_pagina, 'index.php', $urlPrev, $urlNext);
+    
+        $output = $pagination;
+    
+        $inicio = ($pagina_actual - 1) * $registros_por_pagina;
+        $query = "SELECT * FROM $tabla LIMIT $inicio, $registros_por_pagina";
+        $resultados = $pdomodel->executeQuery($query);
+        return ['output' => $output, 'resultados' => $resultados];
+    }
 }

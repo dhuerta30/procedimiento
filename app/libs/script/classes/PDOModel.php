@@ -1796,33 +1796,35 @@ class PDOModel
         return $pagination;
     }
 
-    public function simplePagination($page = 1, $totalrecords = null, $limit = 10, $base_url = "")
+    public function simplepagination($page = 1, $totalrecords = null, $limit = 10, $base_url = "", $prevId, $nextId)
     {
         $pagination = "";
-
+        
         if ($totalrecords > 0) {
             if (!$limit) $limit = 15;
             if (!$page) $page = 1;
-
-            $prev = $page - 1;
-            $next = $page + 1;
+    
             $lastpage = ceil($totalrecords / $limit);
-
+    
             if ($lastpage > 1) {
                 $pagination .= "<nav aria-label=\"Page navigation\"><ul class=\"pagination\">";
-
-                //previous button
+                
+                
                 if ($page > 1)
-                    $pagination .= "<li><a class='pdomodel-page' href=\"$base_url" . $prev . "\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></a></li>";
-
-                //next button
+                    $pagination .= "<li class=\"page-item\"><a class='page-link text-dark' href=\"$base_url?user=" . $prevId . "\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></a></li>";
+                else
+                    $pagination .= "<li class=\"disabled\"><span class='page-link text-dark' aria-hidden=\"true\">&laquo;</span></li>";
+    
+                
                 if ($page < $lastpage)
-                    $pagination .= "<li><a class='pdomodel-page' href=\"$base_url?page=" . $next . "\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span></a></li>";
-
+                    $pagination .= "<li><a class='page-link text-dark' href=\"$base_url?user=" . $nextId . "\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span></a></li>";
+                else
+                    $pagination .= "<li class=\"disabled\"><span class='page-link text-dark' aria-hidden=\"true\">&raquo;</span></li>";
+    
                 $pagination .= "</ul></nav>";
             }
         }
-
+    
         return $pagination;
     }
 }
