@@ -2528,7 +2528,7 @@ class HomeController
 				}
 
 				$pdomodel->where("rut", $rut, "=", "AND");
-				$pdomodel->where("nombres", $nombre, "=", "AND");
+				$pdomodel->where("nombres", $nombres, "=", "AND");
 				$pdomodel->where("apellido_paterno", $apellido_paterno, "=", "AND");
 				$pdomodel->where("apellido_materno", $apellido_materno, "=", "AND");
 				$pdomodel->where("fecha_nacimiento", $fecha_nacimiento, "=", "AND");
@@ -2572,7 +2572,7 @@ class HomeController
 					$sql = array();
 					foreach ($_SESSION['detalle_de_solicitud'] as $sesionVal) {
 
-						$idpaciente = $sesionVal["id_datos_paciente"];
+						$idpaciente = (isset($sesionVal["id_datos_paciente"])) ? $sesionVal["id_datos_paciente"] : $id;
 
 						$sql['id_datos_paciente'] = $idpaciente;
 						$sql['codigo_fonasa'] = $sesionVal['codigo_fonasa'];
@@ -2589,109 +2589,7 @@ class HomeController
 					 unset($_SESSION['detalle_de_solicitud']);
 
 					$detalle_solicitud = DB::PDOCrud(true);
-					$detalle_solicitud->formDisplayInPopup();
 					$detalle_solicitud->where("id_datos_paciente", "null");
-					$detalle_solicitud->enqueueBtnTopActions("Report",  "<i class='fas fa-plus-circle'></i> Agregar", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud");
-					$detalle_solicitud->crudTableCol(array("codigo_fonasa","tipo_solicitud","tipo_examen","examen", "contraste", "plano","extremidad"));
-					$detalle_solicitud->setLangData("add", "");
-					$detalle_solicitud->setLangData("actions", "Eliminar");
-					$detalle_solicitud->setLangData("save_and_back", "Guardar");
-					$detalle_solicitud->setLangData("back", "Salir");
-					$detalle_solicitud->fieldGroups("Name",array("tipo_solicitud","tipo_examen", "examen"));
-					$detalle_solicitud->fieldGroups("Name2",array("plano","extremidad"));
-					$detalle_solicitud->fieldGroups("Name3",array("observacion","contraste"));
-					$detalle_solicitud->setSettings("searchbox", false);
-					$detalle_solicitud->setSettings("recordsPerPageDropdown", false);
-					$detalle_solicitud->buttonHide("submitBtn");
-					$detalle_solicitud->setSearchCols(array("id_datos_paciente", "tipo_solicitud", "codigo_fonasa", "tipo_examen", "observacion", "contraste", "plano", "extremidad"));
-					$detalle_solicitud->fieldAttributes("observacion", array("placeholder"=>"Observación"));
-					$detalle_solicitud->setSettings("deleteMultipleBtn", false);
-					$detalle_solicitud->setSettings("checkboxCol", false);
-					$detalle_solicitud->setSettings("addbtn", false);
-					$detalle_solicitud->setSettings("printBtn", false);
-					$detalle_solicitud->setSettings("showAllSearch", false);
-					$detalle_solicitud->setSettings("pdfBtn", false);
-					$detalle_solicitud->setSettings("csvBtn", false);
-					$detalle_solicitud->setSettings("excelBtn", false);
-					$detalle_solicitud->setSettings("editbtn", false);
-					$detalle_solicitud->setSettings("viewbtn", false);
-					$detalle_solicitud->relatedData('id_datos_paciente','datos_paciente','id_datos_paciente', "CONCAT(nombres, ' ' ,apellido_paterno, ' ', apellido_materno)");
-					$detalle_solicitud->colRename("codigo_fonasa", "Código");
-					$detalle_solicitud->colRename("examen", "Exámen");
-					$detalle_solicitud->colRename("tipo_solicitud", "Tipo");
-					$detalle_solicitud->colRename("tipo_examen", "Nombre del Exámen");
-					$detalle_solicitud->colRename("observacion", "Observación");
-					$detalle_solicitud->addCallback("before_insert", "insertar_detalle_solicitud");
-					$detalle_solicitud->addCallback("before_delete", "eliminar_detalle_solicitud");
-					$detalle_solicitud->fieldTypes("contraste", "checkbox");
-					$detalle_solicitud->fieldDataBinding("contraste", array(
-						"Examen con contraste" => "Examen con contraste",
-						"Concentimiento informado completo" => "Concentimiento informado completo", 
-						"Premedicación" => "Premedicación", 
-						"Clearence de creatinina" => "Clearence de creatinina", 
-						"Protección renal" => "Protección renal"
-					), "", "","array");
-
-					$detalle_solicitud->fieldTypes("plano", "select");
-					$detalle_solicitud->fieldDataBinding("plano", array(
-						"Izquierda" => "Izquierda",
-						"Derecha" => "Derecha",
-						"Superior" => "Superior",
-						"Inferior" => "Inferior",
-						"Medio" => "Medio"
-					), "", "","array");
-
-					$detalle_solicitud->fieldTypes("tipo_examen", "select");
-					$detalle_solicitud->fieldDataBinding("tipo_examen", array(
-						"Radiografia" => "Radiografia",
-						"Scanner" => "Scanner",
-						"Ecografia" => "Ecografia",
-						"Resonancia magnética" => "Resonancia magnética",
-						"Procedimientos diagnisticos neurología" => "Procedimientos diagnisticos neurología",
-						"Procedimientos de oftalmología" => "Procedimientos de oftalmología",
-						"Procedimientos de Otorrinolaringología" => "Procedimientos de Otorrinolaringología",
-						"Procedimientos dermatología y tegumentos" => "Procedimientos dermatología y tegumentos",
-						"Proc. Diagnostico y terapeutico cardiología" => "Proc. Diagnostico y terapeutico cardiología",
-						"Procedimientos diagnosticos y terapeuticos del aparato respiratorio" => "Procedimientos diagnosticos y terapeuticos del aparato respiratorio",
-						"Procedimientos gastroenterologia" => "Procedimientos gastroenterologia",
-						"Procedimientos de urología y nefrología" => "Procedimientos de urología y nefrología",
-						"Procedimientos ginecologia y obstetricia" => "Procedimientos ginecologia y obstetricia",
-						"Procedimientos de traumatología" => "Procedimientos de traumatología",
-						"Exámenes imagenológicos odontológica" => "Exámenes imagenológicos odontológica"
-					), "", "","array");
-
-					$detalle_solicitud->fieldTypes("extremidad", "select");
-					$detalle_solicitud->fieldDataBinding("extremidad", array(
-						"Dedo" => "Dedo",
-						"Mano" => "Mano",
-						"Brazo" => "Brazo",
-						"Codo" => "Codo",
-						"Muñeca" => "Muñeca",
-						"Antebrazo" => "Antebrazo",
-						"Hombro" => "Hombro",
-						"Pie" => "Pie",
-						"Tobillo" => "Tobillo",
-						"Rodilla" => "Rodilla",
-						"Muslo" => "Muslo",
-						"Sacro iliaca" => "Sacro iliaca",
-						"Cadera" => "Cadera",
-						"Pierna" => "Pierna",
-						"Acromio clavicular" => "Acromio clavicular",
-						"Estemoclavicular" => "Estemoclavicular",
-						"Cubito" => "Cubito",
-						"Radio" => "Radio"
-					), "", "","array");
-
-					$detalle_solicitud->fieldTypes("tipo_solicitud", "select");
-					$detalle_solicitud->fieldDataBinding("tipo_solicitud", array(
-						"Imageneologica" => "Imageneologica",
-						"Procedimientos" => "Procedimientos"
-					), "", "","array");
-
-					$detalle_solicitud->fieldCssClass("tipo_examen", array("tipo_examen"));
-					$detalle_solicitud->fieldCssClass("plano", array("plano"));
-					$detalle_solicitud->fieldCssClass("extremidad", array("extremidad"));
-					$detalle_solicitud->fieldAttributes("observacion", array("style"=>"min-height: 150px"));
 					$render3 = $detalle_solicitud->dbTable("detalle_de_solicitud")->render();
 
 					echo json_encode(['success' => 'Datos Ingresados con éxito', 'render3' => $render3]);
