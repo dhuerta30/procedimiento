@@ -2586,7 +2586,7 @@ class HomeController
 						$sql['creatinina'] = $sesionVal['creatinina'];
 						$pdomodel->insertBatch("detalle_de_solicitud", array($sql));
 					}
-					 unset($_SESSION['detalle_de_solicitud']);
+					unset($_SESSION['detalle_de_solicitud']);
 
 					$detalle_solicitud = DB::PDOCrud(true);
 					$detalle_solicitud->where("id_datos_paciente", "null");
