@@ -35,12 +35,6 @@ class HomeController
 		$fecha_registro = date('d-m-Y H:i');
 
 		$pdocrud = DB::PDOCrud();
-
-		/*$pagina_actual = isset($params[1]) ? $params[1] : null;
-		$registros_por_pagina = 5;
-		
-		DB::Pagination($pagina_actual, $registros_por_pagina, "menu");*/
-
 		$pdocrud->setSettings("required", false);
 		$pdocrud->addCallback("before_insert", "insertar_procedimientos");
 		$pdocrud->addPlugin("bootstrap-inputmask");
@@ -1231,6 +1225,16 @@ class HomeController
 		$fecha_registro = date('Y-m-d H:i:s');
 
 		unset($_SESSION['detalle_de_solicitud']);
+
+		$pagina_actual = (isset($params[1])) ? $params[1] : 1;
+
+		/*$registros_por_pagina = 1;
+        $tabla = "prestaciones";
+		$id_prestaciones = "id_prestaciones";
+        $result = DB::performPagination($registros_por_pagina, $pagina_actual, $tabla, $id_prestaciones);
+    
+        $button_pagination = $result['output'];
+		echo $button_pagination;*/
 
 		$pdocrud = DB::PDOCrud();
 		$pdocrud->formFieldValue("estado", "Ingresado");
@@ -2892,7 +2896,7 @@ class HomeController
 		$pdocrud->fieldRenameLable("nombre", "Nombre campo");
 		$pdocrud->fieldRenameLable("tabla", "Nombre Tabla Base de Datos");
 
-		$action = $_ENV["BASE_URL"] . "home/pagina/modulo/{pk}";
+		$action = $_ENV["BASE_URL"] . "home/pagina/index.php?pagina={pk}";
 		$text = '<i class="fa fa-table" aria-hidden="true"></i>';
 		$attr = array("title" => "Ver módulo", "target"=> "_blank");
 		$pdocrud->enqueueBtnActions("url btn btn-default btn-sm ", $action, "url", $text, "booking_status", $attr);
@@ -3134,9 +3138,10 @@ class HomeController
 		);
 	}
 
-	public function pagina($params)
+	public function pagina()
 	{
-			$id = isset($params[1]) ? $params[1] : null;
+			$request = new Request();
+			$id = $request->get('pagina');
 			
 			if (is_numeric($id)) {
 				Redirect::to("home/modulos");

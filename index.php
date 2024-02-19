@@ -17,7 +17,8 @@ $controllerName = isset($segments[0]) ? ucfirst($segments[0]) . 'Controller' : '
 $action = isset($segments[1]) ? $segments[1] : 'index';
 
 // Obtener los parámetros de la URL
-$params = array_slice($segments, 2);
+//$params = array_slice($segments, 2);
+$params = isset($_GET['params']) ? explode('/', $_GET['params']) : [];
 
 // Validar que el controlador existe
 $controllerFile = __DIR__ . '/app/Controllers/' . $controllerName . '.php';

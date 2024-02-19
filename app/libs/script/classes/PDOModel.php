@@ -1809,13 +1809,11 @@ class PDOModel
             if ($lastpage > 1) {
                 $pagination .= "<nav aria-label=\"Page navigation\"><ul class=\"pagination\">";
                 
-                
                 if ($page > 1)
                     $pagination .= "<li class=\"page-item\"><a class='page-link text-dark' href=\"$base_url?user=" . $prevId . "\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></a></li>";
                 else
                     $pagination .= "<li class=\"disabled\"><span class='page-link text-dark' aria-hidden=\"true\">&laquo;</span></li>";
     
-                
                 if ($page < $lastpage)
                     $pagination .= "<li><a class='page-link text-dark' href=\"$base_url?user=" . $nextId . "\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span></a></li>";
                 else

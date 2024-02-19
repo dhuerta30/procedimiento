@@ -2,15 +2,16 @@
 
 namespace App\Controllers;
 
+use App\core\DB;
+use App\core\View;
+use App\core\Request;
+
 class UserController
 {
-    public function index($params)
+    public function index()
     {
-        $params1 = isset($params[0]) ? $params[0] : null;
-        /*$params2 = isset($params[1]) ? $params[1] : null;
-        $params3 = isset($params[2]) ? $params[2] : null;
-        $params4 = isset($params[3]) ? $params[3] : null;
-        $params5 = isset($params[4]) ? $params[4] : null;*/
+        $request = new Request();
+        $params1 = $request->get('user'); // use el metodo $_GET['user'];
 
         $pdocrud = DB::PDOCrud();
         if(isset($params1)){
@@ -19,6 +20,7 @@ class UserController
         $render = $pdocrud->dbTable("usuario")->render();
 
         View::render('index', ['render' => $render]);
+        
     }
 
     public function edit()
