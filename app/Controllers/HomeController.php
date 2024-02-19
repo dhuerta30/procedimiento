@@ -469,9 +469,10 @@ class HomeController
 		}
 	}
 
-	public function imprimir_solicitud($params){
+	public function imprimir_solicitud(){
 		
-			$id = isset($params[0]) ? $params[0] : null;
+			$request = new Request();
+			$id = $request->get('id');
 
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
