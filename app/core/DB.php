@@ -75,6 +75,7 @@ class DB {
         $inicio = ($pagina_actual - 1) * $registros_por_pagina;
         $query = "SELECT * FROM $tabla LIMIT $inicio, $registros_por_pagina";
         $resultados = $pdomodel->executeQuery($query);
+		
         return ['output' => $pagination, 'resultados' => $resultados];
     }
 }

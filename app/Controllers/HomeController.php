@@ -1226,16 +1226,6 @@ class HomeController
 
 		unset($_SESSION['detalle_de_solicitud']);
 
-		$pagina_actual = (isset($params[1])) ? $params[1] : 1;
-
-		/*$registros_por_pagina = 1;
-        $tabla = "prestaciones";
-		$id_prestaciones = "id_prestaciones";
-        $result = DB::performPagination($registros_por_pagina, $pagina_actual, $tabla, $id_prestaciones);
-    
-        $button_pagination = $result['output'];
-		echo $button_pagination;*/
-
 		$pdocrud = DB::PDOCrud();
 		$pdocrud->formFieldValue("estado", "Ingresado");
 		$pdocrud->fieldHideLable("estado");
