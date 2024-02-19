@@ -20,7 +20,6 @@ class UserController
         $render = $pdocrud->dbTable("usuario")->render();
 
         View::render('index', ['render' => $render]);
-        
     }
 
     public function edit()
