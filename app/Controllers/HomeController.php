@@ -2527,20 +2527,36 @@ class HomeController
 					return;
 				}
 
-				$pdomodel->insert("datos_paciente", array(
-					"rut" => $rut,
-					"nombres" => $nombres,
-					"apellido_paterno" => $apellido_paterno,
-					"apellido_materno" => $apellido_materno,
-					"fecha_nacimiento" => $fecha_nacimiento,
-					"edad" => $edad,
-					"direccion" => $direccion,
-					"sexo" => $sexo,
-					"fecha_y_hora_ingreso" => $fecha_y_hora_ingreso,
-					"estado" => "Ingresado"
-				));
+				$pdomodel->where("rut", $rut, "=", "AND");
+				$pdomodel->where("nombres", $nombre, "=", "AND");
+				$pdomodel->where("apellido_paterno", $apellido_paterno, "=", "AND");
+				$pdomodel->where("apellido_materno", $apellido_materno, "=", "AND");
+				$pdomodel->where("fecha_nacimiento", $fecha_nacimiento, "=", "AND");
+				$pdomodel->where("edad", $edad, "=", "AND");
+				$pdomodel->where("direccion", $direccion, "=", "AND");
+				$pdomodel->where("sexo", $sexo);
+				$datos_paciente_exists = $pdomodel->select("datos_paciente");
 
-				$id = $pdomodel->lastInsertId;
+				// Verificar si el paciente existe en la tabla datos_paciente
+				if (!empty($datos_paciente_exists)) {
+						// El paciente ya existe, obtener el id_datos_paciente
+						$id = $datos_paciente_exists[0]['id_datos_paciente'];
+				} else {
+					$pdomodel->insert("datos_paciente", array(
+						"rut" => $rut,
+						"nombres" => $nombres,
+						"apellido_paterno" => $apellido_paterno,
+						"apellido_materno" => $apellido_materno,
+						"fecha_nacimiento" => $fecha_nacimiento,
+						"edad" => $edad,
+						"direccion" => $direccion,
+						"sexo" => $sexo,
+						"fecha_y_hora_ingreso" => $fecha_y_hora_ingreso,
+						"estado" => "Ingresado"
+					));
+
+					$id = $pdomodel->lastInsertId;
+				}
 
 				$pdomodel->insert("diagnostico_antecedentes_paciente", array(
 					"id_datos_paciente" => $id,
@@ -2551,19 +2567,14 @@ class HomeController
 					"diagnostico_libre" => $diagnostico_libre
 				));
 
-				$idpaciente = $request->post('paciente');
-
 				if(isset($_SESSION['detalle_de_solicitud'])){
-
-					if(!empty($idpaciente)){
-						$id = $idpaciente;
-					} else {
-						$id = $pdomodel->lastInsertId;
-					}
 
 					$sql = array();
 					foreach ($_SESSION['detalle_de_solicitud'] as $sesionVal) {
-						$sql['id_datos_paciente'] = $id;
+
+						$idpaciente = $sesionVal["id_datos_paciente"];
+
+						$sql['id_datos_paciente'] = $idpaciente;
 						$sql['codigo_fonasa'] = $sesionVal['codigo_fonasa'];
 						$sql['tipo_solicitud'] = $sesionVal['tipo_solicitud'];
 						$sql['tipo_examen'] = $sesionVal['tipo_examen'];
@@ -2762,7 +2773,7 @@ class HomeController
 				$_SESSION['detalle_de_solicitud'][] = $detalle_de_solicitud;
 	
 				$response = [
-					'success' => 'Datos Guardado con éxito Temporalmente',
+					'success' => 'Datos Guardados con éxito Temporalmente',
 					'data' => $_SESSION['detalle_de_solicitud']
 				];
 	
