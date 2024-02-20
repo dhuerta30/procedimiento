@@ -8,10 +8,9 @@ use App\core\Request;
 
 class UserController
 {
-    public function index()
+    public function index($params)
     {
-        $request = new Request();
-        $params1 = $request->get('user'); // use el metodo $_GET['user'];
+        $params1 = $params[0];
 
         $pdocrud = DB::PDOCrud();
         if(isset($params1)){
