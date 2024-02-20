@@ -2534,8 +2534,8 @@ class HomeController
 
 				// Verificar si el paciente existe en la tabla datos_paciente
 				if (!empty($datos_paciente_exists)) {
-						// El paciente ya existe, obtener el id_datos_paciente
-						$id = $datos_paciente_exists[0]['id_datos_paciente'];
+					// El paciente ya existe, obtener el id_datos_paciente
+					$id = $datos_paciente_exists[0]['id_datos_paciente'];
 				} else {
 					$pdomodel->insert("datos_paciente", array(
 						"rut" => $rut,
@@ -2567,9 +2567,7 @@ class HomeController
 					$sql = array();
 					foreach ($_SESSION['detalle_de_solicitud'] as $sesionVal) {
 
-						$idpaciente = (isset($sesionVal["id_datos_paciente"])) ? $sesionVal["id_datos_paciente"] : $id;
-
-						$sql['id_datos_paciente'] = $idpaciente;
+						$sql['id_datos_paciente'] = $id;
 						$sql['codigo_fonasa'] = $sesionVal['codigo_fonasa'];
 						$sql['tipo_solicitud'] = $sesionVal['tipo_solicitud'];
 						$sql['tipo_examen'] = $sesionVal['tipo_examen'];
