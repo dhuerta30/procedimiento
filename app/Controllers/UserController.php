@@ -8,9 +8,16 @@ use App\core\Request;
 
 class UserController
 {
-    public function index($params)
+    public function index()
     {
-        $params1 = $params[0];
+        $request = new Request();
+
+        // Obtener un parámetro de la URL
+        $parametro = $request->get(2);
+
+        // Hacer algo con el parámetro
+        echo "El valor del parámetro es: " . $parametro;
+        die();
 
         $pdocrud = DB::PDOCrud();
         if(isset($params1)){

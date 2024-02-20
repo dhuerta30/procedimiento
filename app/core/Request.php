@@ -15,9 +15,25 @@ class Request
         if ($this->method === 'POST') {
             $this->data = $_POST;
         } else {
-            // Almacena los datos de $_GET si la solicitud es un GET
-            $this->data = $_GET;
+            // Almacena los datos de los segmentos de la URL en lugar de $_GET
+            $this->data = $this->parseUrlSegments();
         }
+    }
+
+    // Método para obtener los segmentos de la URL y convertirlos en parámetros
+    private function parseUrlSegments()
+    {
+        $requestUri = $_SERVER['REQUEST_URI'];
+        $requestUri = str_replace($_ENV["BASE_URL"], '', $requestUri);
+        $segments = explode('/', $requestUri);
+    
+        // Filtrar segmentos vacíos
+        $segments = array_filter($segments, function ($segment) {
+            return !empty($segment);
+        });
+    
+        // Devolver un array asociativo de parámetros
+        return array_values($segments);
     }
 
     public function post($key)
@@ -28,7 +44,7 @@ class Request
 
     public function get($key)
     {
-        // Permite obtener datos de $_GET sin restricciones
+        // Permite obtener datos de los segmentos de la URL
         return isset($this->data[$key]) ? $this->data[$key] : null;
     }
 
