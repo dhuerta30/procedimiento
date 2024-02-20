@@ -27,31 +27,35 @@ class ApiController
 
         if ($request->getMethod() === 'POST') {
             
-            $content = Decodejson::getContentFromJson();
+            // Obtén datos del cuerpo de la solicitud (ya sea formulario o JSON)
+            $postData = $request->all();
+            $jsonContent = $request->getContentFromJson();
 
-            if (isset($content)) {
-                $email = $content->email;
-                $password = $content->password;
+            // Combina los datos del formulario y JSON
+            $data = array_merge($postData, $jsonContent);
 
-                $usuario = new UserModel();
-                $data = $usuario->select_userBy_email($email);
+            $email = $data['email'];
+            $password = $data['password'];
 
-                if (password_verify($password, $data[0]["password"])) {
-                    
-                    $tokenData = [
-                        'id' => $data[0]["id"],
-                        'email' => $data[0]["email"],
-                        'timestamp' => time(),
-                    ];
+            $usuario = new UserModel();
+            $data = $usuario->select_userBy_email($email);
 
-                    $token = JWT::encode($tokenData, $this->secretKey, 'HS256');
+            if (password_verify($password, $data[0]["password"])) {
+                
+                $tokenData = [
+                    'id' => $data[0]["id"],
+                    'email' => $data[0]["email"],
+                    'timestamp' => time(),
+                ];
 
-                    $usuario->update_userBy_email($data[0]["email"], array("token_api" => $token));
-                    echo json_encode(['token' => $token]);
-                } else {
-                    echo json_encode(['error' => 'No tiene permisos para acceder a esta Api']);
-                }
+                $token = JWT::encode($tokenData, $this->secretKey, 'HS256');
+
+                $usuario->update_userBy_email($data[0]["email"], array("token_api" => $token));
+                echo json_encode(['token' => $token]);
+            } else {
+                echo json_encode(['error' => 'No tiene permisos para acceder a esta Api']);
             }
+        
         }
     }
 
