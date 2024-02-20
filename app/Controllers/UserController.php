@@ -13,7 +13,7 @@ class UserController
         $request = new Request();
 
         // Obtener un parámetro de la URL
-        $parametro = $request->get(2);
+        $parametro = $request->get('valor');
 
         // Hacer algo con el parámetro
         echo "El valor del parámetro es: " . $parametro;

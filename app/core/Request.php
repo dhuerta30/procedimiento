@@ -26,15 +26,28 @@ class Request
         $requestUri = $_SERVER['REQUEST_URI'];
         $requestUri = str_replace($_ENV["BASE_URL"], '', $requestUri);
         $segments = explode('/', $requestUri);
-    
+
         // Filtrar segmentos vacíos
         $segments = array_filter($segments, function ($segment) {
             return !empty($segment);
         });
-    
-        // Devolver un array asociativo de parámetros
-        return array_values($segments);
+
+        // Crear un array asociativo de parámetros
+        $params = [];
+        $numSegments = count($segments);
+        for ($i = 0; $i < $numSegments; $i += 2) {
+            $key = isset($segments[$i]) ? $segments[$i] : null;
+            $value = isset($segments[$i + 1]) ? $segments[$i + 1] : null;
+
+            // Asociar el nombre del parámetro al valor
+            if ($key !== null && $value !== null) {
+                $params[$key] = $value;
+            }
+        }
+
+        return $params;
     }
+
 
     public function post($key)
     {
