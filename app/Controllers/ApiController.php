@@ -32,9 +32,6 @@ class ApiController
             $email = $data['email'];
             $password = $data['password'];
 
-            $email = $data['email'];
-            $password = $data['password'];
-
             $usuario = new UserModel();
             $data = $usuario->select_userBy_email($email);
 
