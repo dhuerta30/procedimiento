@@ -2885,7 +2885,7 @@ class HomeController
 		$pdocrud->fieldRenameLable("nombre", "Nombre campo");
 		$pdocrud->fieldRenameLable("tabla", "Nombre Tabla Base de Datos");
 
-		$action = $_ENV["BASE_URL"] . "home/pagina/index.php?pagina={pk}";
+		$action = $_ENV["BASE_URL"] . "home/pagina/modulo/{pk}";
 		$text = '<i class="fa fa-table" aria-hidden="true"></i>';
 		$attr = array("title" => "Ver módulo", "target"=> "_blank");
 		$pdocrud->enqueueBtnActions("url btn btn-default btn-sm ", $action, "url", $text, "booking_status", $attr);
@@ -3130,7 +3130,7 @@ class HomeController
 	public function pagina()
 	{
 			$request = new Request();
-			$id = $request->get('pagina');
+			$id = $request->get('modulo');
 			
 			if (is_numeric($id)) {
 				Redirect::to("home/modulos");
