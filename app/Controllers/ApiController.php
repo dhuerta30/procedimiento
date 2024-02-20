@@ -27,12 +27,10 @@ class ApiController
 
         if ($request->getMethod() === 'POST') {
             
-            // Obtén datos del cuerpo de la solicitud (ya sea formulario o JSON)
-            $postData = $request->all();
-            $jsonContent = $request->getContentFromJson();
-
-            // Combina los datos del formulario y JSON
-            $data = array_merge($postData, $jsonContent);
+            $data = array_merge($request->all(), $request->getContentFromJson());
+            
+            $email = $data['email'];
+            $password = $data['password'];
 
             $email = $data['email'];
             $password = $data['password'];
