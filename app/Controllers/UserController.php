@@ -15,13 +15,9 @@ class UserController
         // Obtener un parámetro de la URL
         $parametro = $request->get('valor');
 
-        // Hacer algo con el parámetro
-        echo "El valor del parámetro es: " . $parametro;
-        die();
-
         $pdocrud = DB::PDOCrud();
-        if(isset($params1)){
-            $pdocrud->where("id", $params1, "=");
+        if(isset($parametro)){
+            $pdocrud->where("id", $parametro, "=");
         }
         $render = $pdocrud->dbTable("usuario")->render();
 
