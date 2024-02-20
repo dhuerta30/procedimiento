@@ -13,7 +13,7 @@ class UserController
         $request = new Request();
 
         // Obtener un parámetro de la URL
-        $parametro = $request->get('valor');
+        $parametro = $request->get('id');
 
         $pdocrud = DB::PDOCrud();
         if(isset($parametro)){
@@ -25,7 +25,7 @@ class UserController
     }
 
     public function edit()
-    {       
+    {
         View::render('product');
         
     }
