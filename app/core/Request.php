@@ -36,7 +36,7 @@ class Request
         $params = [];
         $numSegments = count($segments);
         
-        if($numSegments < 3 || $numSegments < 4){
+        if($numSegments < 3){
             echo die("Error Proporcione los parámetros Faltantes en la url ya que es de Tipo GET");
         } else {
             for ($i = 0; $i < $numSegments; $i += 2) {
