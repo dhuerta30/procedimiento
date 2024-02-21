@@ -23,10 +23,8 @@ class ApiController
 
         if ($request->getMethod() === 'POST') {
             
-            $data = $request->all();
-            
-            $email = $data['email'];
-            $password = $data['password'];
+            $email = $request->post('email');
+            $password = $request->post('password');
 
             $usuario = new UserModel();
             $data = $usuario->select_userBy_email($email);
