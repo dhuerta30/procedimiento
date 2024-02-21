@@ -1,7 +1,6 @@
 <?php
 
 namespace App\core;
-use core\Redirect;
 
 class Request
 {
@@ -38,8 +37,7 @@ class Request
         $numSegments = count($segments);
         
         if($numSegments < 3 || $numSegments < 4){
-            echo "Error Proporcione los parámetros";
-            die();
+            echo die("Error Proporcione los parámetros Faltantes en la url ya que es de Tipo GET");
         } else {
             for ($i = 0; $i < $numSegments; $i += 2) {
                 $key = isset($segments[$i]) ? $segments[$i] : null;
