@@ -14,47 +14,11 @@ class RequestApi
         // Almacena los datos de $_POST si la solicitud es un POST
         if ($this->method === 'POST') {
             $this->data = $_POST;
-
-            // Verifica si la solicitud POST contiene datos JSON
-            $jsonContent = $this->getContentFromJson();
-            $this->data = array_merge($this->data, $jsonContent);
+            $this->data = $this->getContentFromJson();
         } else {
-            // Almacena los datos de los segmentos de la URL en lugar de $_GET
-            $this->data = $this->parseUrlSegments();
-
-            $jsonContent = $this->getContentFromJson();
-            $this->data = array_merge($this->data, $jsonContent);
+            $this->data = $this->getContentFromJson();
         }
     }
-
-    // Método para obtener los segmentos de la URL y convertirlos en parámetros
-    private function parseUrlSegments()
-    {
-        $requestUri = $_SERVER['REQUEST_URI'];
-        $requestUri = str_replace($_ENV["BASE_URL"], '', $requestUri);
-        $segments = explode('/', $requestUri);
-
-        // Filtrar segmentos vacíos
-        $segments = array_filter($segments, function ($segment) {
-            return !empty($segment);
-        });
-
-        // Crear un array asociativo de parámetros
-        $params = [];
-        $numSegments = count($segments);
-        for ($i = 0; $i < $numSegments; $i += 2) {
-            $key = isset($segments[$i]) ? $segments[$i] : null;
-            $value = isset($segments[$i + 1]) ? $segments[$i + 1] : null;
-
-            // Asociar el nombre del parámetro al valor
-            if ($key !== null && $value !== null) {
-                $params[$key] = $value;
-            }
-        }
-
-        return $params;
-    }
-
 
     public function post($key)
     {
