@@ -2,7 +2,7 @@
 
 namespace App\core;
 
-class Request
+class RequestApi
 {
     private $data = [];
     private $method;
@@ -14,9 +14,16 @@ class Request
         // Almacena los datos de $_POST si la solicitud es un POST
         if ($this->method === 'POST') {
             $this->data = $_POST;
+
+            // Verifica si la solicitud POST contiene datos JSON
+            $jsonContent = $this->getContentFromJson();
+            $this->data = array_merge($this->data, $jsonContent);
         } else {
             // Almacena los datos de los segmentos de la URL en lugar de $_GET
             $this->data = $this->parseUrlSegments();
+
+            $jsonContent = $this->getContentFromJson();
+            $this->data = array_merge($this->data, $jsonContent);
         }
     }
 
@@ -69,5 +76,12 @@ class Request
     public function all()
     {
         return $this->data;
+    }
+
+    public function getContentFromJson()
+    {
+        header('Content-Type: application/json');
+        $json = file_get_contents('php://input');
+        return json_decode($json, true);
     }
 }

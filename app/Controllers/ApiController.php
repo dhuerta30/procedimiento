@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\core\DB;
-use App\core\Request;
+use App\core\RequestApi;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use App\Models\UserModel;
@@ -19,7 +19,7 @@ class ApiController
 
     public function generarToken()
     {
-        $request = new Request();
+        $request = new RequestApi();
 
         if ($request->getMethod() === 'POST') {
             
@@ -96,13 +96,11 @@ class ApiController
 
     public function listar()
     {
-        $request = new Request();
+        $request = new RequestApi();
 
         if ($request->getMethod() === 'GET') {
-           
-            $data = $request->all();
 
-            $token = $data['token'];
+            $token = $request->get('token');
 
             $usuario = new UserModel();
             $data = $usuario->select_userBy_token($token);
