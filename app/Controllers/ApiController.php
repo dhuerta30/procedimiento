@@ -4,11 +4,9 @@ namespace App\Controllers;
 
 use App\core\DB;
 use App\core\Request;
-use App\core\JsonResponse;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use App\Models\UserModel;
-use App\core\Decodejson;
 
 class ApiController
 {
@@ -21,13 +19,11 @@ class ApiController
 
     public function generarToken()
     {
-        JsonResponse::setJsonHeader();
-
         $request = new Request();
 
         if ($request->getMethod() === 'POST') {
             
-            $data = array_merge($request->all(), $request->getContentFromJson());
+            $data = $request->all();
             
             $email = $data['email'];
             $password = $data['password'];
@@ -100,13 +96,11 @@ class ApiController
 
     public function listar()
     {
-        JsonResponse::setJsonHeader();
-
         $request = new Request();
 
         if ($request->getMethod() === 'GET') {
            
-            $content = Decodejson::getContentFromJson();
+            $data = $request->all();
 
             if (isset($content)) {
                 $token = $content->token;

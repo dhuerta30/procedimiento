@@ -17,9 +17,7 @@ class Request
 
             // Verifica si la solicitud POST contiene datos JSON
             $jsonContent = $this->getContentFromJson();
-            if (!empty($jsonContent)) {
-                $this->data = array_merge($this->data, $jsonContent);
-            }
+            $this->data = array_merge($this->data, $jsonContent);
         } else {
             // Almacena los datos de los segmentos de la URL en lugar de $_GET
             $this->data = $this->parseUrlSegments();
@@ -79,6 +77,7 @@ class Request
 
     public function getContentFromJson()
     {
+        header('Content-Type: application/json');
         $json = file_get_contents('php://input');
         return json_decode($json, true);
     }
