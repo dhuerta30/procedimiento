@@ -84,7 +84,6 @@ class ApiController
         return false;
     }*/
 
-
     public function validarToken($token)
     {
         $usuario = new UserModel();
