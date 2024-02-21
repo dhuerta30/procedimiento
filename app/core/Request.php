@@ -1,6 +1,7 @@
 <?php
 
 namespace App\core;
+use core\Redirect;
 
 class Request
 {
@@ -35,13 +36,19 @@ class Request
         // Crear un array asociativo de parámetros
         $params = [];
         $numSegments = count($segments);
-        for ($i = 0; $i < $numSegments; $i += 2) {
-            $key = isset($segments[$i]) ? $segments[$i] : null;
-            $value = isset($segments[$i + 1]) ? $segments[$i + 1] : null;
+        
+        if($numSegments < 3 || $numSegments < 4){
+            echo "Error Proporcione los parámetros";
+            die();
+        } else {
+            for ($i = 0; $i < $numSegments; $i += 2) {
+                $key = isset($segments[$i]) ? $segments[$i] : null;
+                $value = isset($segments[$i + 1]) ? $segments[$i + 1] : null;
 
-            // Asociar el nombre del parámetro al valor
-            if ($key !== null && $value !== null) {
-                $params[$key] = $value;
+                // Asociar el nombre del parámetro al valor
+                if ($key !== null && $value !== null) {
+                    $params[$key] = $value;
+                }
             }
         }
 
@@ -58,7 +65,7 @@ class Request
     public function get($key)
     {
         // Permite obtener datos de los segmentos de la URL
-        return isset($this->data[$key]) ? $this->data[$key] : null;
+        return ($this->method === 'GET' && isset($this->data[$key])) ? $this->data[$key] : null;
     }
 
     public function getMethod()
