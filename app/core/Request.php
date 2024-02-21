@@ -21,6 +21,9 @@ class Request
         } else {
             // Almacena los datos de los segmentos de la URL en lugar de $_GET
             $this->data = $this->parseUrlSegments();
+
+            $jsonContent = $this->getContentFromJson();
+            $this->data = array_merge($this->data, $jsonContent);
         }
     }
 
