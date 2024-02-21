@@ -41,17 +41,8 @@ if (file_exists($controllerFile)) {
     $controller = new $controllerClassName($model, $view);
 
     // Enrutamiento simple
-    if (method_exists($controller, $action)) {
-        $reflectionMethod = new ReflectionMethod($controllerClassName, $action);
-        $requiredParams = $reflectionMethod->getNumberOfParameters();
-    
-        // Comprobar si se proporcionan suficientes parámetros
-        if (count($params) >= $requiredParams) {
-            $controller->$action($params);
-        } else {
-            // Lanzar un error o redirigir a una página de error
-            App\core\Redirect::to("error/index");
-        }
+    if (method_exists($controller, $action)) {    
+        $controller->$action();
     } else {
         App\core\Redirect::to("error/index");
     }
