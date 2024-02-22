@@ -1220,6 +1220,24 @@ class HomeController
 		}
 	}
 
+	public function obtener_profesionales(){
+		
+		$request = new Request();
+
+    	if ($request->getMethod() === 'POST') {
+			$pdocrud = DB::PDOCrud();
+			$pdomodel = $pdocrud->getPDOModelObj();
+			$pdomodel->columns = array("id_profesional", "nombre_profesional", "apellido_profesional");
+			$data = $pdomodel->select("profesional");
+
+			if($data){
+				echo json_encode(['data' => $data]);
+			} else {
+				echo json_encode(['error' => 'No hay Profesionales']);
+			}
+		}
+	}
+
 	public function datos_paciente(){
 
 		date_default_timezone_set('America/Santiago');
@@ -1228,6 +1246,7 @@ class HomeController
 		unset($_SESSION['detalle_de_solicitud']);
 
 		$pdocrud = DB::PDOCrud();
+		$pdocrud->addPlugin("select2");
 		$pdocrud->formFieldValue("estado", "Ingresado");
 		$pdocrud->fieldHideLable("estado");
 		$pdocrud->fieldDataAttr("estado", array("style"=>"display:none"));
@@ -1281,6 +1300,8 @@ class HomeController
 		
 		$diagnostico = DB::PDOCrud(true);
 		$diagnostico->addPlugin("chosen");
+		$diagnostico->fieldTypes("profesional", "select");
+		//$diagnostico->fieldDataBinding("profesional", "profesional", "id_profesional", array("nombre_profesional","apellido_profesional"), "db", " ");
 		$diagnostico->fieldAddOnInfo("diagnostico", "after", '<div class="input-group-append"><span class="btn btn-default border eliminar_diagnostico" id="basic-addon1"><i class="fa fa-trash"></i></span></div>');
 		$diagnostico->fieldAddOnInfo("profesional", "after", '<div class="input-group-append"><span class="btn btn-default border agregar_profesional" id="basic-addon1"><i class="fa fa-plus"></i></span></div>');
 		$diagnostico->formFields(array("especialidad","profesional","diagnostico","sintomas_principales", "diagnostico_libre"));
@@ -2350,7 +2371,7 @@ class HomeController
 
 				$pdocrud->where("rut", $run);
 			} 
-			
+
 			if (!empty($request->post('nombre_paciente'))) {
 				$nombre_paciente = $request->post('nombre_paciente');
 				$pdocrud->where("nombres", $nombre_paciente, "=", "", "(")

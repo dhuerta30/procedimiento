@@ -29,6 +29,18 @@
         z-index: 200;
         width: 100%;
     }
+
+    .select2-container .select2-selection--single {
+        height: 38px!important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        top: 7px!important;
+    }
+
+    .select2-container {
+        width: 90%!important;
+    }
 </style>
 <div class="content-wrapper">
     <section class="content">
@@ -772,13 +784,48 @@
             }
         });
 
-        $(".profesional").autocomplete({
+        function obtener_profesionales(){
+            $.ajax({
+                url: "<?=$_ENV["BASE_URL"]?>home/obtener_profesionales",
+                type: 'POST',
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#pdocrud-ajax-loader").show();
+                },
+                success: function(data) {
+                    $("#pdocrud-ajax-loader").hide();
+                    $('.profesional').empty();
+                    $('.profesional').html("<option value>Seleccionar</option>");
+
+                    $.each(data['data'], function(key, value) {
+                        $('.profesional').append('<option value="' + value.id_profesional + '">' + value.nombre_profesional + ' ' + value.apellido_profesional + '</option>');
+                    });
+                }
+            });
+        }
+
+        $(document).ready(function() {
+
+            $('.profesional').select2();
+            obtener_profesionales();
+
+            $('.profesional').on('select2:open', function() {
+                obtener_profesionales();
+            });
+
+            $('.profesional').on('select2:select', function(e) {
+                $(this).val(e.params.data.id).trigger('change.select2');
+            });
+
+        });
+
+        /*$(".profesional").autocomplete({
             minLength: 1,
             delay: 0,
             autoFocus: true,
             source: function(request, response) {
                 $.ajax({
-                    url: "<?=$_ENV["BASE_URL"]?>home/buscar_profesional",
+                    url: "home/buscar_profesional",
                     type: 'POST',
                     dataType: 'json',
                     data: { query: request.term },
@@ -795,7 +842,7 @@
                     $(this).html(text.replace(matcher, "<span style='color:black; font-weight: bold;'>$1</span>"));
                 });
             }
-        });
+        });*/
 
 
         $(document).on("click", ".agregar_profesional", function(){
