@@ -1785,6 +1785,9 @@ class HomeController
 			$pdomodel->where("id_detalle_de_solicitud", $id);
 			$data = $pdomodel->select("datos_paciente");
 
+			$pdomodel->where("id_profesional", $data[0]["profesional"]);
+			$data_profesional = $pdomodel->select("profesional");
+
 			$pdomodel->where("id_causal_salida", $data[0]["motivo_egreso"]);
 			$motivo_egreso = $pdomodel->select("causal_salida");
 
@@ -1840,7 +1843,7 @@ class HomeController
 						</tr>
 						<tr>
 							<td><strong>Profesional</strong></td>
-							<td>".ucwords($data[0]["profesional"])."</td>
+							<td>".ucwords($data_profesional[0]["nombre_profesional"]). ' ' .ucwords($data_profesional[0]["apellido_profesional"]) ."</td>
 						</tr>
 						<tr>
 							<td><strong>Fundamento</strong></td>
