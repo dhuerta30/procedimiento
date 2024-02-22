@@ -1610,17 +1610,18 @@ class HomeController
 	public function lista_espera_examenes(){
 		$pdocrud = DB::PDOCrud();
 		$pdocrud->addPlugin("bootstrap-inputmask");
-		$pdocrud->formFields(array("estado","rut","fecha_solicitud", "examen", "nombres", "profesional", "fecha_y_hora_ingreso"));
+		$pdocrud->formFields(array("estado","rut","fecha_solicitud", "examen", "nombres", "nombre_profesional", "fecha_y_hora_ingreso"));
 		$pdocrud->setSettings("required", false);
 		$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 		$pdocrud->joinTable("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
+		$pdocrud->joinTable("profesional", "profesional.id_profesional = diagnostico_antecedentes_paciente.profesional", "INNER JOIN");
 		$pdocrud->fieldAddOnInfo("fecha_y_hora_ingreso", "after", '<div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span></div>');
 		$pdocrud->fieldCssClass("nombres", array("nombre_paciente"));
 		$pdocrud->fieldCssClass("fecha_y_hora_ingreso", array("fecha_solicitud"));
 		$pdocrud->fieldCssClass("rut", array("rut"));
 		$pdocrud->fieldCssClass("estado", array("estado"));
 		$pdocrud->fieldCssClass("examen", array("prestacion"));
-		$pdocrud->fieldCssClass("profesional", array("profesional"));
+		$pdocrud->fieldCssClass("nombre_profesional", array("profesional"));
 		$pdocrud->formStaticFields("botones_busqueda", "html", "
 				<div class='row'>
 					<div class='col-md-12'>
@@ -1633,11 +1634,12 @@ class HomeController
 		$pdocrud->fieldRenameLable("fecha_y_hora_ingreso", "Fecha Solicitud");
 		$pdocrud->fieldRenameLable("nombres", "Nombre Paciente");
 		$pdocrud->fieldRenameLable("examen", "Prestación");
+		$pdocrud->fieldRenameLable("nombre_profesional", "Profesional");
 		$pdocrud->fieldTypes("estado", "select");
 		$pdocrud->fieldDataBinding("estado", "estado_procedimiento", "nombre as estado_procedimiento", "nombre", "db");
 		$pdocrud->fieldGroups("Name",array("rut","nombres", "estado"));
-		$pdocrud->fieldGroups("Name2",array("examen", "profesional", "fecha_y_hora_ingreso"));
-		$pdocrud->fieldDisplayOrder(array("rut","nombres","estado", "examen", "profesional", "fecha_y_hora_ingreso"));
+		$pdocrud->fieldGroups("Name2",array("examen", "nombre_profesional", "fecha_y_hora_ingreso"));
+		$pdocrud->fieldDisplayOrder(array("rut","nombres","estado", "examen", "nombre_profesional", "fecha_y_hora_ingreso"));
 		$pdocrud->buttonHide("submitBtn");
 		$pdocrud->buttonHide("cancel");
 		$render = $pdocrud->dbTable("datos_paciente")->render("insertform");
@@ -2392,7 +2394,12 @@ class HomeController
 			
 			if (!empty($request->post('profesional'))) {
 				$profesional = $request->post('profesional');
-				$pdocrud->where("profesional", "%$profesional%", "LIKE");
+				//$pdocrud->where("profesional.nombre_profesional", "%$profesional%", "LIKE");
+
+				$pdocrud->where("profesional.nombre_profesional", $profesional, "=", "", "(")
+					->where("CONCAT(profesional.nombre_profesional, ' ', profesional.apellido_profesional)", $profesional, "=", "OR")
+					->where("CONCAT(profesional.apellido_profesional)", $profesional, "=", "OR")
+					->where("CONCAT(profesional.nombre_profesional, ' ', profesional.apellido_profesional)", $profesional, "=", "", ")");
 			}
 			
 			if (!empty($request->post('fecha_solicitud'))) {
@@ -2408,8 +2415,14 @@ class HomeController
 				. (isset($profesional) ? 'Profesional: ' . $profesional : ''). ' '
 				. (isset($fecha_solicitud) ? 'Fecha Solicitud: ' . $fecha_solicitud : ''). ' '
 			);
+			//$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
+			//$pdocrud->joinTable("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
+
 			$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 			$pdocrud->joinTable("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
+			$pdocrud->joinTable("profesional", "profesional.id_profesional = diagnostico_antecedentes_paciente.profesional", "LEFT JOIN");
+			//$pdocrud->dbGroupBy("codigo_fonasa");
+			$pdocrud->dbOrderBy("codigo_fonasa");
 			$pdocrud->addCallback("format_table_data", "formatTable_buscar_examenes");
 			$pdocrud->enqueueCSS("style", $_ENV["BASE_URL"] . "app/libs/script/css/style.css");
 			$pdocrud->enqueueCSS("ui", $_ENV["BASE_URL"] . "app/libs/script/css/jquery-ui.css");
@@ -2443,7 +2456,7 @@ class HomeController
 				"tipo_solicitud",
 				"tipo_examen", 
 				"id_diagnostico_antecedentes_paciente",
-				"contraste", 
+				"contraste",
 				"observacion", 
 				"extremidad", 
 				"diagnostico_libre", 
@@ -2451,7 +2464,9 @@ class HomeController
 				"adjuntar",
 				"fundamento",
 				"fecha_egreso",
-				"motivo_egreso"
+				"motivo_egreso",
+				"profesional",
+				"id_profesional"
 			));
 			$pdocrud->formFields(array("id_detalle_de_solicitud","observacion"));
 	

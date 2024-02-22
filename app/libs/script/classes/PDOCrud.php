@@ -83,6 +83,7 @@ Class PDOCrud {
     private $columns;
     private $currentpage;
     private $orderByCols;
+    private $groupByCols;
     private $sortOrder;
     private $tableDataFormat;
     private $colFormat;
@@ -450,6 +451,16 @@ Class PDOCrud {
             $this->orderByCols = $orderbyCols;
         return $this;
     }
+
+
+    public function dbGroupBy($groupByCols) {
+        if (is_array($groupByCols))
+            $this->groupByCols = $groupByCols;
+        else
+            $this->groupByCols = array($groupByCols);
+        
+        return $this;
+    }    
 
     /**
      * Sets limit of records to be displayed
@@ -3025,6 +3036,7 @@ Class PDOCrud {
             $pdoModelObj = $this->addJoinCondtion($pdoModelObj, false);
             $pdoModelObj = $this->addWhereCondition($pdoModelObj, $data);
             $pdoModelObj = $this->addLimitOrderBy($pdoModelObj, $data, $recordPerPage);
+            $pdoModelObj = $this->addGroupBy($pdoModelObj, $data, $recordPerPage);
             $result = $pdoModelObj->select($this->tableName);
             $result = $this->reorderColumn($result);
             $cols = array_keys($result[0]);
@@ -3213,6 +3225,18 @@ Class PDOCrud {
         }
         return $pdoModelObj;
     }
+
+
+    private function addGroupBy(PDOModel $pdoModelObj, $data = array(), $recordPerPage = 10) {
+        $pdoModelObj->limit = $this->getSelectPageLimit($recordPerPage);
+        if (isset($data["groupby"])) {
+            $fieldName = $this->decrypt($data["groupby"]);
+            $pdoModelObj->groupByCols = array($groupByField);
+        }
+    
+        return $pdoModelObj;
+    }
+    
 
     private function getSelectPageLimit($recordPerPage) {
         $limit = 10;
@@ -4263,6 +4287,15 @@ Class PDOCrud {
         if (isset($this->fieldDataBind[$fieldName])) {
             if ($this->fieldDataBind[$fieldName]["bind"] === "db") {
                 $pdoModelObj = $this->getPDOModelObj();
+
+                if (isset($this->fieldDataBind[$fieldName]["groupby"])) {
+                    $groupByCols = is_array($this->fieldDataBind[$fieldName]["groupby"])
+                        ? $this->fieldDataBind[$fieldName]["groupby"]
+                        : array($this->fieldDataBind[$fieldName]["groupby"]);
+    
+                    $pdoModelObj->groupByCols = $groupByCols;
+                }
+
                 if (is_array($this->fieldDataBind[$fieldName]["val"])) {
                     $valColumn = "CONCAT_WS('".$this->fieldDataBind[$fieldName]["separator"]."',".implode(",",$this->fieldDataBind[$fieldName]["val"]).")";
                     $pdoModelObj->columns = array(
