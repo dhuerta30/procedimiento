@@ -1648,11 +1648,91 @@ class HomeController
 		$render = $pdocrud->dbTable("datos_paciente")->render("insertform");
 		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
 
+
+		$crud = DB::PDOCrud(true);
+		$pdomodel = $crud->getPDOModelObj();
+		$pdomodel->columns = array(
+			"dp.id_datos_paciente",
+			"ds.id_detalle_de_solicitud",
+			"rut",
+			"GROUP_CONCAT(DISTINCT nombres, ' ', apellido_paterno, ' ', apellido_materno) AS Paciente",
+			"GROUP_CONCAT(DISTINCT edad) AS Edad",
+			"GROUP_CONCAT(DISTINCT fecha_y_hora_ingreso) as Fecha_solicitud",
+			"GROUP_CONCAT(DISTINCT estado) AS Estado",
+			"GROUP_CONCAT(DISTINCT codigo_fonasa) AS Codigo",
+			"GROUP_CONCAT(DISTINCT tipo_examen) AS Examen",
+			"GROUP_CONCAT(DISTINCT fecha) AS Fecha",
+			"GROUP_CONCAT(DISTINCT especialidad) AS especialidad",
+			"GROUP_CONCAT(DISTINCT nombre_profesional, ' ',apellido_profesional) AS profesional",
+		);
+
+		$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
+		$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
+		$pdomodel->joinTables("profesional as pro", "pro.id_profesional = dg_p.profesional", "INNER JOIN");
+
+		$pdomodel->groupByCols = array("dp.id_datos_paciente", "rut", "edad");
+		$data = $pdomodel->select("datos_paciente as dp");
+		
+		$html = '
+		<div class="table-responsive">
+			<table class="table table-striped tabla_reportes text-center" style="width:100%">
+				<thead class="bg-primary">
+					<tr>
+						<th>Rut</th>
+						<th>Paciente</th>
+						<th>Edad</th>
+						<th>Fecha Solicitud</th>
+						<th>Estado</th>
+						<th>Código</th>
+						<th>Exámen</th>
+						<th>Fecha</th>
+						<th>Especialidad</th>
+						<th>Profesional</th>
+						<th>Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+		';
+	
+		foreach ($data as $row) {
+			$html .= '
+				<tr style="white-space: nowrap;">
+					<td>' . $row['rut'] . '</td>
+					<td>' . $row['paciente'] . '</td>
+					<td>' . $row["edad"] . '</td>
+					<td>' . date('d/m/Y', strtotime($row["fecha_solicitud"])) . '</td>
+					<td><div class="bdge badge-success">' . $row["estado"] . '</div></td>
+					<td>' . $row["codigo"] . '</td>
+					<td>' . $row["examen"] . '</td>
+					<td>' . date('d/m/Y', strtotime($row["fecha"])) . '</td>
+					<td>' . $row["especialidad"] . '</td>
+					<td>' . $row["profesional"] . '</td>
+					<td>
+						<a href="javascript:;" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-file-o"></i></a>
+						<a href="javascript:;" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-arrow-right"></i></a>
+						<a href="javascript:;" class="btn btn-info btn-sm ver_logs" data-id="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-exclamation"></i></a>
+						<a href="javascript:;" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-file-pdf"></i></a>
+						<a href="javascript:;" class="btn btn-primary btn-sm procedimientos" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-folder"></i></a>
+					</td>
+				</tr>
+			';
+		}
+	
+		$html .= '
+				</tbody>
+			</table>
+		</div>
+		';
+
+		$html_data = array($html);
+		$render_crud = $crud->render("HTML", $html_data);
+		
 		View::render(
 			'lista_espera_examenes',
 			[
 				'render' => $render,
-				'mask' => $mask
+				'mask' => $mask,
+				'render_crud' => $render_crud
 			]
 		);
 	}
@@ -2364,6 +2444,106 @@ class HomeController
 		
 		$request = new Request();
 
+		if($request->getMethod() === 'POST'){	
+
+			$pdocrud = DB::PDOCrud(true);
+			$pdomodel = $pdocrud->getPDOModelObj();
+			$pdomodel->columns = array(
+				"dp.id_datos_paciente",
+				"ds.id_detalle_de_solicitud",
+				"rut",
+				"GROUP_CONCAT(DISTINCT nombres, ' ', apellido_paterno, ' ', apellido_materno) AS Paciente",
+				"GROUP_CONCAT(DISTINCT edad) AS Edad",
+				"GROUP_CONCAT(DISTINCT fecha_y_hora_ingreso) as Fecha_solicitud",
+				"GROUP_CONCAT(DISTINCT estado) AS Estado",
+				"GROUP_CONCAT(DISTINCT codigo_fonasa) AS Codigo",
+				"GROUP_CONCAT(DISTINCT tipo_examen) AS Examen",
+				"GROUP_CONCAT(DISTINCT fecha) AS Fecha",
+				"GROUP_CONCAT(DISTINCT especialidad) AS especialidad",
+				"GROUP_CONCAT(DISTINCT nombre_profesional, ' ',apellido_profesional) AS profesional",
+			);
+	
+			$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
+			$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
+			$pdomodel->joinTables("profesional as pro", "pro.id_profesional = dg_p.profesional", "INNER JOIN");
+
+			if (!empty($request->post('run'))) {
+				$run = $request->post('run');
+
+				if (!self::validaRut($run)) {
+					echo "<div class='alert alert-danger text-center'>RUT inválido</div>";
+					return;
+				}
+
+				$pdomodel->where("rut", $run);
+			} 
+
+			$data = $pdomodel->select("datos_paciente as dp");
+			
+			if (isset($run)) {
+				$html = '
+				<div class="table-responsive">
+					<table class="table table-striped tabla_reportes text-center" style="width:100%">
+						<thead class="bg-primary">
+							<tr>
+								<th>Rut</th>
+								<th>Paciente</th>
+								<th>Edad</th>
+								<th>Fecha Solicitud</th>
+								<th>Estado</th>
+								<th>Código</th>
+								<th>Exámen</th>
+								<th>Fecha</th>
+								<th>Especialidad</th>
+								<th>Profesional</th>
+								<th>Acciones</th>
+							</tr>
+						</thead>
+						<tbody>
+				';
+			
+				foreach ($data as $row) {
+					$html .= '
+						<tr style="white-space: nowrap;">
+							<td>' . $row['rut'] . '</td>
+							<td>' . $row['paciente'] . '</td>
+							<td>' . $row["edad"] . '</td>
+							<td>' . date('d/m/Y', strtotime($row["fecha_solicitud"])) . '</td>
+							<td><div class="bdge badge-success">' . $row["estado"] . '</div></td>
+							<td>' . $row["codigo"] . '</td>
+							<td>' . $row["examen"] . '</td>
+							<td>' . date('d/m/Y', strtotime($row["fecha"])) . '</td>
+							<td>' . $row["especialidad"] . '</td>
+							<td>' . $row["profesional"] . '</td>
+							<td>
+								<a href="javascript:;" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-file-o"></i></a>
+								<a href="javascript:;" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-arrow-right"></i></a>
+								<a href="javascript:;" class="btn btn-info btn-sm ver_logs" data-id="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-exclamation"></i></a>
+								<a href="javascript:;" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-file-pdf"></i></a>
+								<a href="javascript:;" class="btn btn-primary btn-sm procedimientos" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-folder"></i></a>
+							</td>
+						</tr>
+					';
+				}
+			
+				$html .= '
+						</tbody>
+					</table>
+				</div>
+				';
+	
+				$html_data = array($html);
+				echo $pdocrud->render("HTML", $html_data);
+			} else {
+				echo "<div class='alert alert-danger text-center'>Ingrese datos a Buscar</div>";
+			}
+		}
+	}
+
+	/*public function buscar_examenes(){
+		
+		$request = new Request();
+
     	if ($request->getMethod() === 'POST') {
 	
 			$pdocrud = DB::PDOCrud(true);
@@ -2426,8 +2606,7 @@ class HomeController
 
 			$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 			$pdocrud->joinTable("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
-			$pdocrud->joinTable("profesional", "profesional.id_profesional = diagnostico_antecedentes_paciente.profesional", "LEFT JOIN");
-			//$pdocrud->dbGroupBy("codigo_fonasa");
+			$pdocrud->joinTable("profesional", "profesional.id_profesional = diagnostico_antecedentes_paciente.profesional", "INNER JOIN");
 			$pdocrud->dbOrderBy("codigo_fonasa");
 			$pdocrud->addCallback("format_table_data", "formatTable_buscar_examenes");
 			$pdocrud->enqueueCSS("style", $_ENV["BASE_URL"] . "app/libs/script/css/style.css");
@@ -2482,7 +2661,7 @@ class HomeController
 				echo "<div class='alert alert-danger text-center'>Ingrese datos a Buscar</div>";
 			}
 		}
-	}
+	}*/
 
 	public static function validaRut($rut)
     {

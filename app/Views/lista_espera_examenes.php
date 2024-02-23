@@ -24,7 +24,9 @@
                     <?=$mask;?>
 				</div>
 
-                <div class="resultados"></div>
+                <div class="resultados">
+                    <?=$render_crud;?>
+                </div>
 
                 <div class="cargar_modal"></div>
 			</div>
