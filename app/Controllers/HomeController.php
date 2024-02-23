@@ -2469,9 +2469,9 @@ class HomeController
 				"dp.fecha_y_hora_ingreso",
 				"dp.estado",
 				"codigo_fonasa",
-				"examen",
-				"fecha",
-				"especialidad",
+				"ds.examen",
+				"dg_p.fecha",
+				"dg_p.especialidad",
 				"pro.nombre_profesional",
 				"pro.apellido_profesional"
 			);
@@ -2480,8 +2480,14 @@ class HomeController
 			$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
 			$pdomodel->joinTables("profesional as pro", "pro.id_profesional = dg_p.profesional", "INNER JOIN");
 
-			if (!empty($request->post('run'))) {
-				$run = $request->post('run');
+			$run = $request->post('run');
+			$nombre_paciente = $request->post('nombre_paciente');
+			$estado = $request->post('estado');
+			$prestacion = $request->post('prestacion');
+			$profesional = $request->post('profesional');
+			$fecha_solicitud = $request->post('fecha_solicitud');
+
+			if (!empty($run)) {
 
 				if (!self::validaRut($run)) {
 					echo "<div class='alert alert-danger text-center'>RUT inválido</div>";
@@ -2491,47 +2497,39 @@ class HomeController
 				$pdomodel->where("dp.rut", $run);
 			}
 
-			if (!empty($request->post('nombre_paciente'))) {
-				$nombre_paciente = $request->post('nombre_paciente');
-
-				$pdomodel->where("nombres", $nombre_paciente);
+			if (!empty($nombre_paciente)) {
+				$pdomodel->where("dp.nombres", $nombre_paciente);
 				$pdomodel->andOrOperator = "OR";
-				$pdomodel->where("CONCAT(nombres, ' ', apellido_paterno)", $nombre_paciente);
+				$pdomodel->where("CONCAT(dp.nombres, ' ', dp.apellido_paterno)", $nombre_paciente);
 				$pdomodel->andOrOperator = "OR";
-				$pdomodel->where("CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno)", $nombre_paciente);
+				$pdomodel->where("CONCAT(dp.nombres, ' ', dp.apellido_paterno, ' ', dp.apellido_materno)", $nombre_paciente);
 				$pdomodel->andOrOperator = "OR";
-				$pdomodel->where("CONCAT(nombres, ' ', apellido_materno)", $nombre_paciente);
+				$pdomodel->where("CONCAT(dp.nombres, ' ', dp.apellido_materno)", $nombre_paciente);
 			}
 
-			if (!empty($request->post('estado'))) {
-				$estado = $request->post('estado');
-				$pdomodel->where("estado", $estado);
+			if (!empty($estado)) {
+				$pdomodel->where("dp.estado", $estado);
 			}
 
-
-			if (!empty($request->post('prestacion'))) {
-				$prestacion = $request->post('prestacion');
-				$pdomodel->where("examen", $prestacion);
+			if (!empty($prestacion)) {
+				$pdomodel->where("ds.examen", $prestacion);
 			}
 			
 
-			if (!empty($request->post('profesional'))) {
-				$profesional = $request->post('profesional');
-
-				$pdomodel->where("nombre_profesional", $profesional);
+			if (!empty($profesional)) {
+				$pdomodel->where("pro.nombre_profesional", $profesional);
 				$pdomodel->andOrOperator = "OR";
-				$pdomodel->where("CONCAT(nombre_profesional, ' ', apellido_profesional)", $profesional);
+				$pdomodel->where("CONCAT(pro.nombre_profesional, ' ', pro.apellido_profesional)", $profesional);
 				$pdomodel->andOrOperator = "OR";
-				$pdomodel->where("CONCAT(apellido_profesional)", $profesional);
+				$pdomodel->where("CONCAT(pro.apellido_profesional)", $profesional);
 			}
 
 
-			if (!empty($request->post('fecha_solicitud'))) {
-				$fecha_solicitud = $request->post('fecha_solicitud');
-				$pdocrud->where("fecha_y_hora_ingreso", $fecha_solicitud);
+			if (!empty($fecha_solicitud)) {
+				$pdocrud->where("dp.fecha_y_hora_ingreso", $fecha_solicitud);
 			}
 
-			$pdomodel->groupByCols = array("dp.id_datos_paciente", "rut", "edad");
+			$pdomodel->groupByCols = array("dp.id_datos_paciente", "dp.rut", "dp.edad");
 			$data = $pdomodel->select("datos_paciente as dp");
 
 			if (isset($run)) {
