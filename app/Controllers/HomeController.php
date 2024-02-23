@@ -2061,11 +2061,80 @@ class HomeController
 		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
 		$select2 = $pdocrud->loadPluginJsCode("select2",".ano");
 
+
+		$crud = DB::PDOCrud(true);
+		$pdomodel = $crud->getPDOModelObj();
+		$pdomodel->columns = array(
+			"count(ds.examen) AS total_examen",
+			"ds.examen",
+			"ds.codigo_fonasa",
+			"ds.tipo_examen",
+			"dg_p.diagnostico",
+			"dp.nombres",
+			"dp.apellido_paterno",
+			"dp.apellido_materno",
+			"dp.estado",
+			"dp.rut",
+			"dp.fecha_y_hora_ingreso",
+			"dg_p.fecha"
+		);
+
+		$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
+		$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
+
+		$pdomodel->groupByCols = array("dp.nombres", "dp.rut");
+		$data = $pdomodel->select("datos_paciente as dp");
+
+		$html = '
+			<div class="table-responsive">
+			<table class="table table-striped tabla_reportes text-center" style="width:100%">
+				<thead class="bg-primary">
+					<tr>
+						<th>Código Fonasa</th>
+						<th>Paciente</th>
+						<th>Diagnóstico CIE-10</th>
+						<th>Exámen</th>
+						<th>Estado</th>
+						<th>Tipo de Exámen</th>
+						<th>Año</th>
+						<th>Total</th>
+					</tr>
+				</thead>
+				<tbody>
+		';
+	
+		foreach ($data as $row) {
+			$nombre_completo = $row["nombres"] . ' ' . $row["apellido_paterno"] . ' ' . $row["apellido_materno"];
+			$html .= '
+				<tr style="white-space: nowrap;">
+					<td>' . $row['codigo_fonasa'] . '</td>
+					<td>' . ucwords($nombre_completo) . '</td>
+					<td>' . $row["diagnostico"] . '</td>
+					<td>' . $row["examen"] . '</td>
+					<td>' . $row["estado"] . '</td>
+					<td>' . $row["tipo_examen"] . '</td>
+					<td>' . date('Y', strtotime($row["fecha"])) . '</td>
+					<td>' . $row["total_examen"] . '</td>
+				</tr>
+			';
+		}
+	
+		$html .= '
+				</tbody>
+			</table>
+		</div>
+		';
+	
+		$html_data = array($html);
+	
+		$render_crud = $pdocrud->render("HTML", $html_data);
+
 		View::render(
 			"reportes",[
 				'render' => $render,
 				'mask' => $mask,
-				'select2' => $select2
+				'select2' => $select2,
+				'render_crud' => $render_crud
 			]
 		);
 	}

@@ -35,7 +35,7 @@
                         <?=$select2?>
 
                        <div class="reportes">
-                        
+                        <?=$render_crud;?>
                        </div>
                        
                     </div>
