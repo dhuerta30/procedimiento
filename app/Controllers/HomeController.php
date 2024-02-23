@@ -1610,45 +1610,7 @@ class HomeController
 		}
 	}
 
-	public function lista_espera_examenes(){
-		$pdocrud = DB::PDOCrud();
-		$pdocrud->addPlugin("bootstrap-inputmask");
-		$pdocrud->formFields(array("estado","rut","fecha_solicitud", "examen", "nombres", "nombre_profesional", "fecha_y_hora_ingreso"));
-		$pdocrud->setSettings("required", false);
-		$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
-		$pdocrud->joinTable("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
-		$pdocrud->joinTable("profesional", "profesional.id_profesional = diagnostico_antecedentes_paciente.profesional", "INNER JOIN");
-		$pdocrud->fieldAddOnInfo("fecha_y_hora_ingreso", "after", '<div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span></div>');
-		$pdocrud->fieldCssClass("nombres", array("nombre_paciente"));
-		$pdocrud->fieldCssClass("fecha_y_hora_ingreso", array("fecha_solicitud"));
-		$pdocrud->fieldCssClass("rut", array("rut"));
-		$pdocrud->fieldCssClass("estado", array("estado"));
-		$pdocrud->fieldCssClass("examen", array("prestacion"));
-		$pdocrud->fieldCssClass("nombre_profesional", array("profesional"));
-		$pdocrud->formStaticFields("botones_busqueda", "html", "
-				<div class='row'>
-					<div class='col-md-12'>
-						<a href='javascript:;' class='btn btn-primary buscar'><i class='fa fa-search'></i> Buscar</a>
-						<a href='javascript:;' class='btn btn-danger limpiar_filtro'><i class='fas fa-eraser'></i> Limpiar</a>
-					</div>
-				</div>
-		");
-		$pdocrud->fieldRenameLable("rut", "RUN");
-		$pdocrud->fieldRenameLable("fecha_y_hora_ingreso", "Fecha Solicitud");
-		$pdocrud->fieldRenameLable("nombres", "Nombre Paciente");
-		$pdocrud->fieldRenameLable("examen", "Prestación");
-		$pdocrud->fieldRenameLable("nombre_profesional", "Profesional");
-		$pdocrud->fieldTypes("estado", "select");
-		$pdocrud->fieldDataBinding("estado", "estado_procedimiento", "nombre as estado_procedimiento", "nombre", "db");
-		$pdocrud->fieldGroups("Name",array("rut","nombres", "estado"));
-		$pdocrud->fieldGroups("Name2",array("examen", "nombre_profesional", "fecha_y_hora_ingreso"));
-		$pdocrud->fieldDisplayOrder(array("rut","nombres","estado", "examen", "nombre_profesional", "fecha_y_hora_ingreso"));
-		$pdocrud->buttonHide("submitBtn");
-		$pdocrud->buttonHide("cancel");
-		$render = $pdocrud->dbTable("datos_paciente")->render("insertform");
-		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
-
-
+	private function mostrar_grilla_lista_espera(){
 		$crud = DB::PDOCrud(true);
 		$pdomodel = $crud->getPDOModelObj();
 		$pdomodel->columns = array(
@@ -1732,6 +1694,48 @@ class HomeController
 
 		$html_data = array($html);
 		$render_crud = $crud->render("HTML", $html_data);
+		return $render_crud;
+	}
+
+	public function lista_espera_examenes(){
+		$pdocrud = DB::PDOCrud();
+		$pdocrud->addPlugin("bootstrap-inputmask");
+		$pdocrud->formFields(array("estado","rut","fecha_solicitud", "examen", "nombres", "nombre_profesional", "fecha_y_hora_ingreso"));
+		$pdocrud->setSettings("required", false);
+		$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
+		$pdocrud->joinTable("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
+		$pdocrud->joinTable("profesional", "profesional.id_profesional = diagnostico_antecedentes_paciente.profesional", "INNER JOIN");
+		$pdocrud->fieldAddOnInfo("fecha_y_hora_ingreso", "after", '<div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span></div>');
+		$pdocrud->fieldCssClass("nombres", array("nombre_paciente"));
+		$pdocrud->fieldCssClass("fecha_y_hora_ingreso", array("fecha_solicitud"));
+		$pdocrud->fieldCssClass("rut", array("rut"));
+		$pdocrud->fieldCssClass("estado", array("estado"));
+		$pdocrud->fieldCssClass("examen", array("prestacion"));
+		$pdocrud->fieldCssClass("nombre_profesional", array("profesional"));
+		$pdocrud->formStaticFields("botones_busqueda", "html", "
+				<div class='row'>
+					<div class='col-md-12'>
+						<a href='javascript:;' class='btn btn-primary buscar'><i class='fa fa-search'></i> Buscar</a>
+						<a href='javascript:;' class='btn btn-danger limpiar_filtro'><i class='fas fa-eraser'></i> Limpiar</a>
+					</div>
+				</div>
+		");
+		$pdocrud->fieldRenameLable("rut", "RUN");
+		$pdocrud->fieldRenameLable("fecha_y_hora_ingreso", "Fecha Solicitud");
+		$pdocrud->fieldRenameLable("nombres", "Nombre Paciente");
+		$pdocrud->fieldRenameLable("examen", "Prestación");
+		$pdocrud->fieldRenameLable("nombre_profesional", "Profesional");
+		$pdocrud->fieldTypes("estado", "select");
+		$pdocrud->fieldDataBinding("estado", "estado_procedimiento", "nombre as estado_procedimiento", "nombre", "db");
+		$pdocrud->fieldGroups("Name",array("rut","nombres", "estado"));
+		$pdocrud->fieldGroups("Name2",array("examen", "nombre_profesional", "fecha_y_hora_ingreso"));
+		$pdocrud->fieldDisplayOrder(array("rut","nombres","estado", "examen", "nombre_profesional", "fecha_y_hora_ingreso"));
+		$pdocrud->buttonHide("submitBtn");
+		$pdocrud->buttonHide("cancel");
+		$render = $pdocrud->dbTable("datos_paciente")->render("insertform");
+		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
+
+		$render_crud = $this->mostrar_grilla_lista_espera();
 		
 		View::render(
 			'lista_espera_examenes',
@@ -2541,7 +2545,8 @@ class HomeController
 				$html_data = array($html);
 				echo $pdocrud->render("HTML", $html_data);
 			} else {
-				echo "<div class='alert alert-danger text-center'>Ingrese datos a Buscar</div>";
+				//echo "<div class='alert alert-danger text-center'>Ingrese datos a Buscar</div>";
+				echo $this->mostrar_grilla_lista_espera();
 			}
 		}
 	}

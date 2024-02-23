@@ -2,6 +2,8 @@
 <?php require 'layouts/sidebar.php'; ?>
 <link href="<?=$_ENV["BASE_URL"]?>css/sweetalert2.min.css" rel="stylesheet">
 <link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>css/flatpickr.min.css">
+<link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>app/libs/script/plugins/datatable/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 <style>
     .page-title.clearfix.card-header.pdocrud-table-heading, .row.pdocrud-options-files {
         display: none;
@@ -38,6 +40,12 @@
 </div>
 <script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/flatpickr.js"></script>
+<script src="<?=$_ENV["BASE_URL"]?>app/libs/script/plugins/datatable/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 <script>
 $(document).ready(function(){
     $(".fecha_solicitud").flatpickr({
@@ -131,7 +139,7 @@ $(document).on("click", ".limpiar_filtro", function(){
     $('.prestacion').val("");
     $('.profesional').val("");
     $('.fecha_solicitud').val("");
-    $('.resultados').empty();
+    $('.buscar').click();
     $('.cargar_modal').empty();
 });
 
