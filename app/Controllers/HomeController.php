@@ -2467,7 +2467,7 @@ class HomeController
 				"GROUP_CONCAT(DISTINCT fecha_y_hora_ingreso) as Fecha_solicitud",
 				"GROUP_CONCAT(DISTINCT estado) AS Estado",
 				"GROUP_CONCAT(DISTINCT codigo_fonasa) AS Codigo",
-				"GROUP_CONCAT(DISTINCT tipo_examen) AS Examen",
+				"GROUP_CONCAT(DISTINCT examen) AS Examen",
 				"GROUP_CONCAT(DISTINCT fecha) AS Fecha",
 				"GROUP_CONCAT(DISTINCT especialidad) AS especialidad",
 				"GROUP_CONCAT(DISTINCT nombre_profesional, ' ',apellido_profesional) AS profesional",
@@ -2488,6 +2488,7 @@ class HomeController
 				$pdomodel->where("rut", $run);
 			} 
 
+			$pdomodel->orderByCols = array("dp.estado asc");
 			$data = $pdomodel->select("datos_paciente as dp");
 			
 			if (isset($run)) {
