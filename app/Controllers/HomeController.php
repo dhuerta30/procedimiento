@@ -1654,7 +1654,7 @@ class HomeController
 		$pdomodel->columns = array(
 			"dp.id_datos_paciente",
 			"ds.id_detalle_de_solicitud",
-			"rut",
+			"dp.rut",
 			"GROUP_CONCAT(DISTINCT nombres, ' ', apellido_paterno, ' ', apellido_materno) AS Paciente",
 			"GROUP_CONCAT(DISTINCT edad) AS Edad",
 			"GROUP_CONCAT(DISTINCT fecha_y_hora_ingreso) as Fecha_solicitud",
