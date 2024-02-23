@@ -1356,6 +1356,7 @@ class HomeController
 		$crud->fieldRenameLable("tipo_examen", "Tipo Exámen (*)");
 		$crud->fieldRenameLable("examen", "Exámen (*)");
 		$crud->fieldRenameLable("observacion", "Observación (*)");
+		$crud->fieldTypes("examen", "input");
 		//$crud->fieldTypes("id_datos_paciente", "select");
 		//$crud->fieldDataBinding("id_datos_paciente", "datos_paciente", "id_datos_paciente", array("nombres","apellido_paterno", "apellido_materno"), "db", " ");
 		$crud->formFields(array("id_datos_paciente","tipo_solicitud", "codigo_fonasa", "tipo_examen","examen","sintomas_principales", "diagnostico_libre", "plano", "extremidad", "observacion", "contraste"));
@@ -1625,7 +1626,7 @@ class HomeController
 			"dp.estado",
 			"GROUP_CONCAT(DISTINCT codigo_fonasa) AS Codigo",
 			"GROUP_CONCAT(DISTINCT examen) AS Examen",
-			"GROUP_CONCAT(DISTINCT fecha) AS Fecha",
+			"dg_p.fecha",
 			"GROUP_CONCAT(DISTINCT especialidad) AS especialidad",
 			"GROUP_CONCAT(DISTINCT nombre_profesional, ' ',apellido_profesional) AS profesional",
 		);
@@ -1663,6 +1664,13 @@ class HomeController
 			$fecha = date('d/m/Y', strtotime($row["fecha"]));
 			$data_fecha = ($fecha != "01/01/1970") ? $fecha : '<div class="badge badge-danger">Sin Fecha</div>';
 
+			$codigos = explode(',', $row["codigo"]);
+
+			$code = "";
+			foreach ($codigos as $codigo) {
+				$code .= '<div class="badge badge-info">'. $codigo . '</div>' . '<br>';
+			}
+
 			$html .= '
 				<tr style="white-space: nowrap;">
 					<td>' . $row['rut'] . '</td>
@@ -1670,8 +1678,8 @@ class HomeController
 					<td>' . $row["edad"] . '</td>
 					<td>' . date('d/m/Y', strtotime($row["fecha_y_hora_ingreso"])) . '</td>
 					<td><div class="bdge badge-success">' . $row["estado"] . '</div></td>
-					<td>' . $row["codigo"] . '</td>
-					<td>' . $row["examen"] . '</td>
+					<td>'. $code .'</td>
+					<td>' . $row['examen'] . '</td>
 					<td>' . $data_fecha . '</td>
 					<td>' . $row["especialidad"] . '</td>
 					<td>' . $row["profesional"] . '</td>
@@ -2540,8 +2548,7 @@ class HomeController
 				"GROUP_CONCAT(DISTINCT codigo_fonasa) AS codigo",
 				"GROUP_CONCAT(ds.examen) as examen",
 				"dg_p.fecha",
-				"dg_p.especialidad",
-				"pro.nombre_profesional",
+				"GROUP_CONCAT(DISTINCT especialidad) AS especialidad",
 				"GROUP_CONCAT(DISTINCT nombre_profesional, ' ',apellido_profesional) AS profesional",
 			);
 	
@@ -2631,7 +2638,14 @@ class HomeController
 
 					$fecha = date('d/m/Y', strtotime($row["fecha"]));
 					$data_fecha = ($fecha != "01/01/1970") ? $fecha : '<div class="badge badge-danger">Sin Fecha</div>';
-
+		
+					$codigos = explode(',', $row["codigo"]);
+		
+					$code = "";
+					foreach ($codigos as $codigo) {
+						$code .= '<div class="badge badge-info">'. $codigo . '</div>' . '<br>';
+					}
+		
 					$html .= '
 						<tr style="white-space: nowrap;">
 							<td>' . $row['rut'] . '</td>
@@ -2639,7 +2653,7 @@ class HomeController
 							<td>' . $row["edad"] . '</td>
 							<td>' . date('d/m/Y', strtotime($row["fecha_y_hora_ingreso"])) . '</td>
 							<td><div class="bdge badge-success">' . $row["estado"] . '</div></td>
-							<td>' . $row["codigo"] . '</td>
+							<td>'. $code .'</td>
 							<td>' . $row["examen"] . '</td>
 							<td>' . $data_fecha . '</td>
 							<td>' . $row["especialidad"] . '</td>
@@ -2916,7 +2930,6 @@ class HomeController
 
 					$sql = array();
 					foreach ($_SESSION['detalle_de_solicitud'] as $sesionVal) {
-
 						$sql['id_datos_paciente'] = $id;
 						$sql['codigo_fonasa'] = $sesionVal['codigo_fonasa'];
 						$sql['tipo_solicitud'] = $sesionVal['tipo_solicitud'];
