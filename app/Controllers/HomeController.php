@@ -2524,7 +2524,7 @@ class HomeController
 				$pdomodel->andOrOperator = "OR";
 				$pdomodel->where("CONCAT(apellido_profesional)", $profesional);
 			}
-			
+
 
 			if (!empty($request->post('fecha_solicitud'))) {
 				$fecha_solicitud = $request->post('fecha_solicitud');
@@ -2589,7 +2589,6 @@ class HomeController
 				$html_data = array($html);
 				echo $pdocrud->render("HTML", $html_data);
 			} else {
-				//echo "<div class='alert alert-danger text-center'>Ingrese datos a Buscar</div>";
 				echo $this->mostrar_grilla_lista_espera();
 			}
 		}
