@@ -1617,10 +1617,12 @@ class HomeController
 			"dp.id_datos_paciente",
 			"ds.id_detalle_de_solicitud",
 			"dp.rut",
-			"GROUP_CONCAT(DISTINCT nombres, ' ', apellido_paterno, ' ', apellido_materno) AS Paciente",
-			"GROUP_CONCAT(DISTINCT edad) AS Edad",
-			"GROUP_CONCAT(DISTINCT fecha_y_hora_ingreso) as Fecha_solicitud",
-			"GROUP_CONCAT(DISTINCT estado) AS Estado",
+			"dp.nombres",
+			"dp.apellido_paterno",
+			"dp.apellido_materno",
+			"dp.edad",
+			"dp.fecha_y_hora_ingreso",
+			"dp.estado",
 			"GROUP_CONCAT(DISTINCT codigo_fonasa) AS Codigo",
 			"GROUP_CONCAT(DISTINCT examen) AS Examen",
 			"GROUP_CONCAT(DISTINCT fecha) AS Fecha",
@@ -1632,9 +1634,7 @@ class HomeController
 		$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
 		$pdomodel->joinTables("profesional as pro", "pro.id_profesional = dg_p.profesional", "INNER JOIN");
 
-		$pdomodel->orderByCols = array("dp.estado asc");
-
-		$pdomodel->groupByCols = array("dp.id_datos_paciente", "rut", "edad");
+		$pdomodel->groupByCols = array("dp.id_datos_paciente", "dp.rut", "dp.edad");
 		$data = $pdomodel->select("datos_paciente as dp");
 		
 		$html = '
@@ -1666,9 +1666,9 @@ class HomeController
 			$html .= '
 				<tr style="white-space: nowrap;">
 					<td>' . $row['rut'] . '</td>
-					<td>' . $row['paciente'] . '</td>
+					<td>' . $row['nombres'] . ' ' . $row['apellido_paterno'] . ' ' . $row['apellido_materno'] . '</td>
 					<td>' . $row["edad"] . '</td>
-					<td>' . date('d/m/Y', strtotime($row["fecha_solicitud"])) . '</td>
+					<td>' . date('d/m/Y', strtotime($row["fecha_y_hora_ingreso"])) . '</td>
 					<td><div class="bdge badge-success">' . $row["estado"] . '</div></td>
 					<td>' . $row["codigo"] . '</td>
 					<td>' . $row["examen"] . '</td>
@@ -2468,12 +2468,12 @@ class HomeController
 				"dp.edad",
 				"dp.fecha_y_hora_ingreso",
 				"dp.estado",
-				"codigo_fonasa",
-				"ds.examen",
+				"GROUP_CONCAT(DISTINCT codigo_fonasa) AS codigo",
+				"GROUP_CONCAT(ds.examen) as examen",
 				"dg_p.fecha",
 				"dg_p.especialidad",
 				"pro.nombre_profesional",
-				"pro.apellido_profesional"
+				"GROUP_CONCAT(DISTINCT nombre_profesional, ' ',apellido_profesional) AS profesional",
 			);
 	
 			$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
@@ -2559,6 +2559,10 @@ class HomeController
 				';
 			
 				foreach ($data as $row) {
+
+					$fecha = date('d/m/Y', strtotime($row["fecha"]));
+					$data_fecha = ($fecha != "01/01/1970") ? $fecha : '<div class="badge badge-danger">Sin Fecha</div>';
+
 					$html .= '
 						<tr style="white-space: nowrap;">
 							<td>' . $row['rut'] . '</td>
@@ -2566,11 +2570,11 @@ class HomeController
 							<td>' . $row["edad"] . '</td>
 							<td>' . date('d/m/Y', strtotime($row["fecha_y_hora_ingreso"])) . '</td>
 							<td><div class="bdge badge-success">' . $row["estado"] . '</div></td>
-							<td>' . $row["codigo_fonasa"] . '</td>
+							<td>' . $row["codigo"] . '</td>
 							<td>' . $row["examen"] . '</td>
-							<td>' . date('d/m/Y', strtotime($row["fecha"])) . '</td>
+							<td>' . $data_fecha . '</td>
 							<td>' . $row["especialidad"] . '</td>
-							<td>' . $row["nombre_profesional"] . ' ' . $row["apellido_profesional"] . '</td>
+							<td>' . $row["profesional"] . '</td>
 							<td>
 								<a href="javascript:;" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-file-o"></i></a>
 								<a href="javascript:;" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-arrow-right"></i></a>
