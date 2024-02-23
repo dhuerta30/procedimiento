@@ -1670,6 +1670,8 @@ class HomeController
 		$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
 		$pdomodel->joinTables("profesional as pro", "pro.id_profesional = dg_p.profesional", "INNER JOIN");
 
+		$pdomodel->orderByCols = array("dp.estado asc");
+
 		$pdomodel->groupByCols = array("dp.id_datos_paciente", "rut", "edad");
 		$data = $pdomodel->select("datos_paciente as dp");
 		
