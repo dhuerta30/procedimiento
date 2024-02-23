@@ -26,6 +26,7 @@
                     <?=$mask;?>
 				</div>
 
+                <div class="datos_search p-3"></div>
                 <div class="resultados">
                     <?=$render_crud;?>
                 </div>
@@ -127,6 +128,7 @@ $(document).on("click", ".buscar", function(){
         success: function(data){
             $("#pdocrud-ajax-loader").hide();
             $('.resultados').html(data);
+            
         }
     });
 

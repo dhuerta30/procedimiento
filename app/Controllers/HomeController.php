@@ -2461,16 +2461,19 @@ class HomeController
 			$pdomodel->columns = array(
 				"dp.id_datos_paciente",
 				"ds.id_detalle_de_solicitud",
-				"rut",
-				"GROUP_CONCAT(DISTINCT nombres, ' ', apellido_paterno, ' ', apellido_materno) AS Paciente",
-				"GROUP_CONCAT(DISTINCT edad) AS Edad",
-				"GROUP_CONCAT(DISTINCT fecha_y_hora_ingreso) as Fecha_solicitud",
-				"GROUP_CONCAT(DISTINCT estado) AS Estado",
-				"GROUP_CONCAT(DISTINCT codigo_fonasa) AS Codigo",
-				"GROUP_CONCAT(DISTINCT examen) AS Examen",
-				"GROUP_CONCAT(DISTINCT fecha) AS Fecha",
-				"GROUP_CONCAT(DISTINCT especialidad) AS especialidad",
-				"GROUP_CONCAT(DISTINCT nombre_profesional, ' ',apellido_profesional) AS profesional",
+				"dp.rut",
+				"dp.nombres",
+				"dp.apellido_paterno",
+				"dp.apellido_materno",
+				"dp.edad",
+				"dp.fecha_y_hora_ingreso",
+				"estado",
+				"codigo_fonasa",
+				"examen",
+				"fecha",
+				"especialidad",
+				"pro.nombre_profesional",
+				"pro.apellido_profesional"
 			);
 	
 			$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
@@ -2485,12 +2488,52 @@ class HomeController
 					return;
 				}
 
-				$pdomodel->where("rut", $run);
-			} 
+				$pdomodel->where("dp.rut", $run);
+			}
 
-			$pdomodel->orderByCols = array("dp.estado asc");
-			$data = $pdomodel->select("datos_paciente as dp");
+			if (!empty($request->post('nombre_paciente'))) {
+				$nombre_paciente = $request->post('nombre_paciente');
+
+				$pdomodel->where("nombres", $nombre_paciente);
+				$pdomodel->andOrOperator = "OR";
+				$pdomodel->where("CONCAT(nombres, ' ', apellido_paterno)", $nombre_paciente);
+				$pdomodel->andOrOperator = "OR";
+				$pdomodel->where("CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno)", $nombre_paciente);
+				$pdomodel->andOrOperator = "OR";
+				$pdomodel->where("CONCAT(nombres, ' ', apellido_materno)", $nombre_paciente);
+			}
+
+			if (!empty($request->post('estado'))) {
+				$estado = $request->post('estado');
+				$pdomodel->where("estado", $estado);
+			}
+
+
+			if (!empty($request->post('prestacion'))) {
+				$prestacion = $request->post('prestacion');
+				$pdomodel->where("examen", $prestacion);
+			}
 			
+
+			if (!empty($request->post('profesional'))) {
+				$profesional = $request->post('profesional');
+
+				$pdomodel->where("nombre_profesional", $profesional);
+				$pdomodel->andOrOperator = "OR";
+				$pdomodel->where("CONCAT(nombre_profesional, ' ', apellido_profesional)", $profesional);
+				$pdomodel->andOrOperator = "OR";
+				$pdomodel->where("CONCAT(apellido_profesional)", $profesional);
+			}
+			
+
+			if (!empty($request->post('fecha_solicitud'))) {
+				$fecha_solicitud = $request->post('fecha_solicitud');
+				$pdocrud->where("fecha_y_hora_ingreso", $fecha_solicitud);
+			}
+
+			$pdomodel->groupByCols = array("dp.id_datos_paciente", "rut", "edad");
+			$data = $pdomodel->select("datos_paciente as dp");
+
 			if (isset($run)) {
 				$html = '
 				<div class="table-responsive">
@@ -2517,15 +2560,15 @@ class HomeController
 					$html .= '
 						<tr style="white-space: nowrap;">
 							<td>' . $row['rut'] . '</td>
-							<td>' . $row['paciente'] . '</td>
+							<td>' . $row['nombres'] . ' ' . $row['apellido_paterno'] . ' ' . $row['apellido_materno'] . '</td>
 							<td>' . $row["edad"] . '</td>
-							<td>' . date('d/m/Y', strtotime($row["fecha_solicitud"])) . '</td>
+							<td>' . date('d/m/Y', strtotime($row["fecha_y_hora_ingreso"])) . '</td>
 							<td><div class="bdge badge-success">' . $row["estado"] . '</div></td>
-							<td>' . $row["codigo"] . '</td>
+							<td>' . $row["codigo_fonasa"] . '</td>
 							<td>' . $row["examen"] . '</td>
 							<td>' . date('d/m/Y', strtotime($row["fecha"])) . '</td>
 							<td>' . $row["especialidad"] . '</td>
-							<td>' . $row["profesional"] . '</td>
+							<td>' . $row["nombre_profesional"] . ' ' . $row["apellido_profesional"] . '</td>
 							<td>
 								<a href="javascript:;" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-file-o"></i></a>
 								<a href="javascript:;" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-arrow-right"></i></a>
