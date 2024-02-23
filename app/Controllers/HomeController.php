@@ -2467,7 +2467,7 @@ class HomeController
 				"dp.apellido_materno",
 				"dp.edad",
 				"dp.fecha_y_hora_ingreso",
-				"estado",
+				"dp.estado",
 				"codigo_fonasa",
 				"examen",
 				"fecha",
