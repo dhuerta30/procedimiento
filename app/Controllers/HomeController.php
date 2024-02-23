@@ -1695,6 +1695,10 @@ class HomeController
 		';
 	
 		foreach ($data as $row) {
+
+			$fecha = date('d/m/Y', strtotime($row["fecha"]));
+			$data_fecha = ($fecha != "01/01/1970") ? $fecha : '<div class="badge badge-danger">Sin Fecha</div>';
+
 			$html .= '
 				<tr style="white-space: nowrap;">
 					<td>' . $row['rut'] . '</td>
@@ -1704,7 +1708,7 @@ class HomeController
 					<td><div class="bdge badge-success">' . $row["estado"] . '</div></td>
 					<td>' . $row["codigo"] . '</td>
 					<td>' . $row["examen"] . '</td>
-					<td>' . date('d/m/Y', strtotime($row["fecha"])) . '</td>
+					<td>' . $data_fecha . '</td>
 					<td>' . $row["especialidad"] . '</td>
 					<td>' . $row["profesional"] . '</td>
 					<td>
