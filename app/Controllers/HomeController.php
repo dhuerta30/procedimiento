@@ -2600,7 +2600,7 @@ class HomeController
 			}
 
 			if (!empty($estado)) {
-				$pdomodel->where("dp.estado", $estado);
+				$pdomodel->where("dg_p.estado", $estado);
 			}
 
 			if (!empty($prestacion)) {
@@ -2619,8 +2619,10 @@ class HomeController
 			}
 
 
-			if (!empty($fecha_solicitud)) {
-				$pdocrud->where("dp.fecha_y_hora_ingreso", $fecha_solicitud);
+			$fecha_formateada = date('Y-m-d', strtotime($fecha_solicitud));
+
+			if (!empty($fecha_formateada)) {
+				$pdomodel->where("ds.fecha_solicitud", $fecha_formateada);
 			}
 
 			$pdomodel->groupByCols = array("dp.id_datos_paciente", "dp.rut", "dp.edad", "ds.fecha", "ds.fecha_solicitud");

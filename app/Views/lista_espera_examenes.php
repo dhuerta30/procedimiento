@@ -50,7 +50,7 @@
 <script>
 $(document).ready(function(){
     $(".fecha_solicitud").flatpickr({
-        dateFormat: "d-m-Y",
+        dateFormat: "Y-m-d",
         allowInput: true,
         //defaultDate: new Date(),
         locale: {
