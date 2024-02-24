@@ -1627,20 +1627,20 @@ class HomeController
 			"dp.apellido_paterno",
 			"dp.apellido_materno",
 			"dp.edad",
-			"ds.fecha_solicitud",
+			"GROUP_CONCAT(DISTINCT fecha_solicitud) as fecha_solicitud",
 			"dp.estado",
 			"GROUP_CONCAT(DISTINCT codigo_fonasa) AS Codigo",
 			"GROUP_CONCAT(DISTINCT examen SEPARATOR ' - ') AS Examen",
-			"dg_p.fecha",
+			"GROUP_CONCAT(DISTINCT ds.fecha) as fecha", 
 			"GROUP_CONCAT(DISTINCT especialidad) AS especialidad",
-			"GROUP_CONCAT(DISTINCT nombre_profesional, ' ',apellido_profesional) AS profesional",
+			"GROUP_CONCAT(DISTINCT nombre_profesional, ' ', apellido_profesional) AS profesional", 
 		);
 
 		$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
 		$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
 		$pdomodel->joinTables("profesional as pro", "pro.id_profesional = dg_p.profesional", "INNER JOIN");
 
-		$pdomodel->groupByCols = array("dp.id_datos_paciente", "dp.rut", "dp.edad", "fecha");
+		$pdomodel->groupByCols = array("dp.id_datos_paciente", "dp.rut", "dp.edad", "ds.fecha", "ds.fecha_solicitud");
 		$data = $pdomodel->select("datos_paciente as dp");
 		
 		$html = '
