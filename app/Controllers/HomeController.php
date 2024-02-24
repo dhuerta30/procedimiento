@@ -2618,11 +2618,8 @@ class HomeController
 				$pdomodel->closedBrackets = ")";
 			}
 
-
-			$fecha_formateada = date('Y-m-d', strtotime($fecha_solicitud));
-
-			if (!empty($fecha_formateada)) {
-				$pdomodel->where("ds.fecha_solicitud", $fecha_formateada);
+			if (!empty($fecha_solicitud)) {
+				$pdomodel->where("ds.fecha_solicitud", $fecha_solicitud);
 			}
 
 			$pdomodel->groupByCols = array("dp.id_datos_paciente", "dp.rut", "dp.edad", "ds.fecha", "ds.fecha_solicitud");
