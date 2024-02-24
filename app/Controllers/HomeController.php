@@ -2143,43 +2143,7 @@ class HomeController
 		}
 	}
 
-	public function reportes(){
-
-		$pdocrud = DB::PDOCrud();
-		$pdocrud->addPlugin("select2");
-		$pdocrud->addPlugin("bootstrap-inputmask");
-		$html_data = array('
-			<form action="#" method="POST" class="form_search">
-			<div class="row">
-				<div class="col-md-6">
-					<label for="correo">Rut</label>
-					<input class="form-control rut" type="text" name="rut" id="rut"  placeholder="">
-				</div>
-				<div class="col-md-6">
-					<label for="fecha">Año</label>
-					<div class="input-group-append">
-						<select class="form-control ano" type="text" name="ano" id="ano">
-							<option>Seleccionar Año</option>
-						</select>
-						<span class="btn btn-default border" id="basic-addon1">
-							<i class="fa fa-calendar"></i>
-						</span>
-					</div>
-				</div>
-			</div>
-			<div class="row mt-3 mb-4">
-				<div class="col-md-12">
-					<a href="javascript:;" class="btn btn-primary btn_search"><i class="fa fa-search"></i> Buscar</a>
-					<a href="javascript:;" class="btn btn-danger btn_limpiar d-none"><i class="fas fa-eraser"></i> Limpiar</a>
-				</div>
-			</div>	
-		</form>
-		');
-		$render = $pdocrud->render("HTML", $html_data);
-		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
-		$select2 = $pdocrud->loadPluginJsCode("select2",".ano");
-
-
+	private function reportes_all(){
 		$crud = DB::PDOCrud(true);
 		$pdomodel = $crud->getPDOModelObj();
 		$pdomodel->columns = array(
@@ -2201,6 +2165,7 @@ class HomeController
 		$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
 
 		$pdomodel->groupByCols = array("dp.nombres", "dp.rut");
+		$pdomodel->where("dg_p.fecha", "1970", "!=");
 		$data = $pdomodel->select("datos_paciente as dp");
 
 		$html = '
@@ -2245,7 +2210,47 @@ class HomeController
 	
 		$html_data = array($html);
 	
-		$render_crud = $pdocrud->render("HTML", $html_data);
+		$render_crud = $crud->render("HTML", $html_data);
+		return $render_crud;
+	}
+
+	public function reportes(){
+
+		$pdocrud = DB::PDOCrud();
+		$pdocrud->addPlugin("select2");
+		$pdocrud->addPlugin("bootstrap-inputmask");
+		$html_data = array('
+			<form action="#" method="POST" class="form_search">
+			<div class="row">
+				<div class="col-md-6">
+					<label for="correo">Rut</label>
+					<input class="form-control rut" type="text" name="rut" id="rut"  placeholder="">
+				</div>
+				<div class="col-md-6">
+					<label for="fecha">Año</label>
+					<div class="input-group-append">
+						<select class="form-control ano" type="text" name="ano" id="ano">
+							<option>Seleccionar Año</option>
+						</select>
+						<span class="btn btn-default border" id="basic-addon1">
+							<i class="fa fa-calendar"></i>
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="row mt-3 mb-4">
+				<div class="col-md-12">
+					<a href="javascript:;" class="btn btn-primary btn_search"><i class="fa fa-search"></i> Buscar</a>
+					<a href="javascript:;" class="btn btn-danger btn_limpiar d-none"><i class="fas fa-eraser"></i> Limpiar</a>
+				</div>
+			</div>	
+		</form>
+		');
+		$render = $pdocrud->render("HTML", $html_data);
+		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
+		$select2 = $pdocrud->loadPluginJsCode("select2",".ano");
+
+		$render_crud = $this->reportes_all();
 
 		View::render(
 			"reportes",[
@@ -2579,10 +2584,10 @@ class HomeController
 			
 			if (!empty($ano)) {
 				// Validar que el año sea numérico y tenga 4 dígitos
-				if (!is_numeric($ano) || strlen($ano) !== 4) {
+				/*if (!is_numeric($ano) || strlen($ano) !== 4) {
 					echo json_encode(['error' => 'Ingrese un Año válido']);
 					return;
-				}
+				}*/
 	
 				$pdomodel->whereYear("dg_p.fecha", $ano, "=");
 			}
@@ -2629,10 +2634,9 @@ class HomeController
 			
 				$html_data = array($html);
 			
-				$render = $pdocrud->render("HTML", $html_data);
-				echo json_encode(['render' => $render]);
+				echo $pdocrud->render("HTML", $html_data);
 			} else {
-				echo json_encode(['error' => 'No se encontraron resultados para la búsqueda']);
+				echo $this->reportes_all();
 			}
 		}
 	}	

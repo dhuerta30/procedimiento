@@ -56,6 +56,51 @@
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 <script>
+function datatable(){
+    $('.tabla_reportes').DataTable({
+        searching: false,
+        scrollX: true,
+        paging: ($('.tabla_reportes tbody tr').length > 10) ? true : false,
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'excel',
+                text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
+                className: 'btn btn-light',
+                filename: function(){
+                    return 'reportes';
+                },
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] // Define las columnas a exportar
+                }
+            }
+        ],
+        language: {
+            "decimal": "",
+            "emptyTable": "No hay información",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+            "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+            "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ Entradas",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscar:",
+            "zeroRecords": "Sin resultados encontrados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+        }
+    });
+}
+$(document).ready(function(){
+    datatable();
+});
+
 $(document).on("click", ".btn_search", function(){
     let rut = $('#rut').val();
     let ano = $('#ano').val();
@@ -63,7 +108,7 @@ $(document).on("click", ".btn_search", function(){
     $.ajax({
         type: "POST",
         url: "<?=$_ENV["BASE_URL"]?>home/buscar_por_rut",
-        dataType: "json",
+        dataType: "html",
         data: {
             rut: rut,
             ano: ano
@@ -72,51 +117,9 @@ $(document).on("click", ".btn_search", function(){
             $("#pdocrud-ajax-loader").show();
         },
         success: function(data){
-            if(data['render']){
-                $("#pdocrud-ajax-loader").hide();
-                $('.reportes').html("<div class='table-responsive'>"+ data['render'] +"</div>");
-                $('.tabla_reportes').DataTable({
-                    paging: ($('.tabla_reportes tbody tr').length > 10) ? true : false,
-                    dom: 'Bfrtip',
-                    buttons: [
-                        {
-                            extend: 'excel',
-                            text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
-                            className: 'btn btn-light',
-                            filename: function(){
-                                return 'reportes';
-                            },
-                            exportOptions: {
-                                columns: [0, 1, 2, 3] // Define las columnas a exportar
-                            }
-                        }
-                    ],
-                    language: {
-                        "decimal": "",
-                        "emptyTable": "No hay información",
-                        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
-                        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-                        "infoPostFix": "",
-                        "thousands": ",",
-                        "lengthMenu": "Mostrar _MENU_ Entradas",
-                        "loadingRecords": "Cargando...",
-                        "processing": "Procesando...",
-                        "search": "Buscar:",
-                        "zeroRecords": "Sin resultados encontrados",
-                        "paginate": {
-                            "first": "Primero",
-                            "last": "Ultimo",
-                            "next": "Siguiente",
-                            "previous": "Anterior"
-                        }
-                    }
-                });
-                $('.btn_limpiar').removeClass('d-none');
-            } else {
-                $("#pdocrud-ajax-loader").hide();
-                $('.reportes').html("<div class='alert alert-danger text-center'>"+ data['error'] +"</div>");
-            }
+            $("#pdocrud-ajax-loader").hide();
+            $('.reportes').html("<div class='table-responsive'>"+ data +"</div>");
+            datatable();
         }
     });
 });
