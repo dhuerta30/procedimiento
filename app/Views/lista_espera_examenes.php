@@ -396,16 +396,21 @@ $(document).on("pdocrud_after_submission", function(event, obj, data){
     let json = JSON.parse(data);
 
     if(json.message){
-        $('#pdocrud_search_btn').click();
+        //$('#pdocrud_search_btn').click();
         $('#procedimientos').modal('hide');
         $('#egresar_solicitud').modal('hide');
         $('#agregar_nota').modal('hide');
-
+    
         Swal.fire({
             title: 'Genial!',
             text: json.message,
             icon: 'success',
-            confirmButtonText: 'Aceptar'
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: false
+        }).then((result) => {
+            if(result.isConfirmed) {
+                $('.limpiar_filtro').click();
+            }
         });
     }
 
