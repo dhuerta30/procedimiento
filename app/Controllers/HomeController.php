@@ -1245,6 +1245,7 @@ class HomeController
 
 		date_default_timezone_set('America/Santiago');
 		$fecha_registro = date('Y-m-d H:i:s');
+		$fecha_solicitud = date('Y-m-d');
 
 		unset($_SESSION['detalle_de_solicitud']);
 
@@ -1348,6 +1349,10 @@ class HomeController
 
 		$crud = DB::PDOCrud(true);
 		$crud->addPlugin("chosen");
+		$crud->fieldCssClass("fecha_solicitud", array("fecha_solicitud"));
+		$crud->formFieldValue("fecha_solicitud", $fecha_solicitud);
+		$crud->fieldHideLable("fecha_solicitud");
+        $crud->fieldDataAttr("fecha_solicitud", array("style"=>"display:none"));
 		$crud->fieldHideLable("codigo_fonasa");
 		$crud->fieldDataAttr("codigo_fonasa", array("style"=>"display:none"));
 		$crud->fieldHideLable("id_datos_paciente");
@@ -1359,7 +1364,7 @@ class HomeController
 		$crud->fieldTypes("examen", "input");
 		//$crud->fieldTypes("id_datos_paciente", "select");
 		//$crud->fieldDataBinding("id_datos_paciente", "datos_paciente", "id_datos_paciente", array("nombres","apellido_paterno", "apellido_materno"), "db", " ");
-		$crud->formFields(array("id_datos_paciente","tipo_solicitud", "codigo_fonasa", "tipo_examen","examen","sintomas_principales", "diagnostico_libre", "plano", "extremidad", "observacion", "contraste"));
+		$crud->formFields(array("id_datos_paciente","tipo_solicitud", "codigo_fonasa", "tipo_examen","examen","sintomas_principales", "diagnostico_libre", "plano", "extremidad", "observacion", "contraste", "fecha_solicitud"));
 		$crud->fieldDisplayOrder(array("codigo_fonasa","id_datos_paciente","tipo_solicitud", "codigo_fonasa", "tipo_examen","examen","sintomas_principales", "diagnostico_libre", "plano", "extremidad", "observacion", "contraste"));
 		$crud->fieldAddOnInfo("examen", "after", '<div class="input-group-append eliminar_examen"><span class="btn btn-default border eliminar_examen" id="basic-addon1"><i class="fa fa-remove"></i></span></div>');
 		$crud->fieldCssClass("id_datos_paciente", array("paciente"));
@@ -1622,7 +1627,7 @@ class HomeController
 			"dp.apellido_paterno",
 			"dp.apellido_materno",
 			"dp.edad",
-			"dp.fecha_y_hora_ingreso",
+			"ds.fecha_solicitud",
 			"dp.estado",
 			"GROUP_CONCAT(DISTINCT codigo_fonasa) AS Codigo",
 			"GROUP_CONCAT(DISTINCT examen SEPARATOR ' - ') AS Examen",
@@ -1635,7 +1640,7 @@ class HomeController
 		$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
 		$pdomodel->joinTables("profesional as pro", "pro.id_profesional = dg_p.profesional", "INNER JOIN");
 
-		$pdomodel->groupByCols = array("dp.id_datos_paciente", "dp.rut", "dp.edad");
+		$pdomodel->groupByCols = array("dp.id_datos_paciente", "dp.rut", "dp.edad", "fecha");
 		$data = $pdomodel->select("datos_paciente as dp");
 		
 		$html = '
@@ -1681,7 +1686,7 @@ class HomeController
 					<td>' . $row['rut'] . '</td>
 					<td>' . $row['nombres'] . ' ' . $row['apellido_paterno'] . ' ' . $row['apellido_materno'] . '</td>
 					<td>' . $row["edad"] . '</td>
-					<td>' . date('d/m/Y', strtotime($row["fecha_y_hora_ingreso"])) . '</td>
+					<td>' . date('d/m/Y', strtotime($row["fecha_solicitud"])) . '</td>
 					<td><div class="bdge badge-success">' . $row["estado"] . '</div></td>
 					<td>'. $code .'</td>
 					<td>' . $exam . '</td>
@@ -1713,14 +1718,14 @@ class HomeController
 	public function lista_espera_examenes(){
 		$pdocrud = DB::PDOCrud();
 		$pdocrud->addPlugin("bootstrap-inputmask");
-		$pdocrud->formFields(array("estado","rut","fecha_solicitud", "examen", "nombres", "nombre_profesional", "fecha_y_hora_ingreso"));
+		$pdocrud->formFields(array("estado","rut","fecha_solicitud", "examen", "nombres", "nombre_profesional", "fecha_solicitud"));
 		$pdocrud->setSettings("required", false);
 		$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 		$pdocrud->joinTable("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 		$pdocrud->joinTable("profesional", "profesional.id_profesional = diagnostico_antecedentes_paciente.profesional", "INNER JOIN");
-		$pdocrud->fieldAddOnInfo("fecha_y_hora_ingreso", "after", '<div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span></div>');
+		$pdocrud->fieldAddOnInfo("fecha_solicitud", "after", '<div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span></div>');
 		$pdocrud->fieldCssClass("nombres", array("nombre_paciente"));
-		$pdocrud->fieldCssClass("fecha_y_hora_ingreso", array("fecha_solicitud"));
+		$pdocrud->fieldCssClass("fecha_solicitud", array("fecha_solicitud"));
 		$pdocrud->fieldCssClass("rut", array("rut"));
 		$pdocrud->fieldCssClass("estado", array("estado"));
 		$pdocrud->fieldCssClass("examen", array("prestacion"));
@@ -1734,15 +1739,16 @@ class HomeController
 				</div>
 		");
 		$pdocrud->fieldRenameLable("rut", "RUN");
-		$pdocrud->fieldRenameLable("fecha_y_hora_ingreso", "Fecha Solicitud");
+		$pdocrud->fieldRenameLable("fecha_solicitud", "Fecha Solicitud");
 		$pdocrud->fieldRenameLable("nombres", "Nombre Paciente");
 		$pdocrud->fieldRenameLable("examen", "Prestación");
+		$pdocrud->fieldTypes("examen", "input");
 		$pdocrud->fieldRenameLable("nombre_profesional", "Profesional");
 		$pdocrud->fieldTypes("estado", "select");
 		$pdocrud->fieldDataBinding("estado", "estado_procedimiento", "nombre as estado_procedimiento", "nombre", "db");
 		$pdocrud->fieldGroups("Name",array("rut","nombres", "estado"));
-		$pdocrud->fieldGroups("Name2",array("examen", "nombre_profesional", "fecha_y_hora_ingreso"));
-		$pdocrud->fieldDisplayOrder(array("rut","nombres","estado", "examen", "nombre_profesional", "fecha_y_hora_ingreso"));
+		$pdocrud->fieldGroups("Name2",array("examen", "nombre_profesional", "fecha_solicitud"));
+		$pdocrud->fieldDisplayOrder(array("rut","nombres","estado", "examen", "nombre_profesional", "fecha_solicitud"));
 		$pdocrud->buttonHide("submitBtn");
 		$pdocrud->buttonHide("cancel");
 		$render = $pdocrud->dbTable("datos_paciente")->render("insertform");
@@ -2943,6 +2949,7 @@ class HomeController
 						$sql['id_datos_paciente'] = $id;
 						$sql['codigo_fonasa'] = $sesionVal['codigo_fonasa'];
 						$sql['tipo_solicitud'] = $sesionVal['tipo_solicitud'];
+						$sql['fecha_solicitud'] = $sesionVal['fecha_solicitud'];
 						$sql['tipo_examen'] = $sesionVal['tipo_examen'];
 						$sql['examen'] = $sesionVal['examen'];
 						$sql['plano'] = $sesionVal['plano'];
@@ -2979,6 +2986,7 @@ class HomeController
 			$codigo_fonasa = $request->post('codigo_fonasa');
 			$paciente = $request->post('paciente') ?? null;
 			$tipo_solicitud = $request->post('tipo_solicitud');
+			$fecha_solicitud = $request->post('fecha_solicitud');
 			$tipo_examen = $request->post('tipo_examen');
 			$examen = $request->post('examen');
 			$plano = $request->post('plano');
@@ -3024,6 +3032,7 @@ class HomeController
 					"codigo_fonasa" => $codigo_fonasa,
 					"id_datos_paciente" => $paciente,
 					"tipo_solicitud" => $tipo_solicitud,
+					"fecha_solicitud" => $fecha_solicitud,
 					"tipo_examen" => $tipo_examen,
 					"examen" => $examen,
 					"plano" => $plano,

@@ -523,6 +523,7 @@
             let codigo_fonasa = $('.codigo_fonasa').val();
             let paciente = $('.paciente').val();
             let tipo_solicitud = $('.tipo_solicitud').val();
+            let fecha_solicitud = $('.fecha_solicitud').val();
             let tipo_examen = $('.tipo_examen').val();
             let examen = $('.examen').val();
             let plano = $('.plano').val();
@@ -546,6 +547,7 @@
                     codigo_fonasa: codigo_fonasa,
                     paciente: paciente,
                     tipo_solicitud: tipo_solicitud,
+                    fecha_solicitud: fecha_solicitud,
                     tipo_examen: tipo_examen,
                     examen: examen,
                     plano: plano,
