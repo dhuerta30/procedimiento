@@ -28,7 +28,9 @@
 
                 <div class="datos_search p-3"></div>
                 <div class="resultados">
-                    <?=$render_crud;?>
+                    <div class='table-responsive'>
+                        <?=$render_crud;?>
+                    </div>
                 </div>
 
                 <div class="cargar_modal"></div>
@@ -48,7 +50,52 @@
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 <script>
+function datatable(){
+    $('.tabla_reportes').DataTable({
+        searching: false,
+        scrollX: true,
+        paging: ($('.tabla_reportes tbody tr').length > 10) ? true : false,
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'excel',
+                text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
+                className: 'btn btn-light',
+                filename: function(){
+                    return 'reportes';
+                },
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] // Define las columnas a exportar
+                }
+            }
+        ],
+        language: {
+            "decimal": "",
+            "emptyTable": "No hay información",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+            "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+            "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ Entradas",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscar:",
+            "zeroRecords": "Sin resultados encontrados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+        }
+    });
+}
+
 $(document).ready(function(){
+
+    datatable();
+
     $(".fecha_solicitud").flatpickr({
         dateFormat: "Y-m-d",
         allowInput: true,
@@ -128,7 +175,7 @@ $(document).on("click", ".buscar", function(){
         success: function(data){
             $("#pdocrud-ajax-loader").hide();
             $('.resultados').html(data);
-            
+            datatable();
         }
     });
 

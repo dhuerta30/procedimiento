@@ -1644,7 +1644,6 @@ class HomeController
 		$data = $pdomodel->select("datos_paciente as dp");
 		
 		$html = '
-		<div class="table-responsive">
 			<table class="table table-striped tabla_reportes text-center" style="width:100%">
 				<thead class="bg-primary">
 					<tr>
@@ -1707,7 +1706,6 @@ class HomeController
 		$html .= '
 				</tbody>
 			</table>
-		</div>
 		';
 
 		$html_data = array($html);
