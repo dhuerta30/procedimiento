@@ -510,6 +510,9 @@ class HomeController
 
 			$nombre = isset($motivo_egreso[0]["nombre"]) ? $motivo_egreso[0]["nombre"] : '';
 
+			$fecha = date('d/m/Y', strtotime($data[0]["fecha"]));
+			$data_fecha = ($fecha != "01/01/1970") ? $fecha : 'Sin Fecha';
+
 			if($data[0]["fecha_solicitud"] != "0000-00-00 00:00:00") {
 				$obt = date('d/m/Y', strtotime($data[0]["fecha_solicitud"]));
 			} else {
@@ -604,6 +607,10 @@ class HomeController
 						<tr>
 							<td><strong>Exámen</strong></td>
 							<td>".$exam."</td>
+						</tr>
+						<tr>
+							<td><strong>Fecha</strong></td>
+							<td>".$data_fecha."</td>
 						</tr>
 						<tr>
 							<td><strong>Especialidad</strong></td>
