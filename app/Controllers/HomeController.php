@@ -1625,7 +1625,7 @@ class HomeController
 			"dp.fecha_y_hora_ingreso",
 			"dp.estado",
 			"GROUP_CONCAT(DISTINCT codigo_fonasa) AS Codigo",
-			"GROUP_CONCAT(DISTINCT examen) AS Examen",
+			"GROUP_CONCAT(DISTINCT examen SEPARATOR ' - ') AS Examen",
 			"dg_p.fecha",
 			"GROUP_CONCAT(DISTINCT especialidad) AS especialidad",
 			"GROUP_CONCAT(DISTINCT nombre_profesional, ' ',apellido_profesional) AS profesional",
@@ -1671,6 +1671,11 @@ class HomeController
 				$code .= '<div class="badge badge-info">'. $codigo . '</div>' . '<br>';
 			}
 
+    		$exam = str_replace(' - ', "<br>", $row["examen"]);
+
+			$profesional = str_replace(',', "<br>", $row["profesional"]);
+			$especialidad = str_replace(',', "<br>", $row["especialidad"]);
+
 			$html .= '
 				<tr style="white-space: nowrap;">
 					<td>' . $row['rut'] . '</td>
@@ -1679,10 +1684,10 @@ class HomeController
 					<td>' . date('d/m/Y', strtotime($row["fecha_y_hora_ingreso"])) . '</td>
 					<td><div class="bdge badge-success">' . $row["estado"] . '</div></td>
 					<td>'. $code .'</td>
-					<td>' . $row['examen'] . '</td>
+					<td>' . $exam . '</td>
 					<td>' . $data_fecha . '</td>
-					<td>' . $row["especialidad"] . '</td>
-					<td>' . $row["profesional"] . '</td>
+					<td>' . $especialidad . '</td>
+					<td>' . $profesional . '</td>
 					<td>
 						<a href="javascript:;" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-file-o"></i></a>
 						<a href="javascript:;" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-arrow-right"></i></a>
@@ -2545,8 +2550,8 @@ class HomeController
 				"dp.edad",
 				"dp.fecha_y_hora_ingreso",
 				"dp.estado",
-				"GROUP_CONCAT(DISTINCT codigo_fonasa) AS codigo",
-				"GROUP_CONCAT(ds.examen) as examen",
+				"GROUP_CONCAT(DISTINCT codigo_fonasa) AS Codigo",
+				"GROUP_CONCAT(DISTINCT examen SEPARATOR ' - ') AS Examen",
 				"dg_p.fecha",
 				"GROUP_CONCAT(DISTINCT especialidad) AS especialidad",
 				"GROUP_CONCAT(DISTINCT nombre_profesional, ' ',apellido_profesional) AS profesional",
@@ -2645,7 +2650,12 @@ class HomeController
 					foreach ($codigos as $codigo) {
 						$code .= '<div class="badge badge-info">'. $codigo . '</div>' . '<br>';
 					}
+
+					$exam = str_replace(' - ', "<br>", $row["examen"]);
 		
+					$profesional = str_replace(',', "<br>", $row["profesional"]);
+					$especialidad = str_replace(',', "<br>", $row["especialidad"]);
+
 					$html .= '
 						<tr style="white-space: nowrap;">
 							<td>' . $row['rut'] . '</td>
@@ -2654,10 +2664,10 @@ class HomeController
 							<td>' . date('d/m/Y', strtotime($row["fecha_y_hora_ingreso"])) . '</td>
 							<td><div class="bdge badge-success">' . $row["estado"] . '</div></td>
 							<td>'. $code .'</td>
-							<td>' . $row["examen"] . '</td>
+							<td>' . $exam . '</td>
 							<td>' . $data_fecha . '</td>
-							<td>' . $row["especialidad"] . '</td>
-							<td>' . $row["profesional"] . '</td>
+							<td>' . $especialidad . '</td>
+							<td>' . $profesional . '</td>
 							<td>
 								<a href="javascript:;" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-file-o"></i></a>
 								<a href="javascript:;" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-arrow-right"></i></a>
