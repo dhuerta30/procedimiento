@@ -1997,6 +1997,14 @@ class HomeController
 
 			$exam = str_replace(' - ', "<br>", $data[0]["examen"]);
 
+			$examArray = explode('<br>', $exam);
+			foreach ($examArray as $key => $element) {
+				$examArray[$key] = ($key + 1) . '. ' . $element;
+			}
+
+			// Unir de nuevo el array en una cadena con saltos de línea
+			$exam = implode("<br>", $examArray);
+
 			$profesional = str_replace(',', "<br>", $data[0]["profesional"]);
 			$especialidad = str_replace(',', "<br>", $data[0]["especialidad"]);
 
