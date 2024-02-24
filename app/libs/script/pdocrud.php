@@ -151,9 +151,10 @@ function before_sql_data_estat($data, $obj){
 function editar_procedimientos($data, $obj){
     $id_datos_paciente = $data['datos_paciente']['id_datos_paciente'];
     $fecha = $data["diagnostico_antecedentes_paciente"]["fecha"];
-    $estado = $_POST['estado'];
+    $estado = $data["diagnostico_antecedentes_paciente"]["estado"];
+    //$estado = $_POST['estado'];
  
-    $pdomodel = $obj->getPDOModelObj();
+    /*$pdomodel = $obj->getPDOModelObj();
     $pdomodel->where("estado", $estado, "!=", "AND");
     $pdomodel->where("id_datos_paciente", $id_datos_paciente, "=");
     $data_estado = $pdomodel->select("datos_paciente");
@@ -164,11 +165,12 @@ function editar_procedimientos($data, $obj){
 
         $success = array("message" => "Operación realizada con éxito", "error" => [], "redirectionurl" => "");
         die(json_encode($success));
-    }
+    }*/
 
     $newdata = array();
     $newdata['datos_paciente']['id_datos_paciente'] = $id_datos_paciente;
     $newdata['diagnostico_antecedentes_paciente']['fecha'] = $fecha;
+    $newdata['diagnostico_antecedentes_paciente']['estado'] = $estado;
     $newdata['diagnostico_antecedentes_paciente']['diagnostico'] = $data['diagnostico_antecedentes_paciente']['diagnostico'];
     $newdata['diagnostico_antecedentes_paciente']['fundamento'] = $data['diagnostico_antecedentes_paciente']['fundamento'];
     $newdata['diagnostico_antecedentes_paciente']['adjuntar'] = basename($data['diagnostico_antecedentes_paciente']['adjuntar']);

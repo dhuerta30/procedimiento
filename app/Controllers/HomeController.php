@@ -1628,7 +1628,7 @@ class HomeController
 			"dp.apellido_materno",
 			"dp.edad",
 			"GROUP_CONCAT(DISTINCT fecha_solicitud) as fecha_solicitud",
-			"dp.estado",
+			"dg_p.estado",
 			"GROUP_CONCAT(DISTINCT codigo_fonasa) AS Codigo",
 			"GROUP_CONCAT(DISTINCT examen SEPARATOR ' - ') AS Examen",
 			"GROUP_CONCAT(DISTINCT ds.fecha) as fecha", 
@@ -1804,22 +1804,25 @@ class HomeController
 			$pdocrud->fieldAddOnInfo("fecha", "after", '<div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span></div>');
 			$pdocrud->fieldCssClass("fecha", array("fecha"));
 			$pdocrud->fieldHideLable("id_datos_paciente");
+			$pdocrud->fieldRenameLable("estado", "Cambiar Estado");
+			$pdocrud->fieldTypes("estado", "select");
+			$pdocrud->fieldDataBinding("estado", "estado_procedimiento", "nombre as estado_procedimiento", "nombre", "db");
 			$pdocrud->fieldDataAttr("id_datos_paciente", array("style"=>"display:none"));
 			$pdocrud->joinTable("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 			$pdocrud->setPK("id_datos_paciente");
 			$pdocrud->fieldRenameLable("diagnostico", "Diagnóstico CIE-10");
-			$pdocrud->fieldDisplayOrder(array("id_datos_paciente", "campo_estado","fecha","diagnostico", "fundamento", "adjuntar"));
+			$pdocrud->fieldDisplayOrder(array("id_datos_paciente", "estado","fecha","diagnostico", "fundamento", "adjuntar"));
 			$pdocrud->fieldTypes("adjuntar", "FILE_NEW");
 			$pdocrud->setSettings("hideAutoIncrement", false);
 			$pdocrud->setSettings("encryption", false);
-			$pdocrud->formFields(array("id_datos_paciente", "fecha", "diagnostico", "fundamento", "adjuntar"));
+			$pdocrud->formFields(array("id_datos_paciente", "fecha", "diagnostico", "fundamento", "adjuntar", "estado"));
 
 			$id = $request->post('id');
 
-			$pdomodel = $pdocrud->getPDOModelObj();
-			$estado = $pdomodel->select("estado_procedimiento");
+			//$pdomodel = $pdocrud->getPDOModelObj();
+			//$estado = $pdomodel->select("estado_procedimiento");
 
-			$pdomodel->where("id_datos_paciente", $id);
+			/*$pdomodel->where("id_datos_paciente", $id);
 			$datos_paciente = $pdomodel->select("datos_paciente");
 
 			$option = "";
@@ -1829,9 +1832,9 @@ class HomeController
 				} else {
 					$option .= "<option value='".$estados['nombre']."'>".$estados['nombre']."</option>";
 				}
-			}
+			}*/
 
-			$pdocrud->formStaticFields("campo_estado", "html", "
+			/*$pdocrud->formStaticFields("campo_estado", "html", "
 				<div class='row'>
 					<div class='col-md-12'>
 						<label>Cambiar Estado</label>
@@ -1841,7 +1844,7 @@ class HomeController
 						</select>
 					</div>
 				</div>
-			");
+			");*/
 			
 			$pdocrud->addCallback("before_update", "editar_procedimientos");
 			$render = $pdocrud->dbTable("datos_paciente")->render("editform", array("id" => $id));
@@ -2555,7 +2558,7 @@ class HomeController
 				"dp.apellido_materno",
 				"dp.edad",
 				"dp.fecha_y_hora_ingreso",
-				"dp.estado",
+				"dg_p.estado",
 				"GROUP_CONCAT(DISTINCT codigo_fonasa) AS Codigo",
 				"GROUP_CONCAT(DISTINCT examen SEPARATOR ' - ') AS Examen",
 				"dg_p.fecha",
@@ -2938,6 +2941,7 @@ class HomeController
 					"especialidad" => $especialidad,
 					"profesional" => $profesional,
 					"diagnostico" => $diagnostico,
+					"estado" => "Ingresado",
 					"sintomas_principales" => $sintomas_principales,
 					"diagnostico_libre" => $diagnostico_libre
 				));
