@@ -1686,7 +1686,7 @@ class HomeController
 					<td>' . $row['nombres'] . ' ' . $row['apellido_paterno'] . ' ' . $row['apellido_materno'] . '</td>
 					<td>' . $row["edad"] . '</td>
 					<td>' . date('d/m/Y', strtotime($row["fecha_solicitud"])) . '</td>
-					<td><div class="bdge badge-success">' . $row["estado"] . '</div></td>
+					<td>' . $row["estado"] . '</td>
 					<td>'. $code .'</td>
 					<td>' . $exam . '</td>
 					<td>' . $data_fecha . '</td>
@@ -2668,7 +2668,7 @@ class HomeController
 							<td>' . $row['nombres'] . ' ' . $row['apellido_paterno'] . ' ' . $row['apellido_materno'] . '</td>
 							<td>' . $row["edad"] . '</td>
 							<td>' . date('d/m/Y', strtotime($row["fecha_solicitud"])) . '</td>
-							<td><div class="bdge badge-success">' . $row["estado"] . '</div></td>
+							<td>' . $row["estado"] . '</td>
 							<td>'. $code .'</td>
 							<td>' . $exam . '</td>
 							<td>' . $data_fecha . '</td>
