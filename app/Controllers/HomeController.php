@@ -1930,6 +1930,13 @@ class HomeController
 				$obt = 'Sin Fecha';
 			}
 
+			$codigos = explode(',', $data[0]["codigo"]);
+
+			$code = "";
+			foreach ($codigos as $codigo) {
+				$code .= '<div class="badge badge-info">'. $codigo . '</div>' . '<br>';
+			}
+
 			$exam = str_replace(' - ', "<br>", $data[0]["examen"]);
 
 			$profesional = str_replace(',', "<br>", $data[0]["profesional"]);
@@ -1966,7 +1973,7 @@ class HomeController
 						</tr>
 						<tr>
 							<td><strong>Código</strong></td>
-							<td>".$data[0]["codigo"]."</td>
+							<td>".$code."</td>
 						</tr>
 						<tr>
 							<td><strong>Exámen</strong></td>
