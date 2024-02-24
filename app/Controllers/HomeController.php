@@ -2552,9 +2552,6 @@ class HomeController
 
    		if ($request->getMethod() === 'POST') {
 	
-			$rut = $request->post('rut');
-			$ano = $request->post('ano');
-	
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
 			$pdomodel->columns = array(
@@ -2574,28 +2571,38 @@ class HomeController
 			$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
 			$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
 
+			$rut = $request->post('rut');
+			$ano = $request->post('ano');
+
 			if (!empty($rut)) {
 				if (!self::validaRut($rut)) {
-					echo json_encode(['error' => 'Ingrese un Rut válido']);
+					$render = $this->reportes_all();
+					echo json_encode(['render' => $render]);
+					//echo json_encode(['error' => 'Ingrese un Rut válido']);
 					return;
 				}
-				$pdomodel->where("dp.rut", $rut, "=", "AND");
+
+				$pdomodel->where("dp.rut", $rut);
 			} 
 			
 			if (!empty($ano)) {
 				// Validar que el año sea numérico y tenga 4 dígitos
-				/*if (!is_numeric($ano) || strlen($ano) !== 4) {
-					echo json_encode(['error' => 'Ingrese un Año válido']);
+				if (!is_numeric($ano) || strlen($ano) !== 4) {
+					$render = $this->reportes_all();
+					echo json_encode(['render' => $render]);
+					//echo json_encode(['error' => 'Ingrese un Año válido']);
 					return;
-				}*/
-	
-				$pdomodel->whereYear("dg_p.fecha", $ano, "=");
+				}
+
+				$pdomodel->whereYear("dg_p.fecha", $ano);	
 			}
 	
 			$pdomodel->groupByCols = array("dp.nombres", "dp.rut");
 			$data = $pdomodel->select("datos_paciente as dp");
+			//echo $pdomodel->getLastQuery();
+			//die();
 	
-			if (!empty($data)) {
+			if (isset($rut)) {
 				$html = '
 					<table class="table table-striped tabla_reportes text-center" style="width:100%">
 						<thead class="bg-primary">
@@ -2634,9 +2641,10 @@ class HomeController
 			
 				$html_data = array($html);
 			
-				echo $pdocrud->render("HTML", $html_data);
+				$render = $pdocrud->render("HTML", $html_data);
+				echo json_encode(['render' => $render]);
 			} else {
-				echo $this->reportes_all();
+				echo json_encode(['error' => 'No se encontraron resultados']);
 			}
 		}
 	}	
