@@ -2557,13 +2557,13 @@ class HomeController
 				"dp.apellido_paterno",
 				"dp.apellido_materno",
 				"dp.edad",
-				"dp.fecha_y_hora_ingreso",
+				"GROUP_CONCAT(DISTINCT fecha_solicitud) as fecha_solicitud",
 				"dg_p.estado",
 				"GROUP_CONCAT(DISTINCT codigo_fonasa) AS Codigo",
 				"GROUP_CONCAT(DISTINCT examen SEPARATOR ' - ') AS Examen",
-				"dg_p.fecha",
+				"GROUP_CONCAT(DISTINCT ds.fecha) as fecha", 
 				"GROUP_CONCAT(DISTINCT especialidad) AS especialidad",
-				"GROUP_CONCAT(DISTINCT nombre_profesional, ' ',apellido_profesional) AS profesional",
+				"GROUP_CONCAT(DISTINCT nombre_profesional, ' ', apellido_profesional) AS profesional", 
 			);
 	
 			$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
@@ -2623,7 +2623,7 @@ class HomeController
 				$pdocrud->where("dp.fecha_y_hora_ingreso", $fecha_solicitud);
 			}
 
-			$pdomodel->groupByCols = array("dp.id_datos_paciente", "dp.rut", "dp.edad");
+			$pdomodel->groupByCols = array("dp.id_datos_paciente", "dp.rut", "dp.edad", "ds.fecha", "ds.fecha_solicitud");
 			$data = $pdomodel->select("datos_paciente as dp");
 
 			if (isset($run)) {
@@ -2670,7 +2670,7 @@ class HomeController
 							<td>' . $row['rut'] . '</td>
 							<td>' . $row['nombres'] . ' ' . $row['apellido_paterno'] . ' ' . $row['apellido_materno'] . '</td>
 							<td>' . $row["edad"] . '</td>
-							<td>' . date('d/m/Y', strtotime($row["fecha_y_hora_ingreso"])) . '</td>
+							<td>' . date('d/m/Y', strtotime($row["fecha_solicitud"])) . '</td>
 							<td><div class="bdge badge-success">' . $row["estado"] . '</div></td>
 							<td>'. $code .'</td>
 							<td>' . $exam . '</td>
