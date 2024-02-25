@@ -2226,7 +2226,7 @@ class HomeController
 					<label for="correo">Año Desde</label>
 					<div class="input-group-append">
 						<select class="form-control ano_desde" type="text" name="ano_desde" id="ano_desde">
-							<option>Seleccionar Año</option>
+							<option>Seleccionar Año Desde</option>
 						</select>
 						<span class="btn btn-default border" id="basic-addon1">
 							<i class="fa fa-calendar"></i>
@@ -2237,7 +2237,7 @@ class HomeController
 					<label for="fecha">Año Hasta</label>
 					<div class="input-group-append">
 						<select class="form-control ano_hasta" type="text" name="ano_hasta" id="ano_hasta">
-							<option>Seleccionar Año</option>
+							<option>Seleccionar Año Hasta</option>
 						</select>
 						<span class="btn btn-default border" id="basic-addon1">
 							<i class="fa fa-calendar"></i>

@@ -19,13 +19,10 @@
 <script src="<?=$_ENV["BASE_URL"]?>theme/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script>
-     $(document).ready(function() {
-      $('#loader').show();
-
-      setTimeout(function() {
-        $('#loader').hide();
-      }, 1500);
-    });
+    $('#loader').show();
+    setTimeout(function() {
+    $('#loader').hide();
+    }, 1500);
 </script>
 </body>
 
