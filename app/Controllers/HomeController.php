@@ -2539,7 +2539,8 @@ class HomeController
 				';
 					
 				$html_data = array($html);
-				echo $pdocrud->render("HTML", $html_data);
+				$render = $pdocrud->render("HTML", $html_data);
+				echo json_encode(['render' => $render]);
 			}
 		}
 	}	

@@ -107,7 +107,7 @@ $(document).on("click", ".btn_search", function(){
     $.ajax({
         type: "POST",
         url: "<?=$_ENV["BASE_URL"]?>home/buscar_por_rut_o_estado",
-        dataType: "html",
+        dataType: "json",
         data: {
             rut: rut,
             estado: estado
@@ -117,9 +117,12 @@ $(document).on("click", ".btn_search", function(){
         },
         success: function(data){   
             $("#pdocrud-ajax-loader").hide();
-            $('.reportes').html("<div class='table-responsive'>"+ data +"</div>");
-            datatable();
-            $('.btn_limpiar').removeClass('d-none');
+            console.log(data);
+            if(data['render']){
+                $('.reportes').html("<div class='table-responsive'>"+ data['render'] +"</div>");
+                datatable();
+                $('.btn_limpiar').removeClass('d-none');
+            }
         }
     });
 });
