@@ -2455,13 +2455,9 @@ class HomeController
 	}
 
 	public function buscar_por_rut_o_estado(){
-		
 		$request = new Request();
-
-    	if ($request->getMethod() === 'POST') {
-			$rut = $request->post('rut');
-			$estado = $request->post('estado');
-
+	
+		if ($request->getMethod() === 'POST') {
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
 			$pdomodel->columns = array(
@@ -2473,7 +2469,7 @@ class HomeController
 				"dp.nombres",
 				"dp.apellido_paterno",
 				"dp.apellido_materno",
-				"dp.estado",
+				"dg_p.estado",
 				"dp.rut",
 				"dp.fecha_y_hora_ingreso",
 				"dg_p.fecha"
@@ -2481,23 +2477,29 @@ class HomeController
 	
 			$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
 			$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
+	
+			$rut = $request->post('rut');
+			$estado = $request->post('estado');
 
 			if (!empty($rut)) {
-				if (!self::validaRut($rut)) {
+				/*if (!self::validaRut($rut)) {
 					echo json_encode(['error' => 'Ingrese un Rut válido']);
 					return;
-				}
-				$pdomodel->where("dp.rut", $rut, "=", "AND");
+				}*/
+				$pdomodel->where("dp.rut", $rut, "=");
 			} 
 			
 			if (!empty($estado)) {
-				$pdomodel->where("dp.estado", $estado, "=");
+				$pdomodel->where("dg_p.estado", $estado, "=");
 			}
-	
+
 			$pdomodel->groupByCols = array("dp.nombres", "dp.rut");
+			$pdomodel->where("dg_p.fecha", "1970", "!=");
 			$data = $pdomodel->select("datos_paciente as dp");
+			//echo $pdomodel->getLastQuery();
 	
-			if (!empty($data)) {
+			if (isset($data)) {
+				// If results exist, render the HTML
 				$html = '
 					<table class="table table-striped tabla_reportes text-center" style="width:100%">
 						<thead class="bg-primary">
@@ -2514,7 +2516,7 @@ class HomeController
 						</thead>
 						<tbody>
 				';
-			
+	
 				foreach ($data as $row) {
 					$nombre_completo = $row["nombres"] . ' ' . $row["apellido_paterno"] . ' ' . $row["apellido_materno"];
 					$html .= '
@@ -2530,21 +2532,18 @@ class HomeController
 						</tr>
 					';
 				}
-			
+	
 				$html .= '
 						</tbody>
 					</table>
 				';
-			
+					
 				$html_data = array($html);
-			
-				$render = $pdocrud->render("HTML", $html_data);
-				echo json_encode(['render' => $render]);
-			} else {
-				echo json_encode(['error' => 'No se encontraron resultados para la búsqueda']);
+				echo $pdocrud->render("HTML", $html_data);
 			}
 		}
-	}
+	}	
+	
 
 	public function buscar_por_rut() {
 		
@@ -2579,7 +2578,7 @@ class HomeController
 					$render = $this->reportes_all();
 					echo json_encode(['render' => $render]);
 					//echo json_encode(['error' => 'Ingrese un Rut válido']);
-					return;
+					exit;
 				}
 
 				$pdomodel->where("dp.rut", $rut);
@@ -2591,7 +2590,7 @@ class HomeController
 					$render = $this->reportes_all();
 					echo json_encode(['render' => $render]);
 					//echo json_encode(['error' => 'Ingrese un Año válido']);
-					return;
+					exit;
 				}
 
 				$pdomodel->whereYear("dg_p.fecha", $ano);	
@@ -3495,6 +3494,77 @@ class HomeController
 		}
 	}
 
+	private function crud_ingreso_egreso(){
+		$pdocrud = DB::PDOCrud(true);
+		$pdomodel = $pdocrud->getPDOModelObj();
+		$pdomodel->columns = array(
+			"count(ds.examen) AS total_examen",
+			"ds.examen",
+			"ds.codigo_fonasa",
+			"ds.tipo_examen",
+			"dg_p.diagnostico",
+			"dp.nombres",
+			"dp.apellido_paterno",
+			"dp.apellido_materno",
+			"dg_p.estado",
+			"dp.rut",
+			"dp.fecha_y_hora_ingreso",
+			"dg_p.fecha"
+		);
+
+		$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
+		$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
+
+		$pdomodel->groupByCols = array("dp.nombres", "dp.rut");
+		//$pdomodel->where("dg_p.estado", NULL, "=");
+		//$pdomodel->andOrOperator = "AND";
+		$pdomodel->where("dg_p.fecha", "1970", "!=");
+		$data = $pdomodel->select("datos_paciente as dp");
+
+		$html = '
+			<table class="table table-striped tabla_reportes text-center" style="width:100%">
+				<thead class="bg-primary">
+					<tr>
+						<th>Código Fonasa</th>
+						<th>Paciente</th>
+						<th>Diagnóstico CIE-10</th>
+						<th>Exámen</th>
+						<th>Estado</th>
+						<th>Tipo de Exámen</th>
+						<th>Año</th>
+						<th>Total</th>
+					</tr>
+				</thead>
+				<tbody>
+		';
+	
+		foreach ($data as $row) {
+			$nombre_completo = $row["nombres"] . ' ' . $row["apellido_paterno"] . ' ' . $row["apellido_materno"];
+			$html .= '
+				<tr>
+					<td>' . $row['codigo_fonasa'] . '</td>
+					<td>' . ucwords($nombre_completo) . '</td>
+					<td>' . $row["diagnostico"] . '</td>
+					<td>' . $row["examen"] . '</td>
+					<td>' . $row["estado"] . '</td>
+					<td>' . $row["tipo_examen"] . '</td>
+					<td>' . date('Y', strtotime($row["fecha"])) . '</td>
+					<td>' . $row["total_examen"] . '</td>
+				</tr>
+			';
+		}
+	
+		$html .= '
+				</tbody>
+			</table>
+		';
+	
+		$html_data = array($html);
+	
+		$render = $pdocrud->render("HTML", $html_data);
+		return $render;
+	}
+
 	public function ingreso_egreso(){
 
 		$pdocrud = DB::PDOCrud();
@@ -3535,10 +3605,13 @@ class HomeController
 		$render = $pdocrud->render("HTML", $html_data);
 		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
 
+		$grilla_ingreso_egreso = $this->crud_ingreso_egreso();
+
 		View::render(
 			"reportes_ingreso_egreso",[
 				'render' => $render,
-				'mask' => $mask
+				'mask' => $mask,
+				'grilla_ingreso_egreso' => $grilla_ingreso_egreso
 			]
 		);
 	}

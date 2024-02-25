@@ -233,5 +233,9 @@ $(document).on("click", ".btn_limpiar", function(){
     $('.error').empty();
     $('.btn_search').click();
 });
+
+$(document).on("click", ".btn_search", function(){
+    $('.btn_limpiar').addClass('d-none');
+});
 </script>
 <?php require 'layouts/footer.php'; ?>
