@@ -233,12 +233,12 @@ $(document).on("click", ".btn_limpiar", function(){
     $('.ano_desde').select2('destroy');
     $('.ano_desde').val("");
     $('.ano_desde').select2();
-    $('.ano_desde').html('<option>Seleccionar Año</option>');
+    $('.ano_desde').html('<option>Seleccionar Año Desde</option>');
 
     $('.ano_hasta').select2('destroy');
     $('.ano_hasta').val("");
     $('.ano_hasta').select2();
-    $('.ano_hasta').html('<option>Seleccionar Año</option>');
+    $('.ano_hasta').html('<option>Seleccionar Año Hasta</option>');
     ComboAno();
     $('.btn_limpiar').addClass('d-none');
     $('.error').empty();

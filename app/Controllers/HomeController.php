@@ -2581,13 +2581,13 @@ class HomeController
 			$ano_desde = $request->post('ano_desde');
 			$ano_hasta = $request->post('ano_hasta');
 
-			if(!empty($ano_desde) && !empty($ano_hasta)){
+			if (!empty($ano_desde)) {
+				$pdomodel->whereYear("dg_p.fecha", $ano_desde);
+				$pdomodel->andOrOperator = "OR";
+				$pdomodel->whereYear("dg_p.fecha", $ano_hasta);
+			} else if(!empty($ano_desde) && !empty($ano_hasta)){
 				$pdomodel->whereYearBetween('dg_p.fecha', $ano_desde, $ano_hasta);
-            }
-
-			/*if(!empty($ano_hasta)){
-                $pdomodel->whereYear("dg_p.fecha", $ano_hasta);
-            }*/
+			}
 
 			/*if (!empty($rut)) {
 				if (!self::validaRut($rut)) {
@@ -2617,7 +2617,7 @@ class HomeController
 			//echo $pdomodel->getLastQuery();
 			//die();
 	
-			if (isset($no_desde) || isset($ano_hasta)) {
+			if (!empty($data)) {
 				$html = '
 					<table class="table table-striped tabla_reportes text-center" style="width:100%">
 						<thead class="bg-primary">
