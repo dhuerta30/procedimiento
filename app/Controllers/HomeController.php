@@ -2581,11 +2581,11 @@ class HomeController
 			$ano_desde = $request->post('ano_desde');
 			$ano_hasta = $request->post('ano_hasta');
 
-			if (!empty($ano_desde)) {
+			if (!empty($ano_desde) && !empty($ano_hasta)) {
 				$pdomodel->whereYear("dg_p.fecha", $ano_desde);
 				$pdomodel->andOrOperator = "OR";
 				$pdomodel->whereYear("dg_p.fecha", $ano_hasta);
-			} else if(!empty($ano_desde) && !empty($ano_hasta)){
+				$pdomodel->andOrOperator = "OR";
 				$pdomodel->whereYearBetween('dg_p.fecha', $ano_desde, $ano_hasta);
 			}
 
