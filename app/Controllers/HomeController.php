@@ -2553,7 +2553,7 @@ class HomeController
 	}	
 	
 
-	public function buscar_por_rut() {
+	public function buscar_por_ano() {
 		
 		$request = new Request();
 
@@ -2578,10 +2578,18 @@ class HomeController
 			$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
 			$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
 
-			$rut = $request->post('rut');
-			$ano = $request->post('ano');
+			$ano_desde = $request->post('ano_desde');
+			$ano_hasta = $request->post('ano_hasta');
 
-			if (!empty($rut)) {
+			if(!empty($ano_desde) && !empty($ano_hasta)){
+				$pdomodel->whereYearBetween('dg_p.fecha', $ano_desde, $ano_hasta);
+            }
+
+			/*if(!empty($ano_hasta)){
+                $pdomodel->whereYear("dg_p.fecha", $ano_hasta);
+            }*/
+
+			/*if (!empty($rut)) {
 				if (!self::validaRut($rut)) {
 					$render = $this->reportes_all();
 					echo json_encode(['render' => $render]);
@@ -2602,14 +2610,14 @@ class HomeController
 				}
 
 				$pdomodel->whereYear("dg_p.fecha", $ano);	
-			}
+			}*/
 	
 			$pdomodel->groupByCols = array("dp.nombres", "dp.rut");
 			$data = $pdomodel->select("datos_paciente as dp");
 			//echo $pdomodel->getLastQuery();
 			//die();
 	
-			if (isset($rut)) {
+			if (isset($no_desde) || isset($ano_hasta)) {
 				$html = '
 					<table class="table table-striped tabla_reportes text-center" style="width:100%">
 						<thead class="bg-primary">

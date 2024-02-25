@@ -728,6 +728,20 @@ class PDOModel
         return $this;
     }
 
+    public function whereYearBetween($column, $startYear, $endYear)
+    {
+        if (!empty($this->whereCondition))
+            $this->whereCondition .= $this->andOrOperator . " ";
+        else
+            $this->whereCondition = " WHERE ";
+
+        $this->whereCondition .= "YEAR(" . implode(" ", $this->parseColumns((array) $column)) . ") BETWEEN ? AND ? ";
+
+        $this->values = array_merge($this->values, array($startYear, $endYear));
+
+        return $this;
+    }
+
     /**
      * Sets where subquery condition
      * @param   string   $column                  The name of column for which where condition needs to be applied.

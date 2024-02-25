@@ -99,16 +99,16 @@ $(document).ready(function(){
     });
 });
 $(document).on("click", ".btn_search", function(){
-    let rut = $('#rut').val();
-    let ano = $('#ano').val();
+    let ano_desde = $('#ano_desde').val();
+    let ano_hasta = $('#ano_hasta').val();
 
     $.ajax({
         type: "POST",
-        url: "<?=$_ENV["BASE_URL"]?>home/buscar_por_rut",
+        url: "<?=$_ENV["BASE_URL"]?>home/buscar_por_ano",
         dataType: "json",
         data: {
-            rut: rut,
-            ano: ano
+            ano_desde: ano_desde,
+            ano_hasta: ano_hasta
         },
         beforeSend: function() {
             $("#pdocrud-ajax-loader").show();
