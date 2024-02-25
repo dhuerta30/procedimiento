@@ -27,7 +27,7 @@
 
                 <div class="row procedimiento">
                     <div class="col-md-12">
-                        <h5>Buscar Reportes Por Rut y Año</h5>
+                        <h5>Buscar Reportes por Año</h5>
                         <hr>
 
                         <?=$render?>
@@ -215,23 +215,33 @@ $("#fecha").flatpickr({
     }
 });
 
-function ComboAno(){
-   var n = (new Date()).getFullYear()
-   var select = document.getElementById("ano");
-   for(var i = n; i>=1900; i--)select.options.add(new Option(i,i)); 
-};
+function ComboAno() {
+   var n = (new Date()).getFullYear();
+   var selectDesde = document.getElementById("ano_desde");
+   var selectHasta = document.getElementById("ano_hasta");
+
+   for (var i = n; i >= 1900; i--) {
+      selectDesde.options.add(new Option(i, i));
+      selectHasta.options.add(new Option(i, i));
+   }
+}
+
 window.onload = ComboAno;
 
 $(document).on("click", ".btn_limpiar", function(){
     $('#rut').val("");
-    $('.ano').select2('destroy');
-    $('.ano').val("");
-    $('.ano').select2();
-    $('.ano').html('<option>Seleccionar Año</option>');
+    $('.ano_desde').select2('destroy');
+    $('.ano_desde').val("");
+    $('.ano_desde').select2();
+    $('.ano_desde').html('<option>Seleccionar Año</option>');
+
+    $('.ano_hasta').select2('destroy');
+    $('.ano_hasta').val("");
+    $('.ano_hasta').select2();
+    $('.ano_hasta').html('<option>Seleccionar Año</option>');
     ComboAno();
     $('.btn_limpiar').addClass('d-none');
     $('.error').empty();
-    $('.btn_search').click();
 });
 
 $(document).on("click", ".btn_search", function(){

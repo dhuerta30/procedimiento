@@ -2223,13 +2223,20 @@ class HomeController
 			<form action="#" method="POST" class="form_search">
 			<div class="row">
 				<div class="col-md-6">
-					<label for="correo">Rut</label>
-					<input class="form-control rut" type="text" name="rut" id="rut"  placeholder="">
+					<label for="correo">Año Desde</label>
+					<div class="input-group-append">
+						<select class="form-control ano_desde" type="text" name="ano_desde" id="ano_desde">
+							<option>Seleccionar Año</option>
+						</select>
+						<span class="btn btn-default border" id="basic-addon1">
+							<i class="fa fa-calendar"></i>
+						</span>
+					</div>
 				</div>
 				<div class="col-md-6">
-					<label for="fecha">Año</label>
+					<label for="fecha">Año Hasta</label>
 					<div class="input-group-append">
-						<select class="form-control ano" type="text" name="ano" id="ano">
+						<select class="form-control ano_hasta" type="text" name="ano_hasta" id="ano_hasta">
 							<option>Seleccionar Año</option>
 						</select>
 						<span class="btn btn-default border" id="basic-addon1">
@@ -2248,7 +2255,7 @@ class HomeController
 		');
 		$render = $pdocrud->render("HTML", $html_data);
 		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
-		$select2 = $pdocrud->loadPluginJsCode("select2",".ano");
+		$select2 = $pdocrud->loadPluginJsCode("select2",".ano_desde, .ano_hasta");
 
 		$render_crud = $this->reportes_all();
 
