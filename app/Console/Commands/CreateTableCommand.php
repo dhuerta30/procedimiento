@@ -8,11 +8,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use DotenvVault\DotenvVault;
 
-class MakeTableCommand extends Command
+class CreateTableCommand extends Command
 {
     protected function configure()
     {
-        $this->setName('make:table')
+        $this->setName('create:table')
              ->setDescription('Crear una nueva tabla en la base de datos.')
              ->addArgument('table', InputArgument::REQUIRED, 'Nombre de la tabla')
              ->addArgument('columns', InputArgument::REQUIRED, 'Columnas de la tabla (separadas por comas)');
