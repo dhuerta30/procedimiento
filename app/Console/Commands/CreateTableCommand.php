@@ -13,7 +13,7 @@ class CreateTableCommand extends Command
     protected function configure()
     {
         $this->setName('create:table')
-             ->setDescription('Crear una nueva tabla en la base de datos.')
+             ->setDescription('Crear una nueva tabla en la base de datos. Ejemplo de uso ( php artify create:table nombre_tabla "columna1 INT, columna2 VARCHAR(255), columna3 DATE" )')
              ->addArgument('table', InputArgument::REQUIRED, 'Nombre de la tabla')
              ->addArgument('columns', InputArgument::REQUIRED, 'Columnas de la tabla (separadas por comas)');
     }

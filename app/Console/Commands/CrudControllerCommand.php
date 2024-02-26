@@ -14,7 +14,7 @@ class CrudControllerCommand extends Command
     protected function configure()
     {
         $this->setName('create:crud')
-             ->setDescription('Crear una nueva tabla y generar un controlador CRUD asociado.')
+             ->setDescription('Crear una nueva tabla y generar un controlador CRUD asociado. Ejemplo de uso ( php artify create:crud nombre_tabla "columna1 INT, columna2 VARCHAR(255), columna3 DATE" )')
              ->addArgument('table', InputArgument::REQUIRED, 'Nombre de la tabla')
              ->addArgument('columns', InputArgument::REQUIRED, 'Columnas de la tabla (separadas por comas)');
     }

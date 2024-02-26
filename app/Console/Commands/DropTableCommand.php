@@ -13,7 +13,7 @@ class DropTableCommand extends Command
     protected function configure()
     {
         $this->setName('drop:table')
-             ->setDescription('Eliminar una tabla de la base de datos.')
+             ->setDescription('Eliminar una tabla de la base de datos. Ejemplo de uso ( php artify drop:table nombre_tabla )')
              ->addArgument('table', InputArgument::REQUIRED, 'Nombre de la tabla a eliminar');
     }
 
