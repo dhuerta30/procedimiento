@@ -133,7 +133,6 @@ class CrudControllerCommand extends Command
 
             public function index()
             {
-                // Implementa la lógica del controlador aquí
                 \$pdocrud = DB::PDOCrud();
                 \$render = \$pdocrud->dbTable('{$tableName}')->render();
 
