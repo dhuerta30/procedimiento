@@ -5,6 +5,7 @@ use App\Console\Commands\MakeModelCommand;
 use App\Console\Commands\MakeViewCommand;
 use App\Console\Commands\CreateTableCommand;
 use App\Console\Commands\DropTableCommand;
+use App\Console\Commands\CrudControllerCommand;
 use Symfony\Component\Console\Application;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -15,4 +16,5 @@ $app->add(new MakeModelCommand());
 $app->add(new MakeViewCommand());
 $app->add(new CreateTableCommand());
 $app->add(new DropTableCommand());
+$app->add(new CrudControllerCommand());
 $app->run();
