@@ -3,6 +3,7 @@
 use App\Console\Commands\MakeControllerCommand;
 use App\Console\Commands\MakeModelCommand;
 use App\Console\Commands\MakeViewCommand;
+use App\Console\Commands\MakeTableCommand;
 use Symfony\Component\Console\Application;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -11,4 +12,5 @@ $app = new Application();
 $app->add(new MakeControllerCommand());
 $app->add(new MakeModelCommand());
 $app->add(new MakeViewCommand());
+$app->add(new MakeTableCommand());
 $app->run();
