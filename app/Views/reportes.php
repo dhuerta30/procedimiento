@@ -62,6 +62,7 @@ $(document).ready(function(){
         searching: false,
         scrollX: true,
         paging: ($('.tabla_reportes tbody tr').length > 10) ? true : false,
+        order: [[0, 'desc']],
         dom: 'Bfrtip',
         buttons: [
             {
@@ -121,6 +122,7 @@ $(document).on("click", ".btn_search", function(){
                     searching: false,
                     scrollX: true,
                     paging: ($('.tabla_reportes tbody tr').length > 10) ? true : false,
+                    order: [[0, 'desc']],
                     dom: 'Bfrtip',
                     buttons: [
                         {
@@ -157,6 +159,7 @@ $(document).on("click", ".btn_search", function(){
                     }
                 });
                 $('.btn_limpiar').removeClass('d-none');
+                $('.error').empty();
             } else {
                 $("#pdocrud-ajax-loader").hide();
                 $('.error').html("<div class='alert alert-danger text-center'>"+ data['error'] +"</div>");

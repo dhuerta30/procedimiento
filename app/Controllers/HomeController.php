@@ -2164,9 +2164,13 @@ class HomeController
 		$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
 		$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
 
-		$pdomodel->groupByCols = array("dp.nombres", "dp.rut");
 		$pdomodel->where("dg_p.fecha", "1970", "!=");
+		$pdomodel->groupByCols = array("dp.nombres", "dp.rut");
+		$pdomodel->orderByCols = array("dg_p.fecha asc");
 		$data = $pdomodel->select("datos_paciente as dp");
+
+		//echo $pdomodel->getLastQuery();
+		//die();
 
 		$html = '
 			<div class="table-responsive">
