@@ -2475,8 +2475,17 @@ class HomeController
 	
 			$pdocrud = DB::PDOCrud();
 			$pdomodel = $pdocrud->getPDOModelObj();
+			
+			if($tipo_examen == "Radiografía"){
+				$tipo_examen = "Radiografía";
+				$tipo_examen .= "Mamografía";
+				$pdomodel->where("glosa", "%$query%", "LIKE", "AND");
+				$pdomodel->where("glosa", "%$tipo_examen%", "LIKE");
+			}
+
 			$pdomodel->where("glosa", "%$query%", "LIKE", "AND");
 			$pdomodel->where("glosa", "%$tipo_examen%", "LIKE");
+
 			$result = $pdomodel->select("prestaciones");
 	
 			$glosas = [];
