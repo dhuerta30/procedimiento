@@ -1366,29 +1366,26 @@ class HomeController
 		$fecha_registro = date('Y-m-d H:i:s');
 		$fecha_solicitud = date('Y-m-d');
 
+		/*
+		Ejemplo de como usar el paginador simple
 		$registros_por_pagina = 10;
 		$parametro = "pagina";
 		$pagina_actual = isset($_GET['pagina']) ? $_GET['pagina'] : 1; // Suponiendo que la página actual está en la URL.
 
 		// Llama a la función performPagination
 		$paginationResult = DB::performPagination($registros_por_pagina, $pagina_actual, 'prestaciones', 'id_prestaciones', $parametro);
+		
+		// Accede a los resultados y a la salida de paginación
+		$resultados = $paginationResult['resultados'];
+		$output = $paginationResult['output'];
 
-		// Verifica si la paginación se realizó correctamente
-		if ($paginationResult !== null) {
-			// Accede a los resultados y a la salida de paginación
-			$resultados = $paginationResult['resultados'];
-			$output = $paginationResult['output'];
-
-			// Muestra los resultados y la paginación en tu interfaz de usuario
-			foreach ($resultados as $resultado) {
-				echo $resultado['especialidad'] . ', ' . $resultado['glosa'] . '<br>';
-			}
-
-			echo '<div class="pagination">' . $output . '</div>';
-		} else {
-			// Manejar el error de paginación
-			echo 'Error en la paginación';
+		// Muestra los resultados y la paginación en tu interfaz de usuario
+		foreach ($resultados as $resultado) {
+			echo $resultado['especialidad'] . ', ' . $resultado['glosa'] . '<br>';
 		}
+
+		echo '<div class="pagination">' . $output . '</div>';*/
+		
 
 		unset($_SESSION['detalle_de_solicitud']);
 
