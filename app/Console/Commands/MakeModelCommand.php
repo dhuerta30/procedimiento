@@ -31,7 +31,20 @@ class MakeModelCommand extends Command
         
         class " . $name . "Model
         {
-            // Implementa la lógica del modelo aquí
+            private $table;
+
+            public function __construct()
+            {
+                $this->table = '';
+            }
+
+            public function mi_metodo($data = array())
+            {
+                $pdomodel = DB::PDOModel();
+                $pdomodel->insert($this->table, $data);
+                return $pdomodel;
+            }
+
         }";
 
         // Guarda el contenido en el archivo
