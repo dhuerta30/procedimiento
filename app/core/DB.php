@@ -33,7 +33,7 @@ class DB {
         return $pdomodel;
     }
 
-    public static function PHPMail($hacia, $desde, $asunto, $mensaje){
+    public static function PHPMail($hacia, $desde, $asunto, $attachments = array(), $mensaje){
 		$pdocrud = DB::PDOCrud();
 		// Parámetros para el correo electrónico
 		$to = array(
@@ -45,7 +45,8 @@ class DB {
 		$altMessage = 'Este es el mensaje alternativo';
 		$cc = array();
 		$bcc = array();
-		$attachments = array();
+        $attachments = array();
+
 		$mode = 'SMTP';
 		$smtp = array(
 			'host' => $_ENV['MAIL_HOST'],

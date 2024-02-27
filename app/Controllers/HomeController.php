@@ -2385,6 +2385,9 @@ class HomeController
 			$hour = date('G:i:s');
 			$user = $_SESSION['usuario'][0]["usuario"];
 
+			$host = $_SERVER['HTTP_HOST'];
+			$url = "http://$host";
+
 			$pdocrud = DB::PDOCrud();
 			$pdomodel = $pdocrud->getPDOModelObj();
 			$id = $pdomodel->select("backup");
@@ -2404,6 +2407,12 @@ class HomeController
 			])->storeAfterExportTo($exportDirectory, "procedimiento" . time() . ".sql");
 
 			$file = $_ENV["BASE_URL"] . $_ENV['UPLOAD_URL'] . $simpleBackup->getExportedName();
+
+			$emailBody = "Correo enviado. Se ha generado el siguiente Respaldo de la Base de Datos del Sistema de Procedimientos:\n";
+
+			$subject = "Respaldo BD Sistema de Procedimientos";
+			$to = "daniel.telematico@gmail.com";
+			DB::PHPMail($to, "daniel.telematico@gmail.com", $subject, array($file), $emailBody);
 
 			$pdomodel->insert("backup", array("archivo" => basename($file), "fecha" => $date, "hora" => $hour, "usuario" => $user));
 
