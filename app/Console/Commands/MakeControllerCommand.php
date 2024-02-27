@@ -11,7 +11,7 @@ class MakeControllerCommand extends Command
     protected function configure()
     {
         $this->setName('make:controller')
-             ->setDescription('Crear un nuevo controlador.')
+             ->setDescription('Crear un nuevo controlador. Ejemplo de uso ( php artify make:controller NombreControlador )')
              ->addArgument('name', InputArgument::REQUIRED, 'Name of the controller');
     }
 

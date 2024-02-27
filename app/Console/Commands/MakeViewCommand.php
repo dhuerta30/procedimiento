@@ -11,7 +11,7 @@ class MakeViewCommand extends Command
     protected function configure()
     {
         $this->setName('make:view')
-             ->setDescription('Crear una nueva vista.')
+             ->setDescription('Crear una nueva vista. Ejemplo de uso ( php artify make:view nombre_vista )')
              ->addArgument('name', InputArgument::REQUIRED, 'Name of the view');
     }
 

@@ -11,7 +11,7 @@ class MakeModelCommand extends Command
     protected function configure()
     {
         $this->setName('make:model')
-             ->setDescription('Crear un nuevo Modelo.')
+             ->setDescription('Crear un nuevo Modelo. ( php artify make:model NombreModelo )')
              ->addArgument('name', InputArgument::REQUIRED, 'Name of the model');
     }
 
