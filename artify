@@ -1,6 +1,7 @@
 <?php
 
 use Symfony\Component\Console\Application;
+use Doctrine\DBAL\DriverManager;
 use App\Console\Commands\MakeControllerCommand;
 use App\Console\Commands\MakeModelCommand;
 use App\Console\Commands\MakeViewCommand;
@@ -11,6 +12,27 @@ use App\Console\Commands\DatabaseMigrationCommand;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
+$dotenv = DotenvVault\DotenvVault::createImmutable(__DIR__);
+$dotenv->safeLoad();
+
+$databaseHost = $_ENV['DB_HOST'];
+$databaseName = $_ENV['DB_NAME'];
+$databaseUser = $_ENV['DB_USER'];
+$databasePassword = $_ENV['DB_PASS'];
+
+if (!$databaseHost || !$databaseName || !$databaseUser || !$databasePassword) {
+    die('Error: Las variables de entorno de la base de datos no están configuradas correctamente.');
+}
+
+$connectionParams = [
+    'dbname' => $databaseName,
+    'user' => $databaseUser,
+    'password' => $databasePassword,
+    'host' => $databaseHost,
+    'driver' => 'pdo_mysql',
+];
+$connection = DriverManager::getConnection($connectionParams);
+
 $app = new Application();
 $app->add(new MakeControllerCommand());
 $app->add(new MakeModelCommand());
@@ -18,5 +40,5 @@ $app->add(new MakeViewCommand());
 $app->add(new CreateTableCommand());
 $app->add(new DropTableCommand());
 $app->add(new CrudControllerCommand());
-$app->add(new DatabaseMigrationCommand());
+$app->add(new DatabaseMigrationCommand($connection));
 $app->run();

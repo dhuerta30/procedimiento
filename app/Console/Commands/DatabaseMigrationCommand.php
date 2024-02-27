@@ -7,6 +7,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\SchemaException;
 
 class DatabaseMigrationCommand extends Command
 {
@@ -26,32 +27,42 @@ class DatabaseMigrationCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        // Obtener el gestor de esquemas
+        $schemaManager = $this->connection->createSchemaManager();
 
         // Lógica de migración aquí
-        $this->createUsersTable($schemaManager);
+        $this->createUsersTable($schemaManager, $output);
 
-        $output->writeln('Migrations completed.');
+        $output->writeln('Migraciones completadas.');
         return Command::SUCCESS;
     }
 
-    private function createUsersTable(Schema $schema)
+    private function createUsersTable($schemaManager, $output)
     {
         $tableName = 'users';
 
-        if (!$schema->tablesExist([$tableName])) {
-            $output->writeln("Creating $tableName table...");
+        try {
+            // Obtener la lista de tablas
+            $tables = $schemaManager->listTableNames();
 
-            $table = $schema->createTable($tableName);
-            $table->addColumn('id', 'integer', ['autoincrement' => true]);
-            $table->addColumn('name', 'string', ['length' => 255]);
-            $table->addColumn('email', 'string', ['length' => 255]);
-            $table->setPrimaryKey(['id']);
-            $table->addUniqueIndex(['email']);
+            // Lógica de migración aquí
+            if (!in_array($tableName, $tables)) {
+                $output->writeln("Creando la tabla $tableName");
 
-            $schemaManager->createTable($table);
-        } else {
-            $output->writeln("$tableName table already exists.");
+                $table = new \Doctrine\DBAL\Schema\Table($tableName);
+                $table->addColumn('id', 'integer', ['autoincrement' => true]);
+                $table->addColumn('name', 'string', ['length' => 255]);
+                $table->addColumn('email', 'string', ['length' => 255]);
+                $table->setPrimaryKey(['id']);
+                $table->addUniqueIndex(['email']);
+
+                // Aplicar la tabla a la base de datos
+                $schemaManager->createTable($table);
+            } else {
+                $output->writeln("La tabla $tableName ya existe.");
+            }
+        } catch (SchemaException $e) {
+            $output->writeln("Error al acceder al esquema: " . $e->getMessage());
         }
     }
 }
