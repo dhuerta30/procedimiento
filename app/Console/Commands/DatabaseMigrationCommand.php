@@ -23,7 +23,7 @@ class DatabaseMigrationCommand extends Command
     protected function configure()
     {
         $this->setName('database:migrate')
-            ->setDescription('Ejecutar migraciones de bases de datos');
+            ->setDescription('Ejecutar migraciones de bases de datos Ejemplo de uso ( php artify database:migrate )');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
