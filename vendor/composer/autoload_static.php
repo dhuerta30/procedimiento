@@ -33,7 +33,9 @@ class ComposerStaticInit42c8644500cd9d7c01e9d23ae6d0379e
         ),
         'P' => 
         array (
+            'Psr\\Log\\' => 8,
             'Psr\\Container\\' => 14,
+            'Psr\\Cache\\' => 10,
             'PhpOption\\' => 10,
         ),
         'G' => 
@@ -48,6 +50,8 @@ class ComposerStaticInit42c8644500cd9d7c01e9d23ae6d0379e
         array (
             'Dotenv\\' => 7,
             'DotenvVault\\' => 12,
+            'Doctrine\\Deprecations\\' => 22,
+            'Doctrine\\DBAL\\' => 14,
         ),
         'C' => 
         array (
@@ -100,9 +104,17 @@ class ComposerStaticInit42c8644500cd9d7c01e9d23ae6d0379e
         array (
             0 => __DIR__ . '/..' . '/symfony/console',
         ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/src',
+        ),
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'Psr\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/cache/src',
         ),
         'PhpOption\\' => 
         array (
@@ -123,6 +135,14 @@ class ComposerStaticInit42c8644500cd9d7c01e9d23ae6d0379e
         'DotenvVault\\' => 
         array (
             0 => __DIR__ . '/..' . '/dotenv-org/phpdotenv-vault/src',
+        ),
+        'Doctrine\\Deprecations\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/deprecations/lib/Doctrine/Deprecations',
+        ),
+        'Doctrine\\DBAL\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/dbal/src',
         ),
         'Coderatio\\SimpleBackup\\' => 
         array (
