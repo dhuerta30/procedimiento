@@ -113,19 +113,23 @@ $(document).on("pdocrud_after_ajax_action", function(event, obj, data){
 	}
 });
 
+function refrechMenu(){
+	$.ajax({
+		type: "POST",
+		url: "<?=$_ENV["BASE_URL"]?>home/refrescarMenu",
+		dataType: "json",
+		success: function(response){
+			$('.menu_generator').html(response);
+		}
+	});
+}
+
 $(document).on("pdocrud_after_submission", function(event, obj, data){
     let json = JSON.parse(data);
 
     if(json.message){
 
-		$.ajax({
-			type: "POST",
-			url: "<?=$_ENV["BASE_URL"]?>home/refrescarMenu",
-			dataType: "json",
-			success: function(response){
-				$('.menu_generator').html(response);
-			}
-		});
+		refrechMenu();
 
         $('.pdocrud-back').click();
 		sortable();
@@ -172,6 +176,7 @@ function sortable(){
 			success: function(response) {
 				$("#pdocrud-ajax-loader").hide();
 				$('#pdocrud_search_btn').click();
+				refrechMenu();
 				Swal.fire({
 					title: "Genial!",
 					text: response['success'],
@@ -220,6 +225,7 @@ function sortableSubmenu(){
 			success: function(response) {
 				$("#pdocrud-ajax-loader").hide();
 				$('#pdocrud_search_btn').click();
+				refrechMenu();
 				Swal.fire({
 					title: "Genial!",
 					text: response['success'],
