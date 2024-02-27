@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Doctrine\DBAL\Schema\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
@@ -49,7 +50,7 @@ class DatabaseMigrationCommand extends Command
             if (!in_array($tableName, $tables)) {
                 $output->writeln("Creando la tabla $tableName");
 
-                $table = new \Doctrine\DBAL\Schema\Table($tableName);
+                $table = new Table($tableName); 
                 $table->addColumn('id', 'integer', ['autoincrement' => true]);
                 $table->addColumn('name', 'string', ['length' => 255]);
                 $table->addColumn('email', 'string', ['length' => 255]);

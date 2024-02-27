@@ -20,9 +20,9 @@ $databaseName = $_ENV['DB_NAME'];
 $databaseUser = $_ENV['DB_USER'];
 $databasePassword = $_ENV['DB_PASS'];
 
-if (!$databaseHost || !$databaseName || !$databaseUser || !$databasePassword) {
+/*if (!$databaseHost || !$databaseName || !$databaseUser || !$databasePassword) {
     die('Error: Las variables de entorno de la base de datos no están configuradas correctamente.');
-}
+}*/
 
 $connectionParams = [
     'dbname' => $databaseName,
