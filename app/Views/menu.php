@@ -13,7 +13,6 @@
 		width:100%!important;
 	}
 </style>
-</style>
 <div class="content-wrapper">
 	<section class="content">
 		<div class="card">
