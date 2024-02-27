@@ -15,14 +15,10 @@ require_once __DIR__ . '/vendor/autoload.php';
 $dotenv = DotenvVault\DotenvVault::createImmutable(__DIR__);
 $dotenv->safeLoad();
 
-$databaseHost = $_ENV['DB_HOST'];
-$databaseName = $_ENV['DB_NAME'];
-$databaseUser = $_ENV['DB_USER'];
-$databasePassword = $_ENV['DB_PASS'];
-
-/*if (!$databaseHost || !$databaseName || !$databaseUser || !$databasePassword) {
-    die('Error: Las variables de entorno de la base de datos no están configuradas correctamente.');
-}*/
+$databaseHost = $_ENV['DB_HOST'] ?? null;
+$databaseName = $_ENV['DB_NAME'] ?? null;
+$databaseUser = $_ENV['DB_USER'] ?? null;
+$databasePassword = $_ENV['DB_PASS'] ?? null;
 
 $connectionParams = [
     'dbname' => $databaseName,
@@ -31,6 +27,11 @@ $connectionParams = [
     'host' => $databaseHost,
     'driver' => 'pdo_mysql',
 ];
+
+if (!$connectionParams) {
+    die('Error: Las variables de entorno de la base de datos no están configuradas correctamente.');
+}
+
 $connection = DriverManager::getConnection($connectionParams);
 
 $app = new Application();
