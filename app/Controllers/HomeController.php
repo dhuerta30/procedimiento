@@ -14,6 +14,7 @@ use App\Models\DatosPacienteModel;
 use App\Models\PageModel;
 use App\Models\UsuarioMenuModel;
 use App\Models\UserModel;
+use App\Models\ProcedimientoModel;
 
 class HomeController
 {
@@ -403,7 +404,7 @@ class HomeController
 					'numero_contacto_2' => $numero_contacto_2,
 					'prioridad' => $prioridad
 				];
-				$pdocedimiento = new Procedimiento();
+				$pdocedimiento = new ProcedimientoModel();
 				$pdocedimiento->insertar_procedimiento($data);
 
 				$url = $_ENV["BASE_URL"];
