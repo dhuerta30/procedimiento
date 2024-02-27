@@ -119,6 +119,7 @@ $(document).on("pdocrud_after_submission", function(event, obj, data){
     if(json.message){
 
 		$.ajax({
+			type: "POST",
 			url: "<?=$_ENV["BASE_URL"]?>home/refrescarMenu",
 			dataType: "json",
 			success: function(response){

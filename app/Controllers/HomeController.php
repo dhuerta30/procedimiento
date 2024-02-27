@@ -206,67 +206,71 @@ class HomeController
 	
 	public function refrescarMenu()
 	{
-		// Obtén la URL actual
-		$currentUrl = $_SERVER['REQUEST_URI'];
+		$request = new Request();
+	
+		if ($request->getMethod() === 'POST') {
+			// Obtén la URL actual
+			$currentUrl = $_SERVER['REQUEST_URI'];
 
-		// Obtén el menú y submenús utilizando funciones existentes
-		$menu = HomeController::menuDB();
+			// Obtén el menú y submenús utilizando funciones existentes
+			$menu = HomeController::menuDB();
 
-		// Estructura para almacenar el menú
-		$menuHtml = '<nav class="mt-2">
-						<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">';
+			// Estructura para almacenar el menú
+			$menuHtml = '<nav class="mt-2">
+							<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">';
 
-		foreach ($menu as $item) {
-			if ($_SESSION["usuario"][0]["idrol"] == 1 || $item["nombre_menu"] != "usuarios" && $item["visibilidad_menu"] != "Ocultar") {
-				// Obtiene submenús
-				$submenus = HomeController::submenuDB($item['id_menu']);
-				$tieneSubmenus = ($item["submenu"] == "Si");
-				$subMenuAbierto = false;
+			foreach ($menu as $item) {
+				if ($_SESSION["usuario"][0]["idrol"] == 1 || $item["nombre_menu"] != "usuarios" && $item["visibilidad_menu"] != "Ocultar") {
+					// Obtiene submenús
+					$submenus = HomeController::submenuDB($item['id_menu']);
+					$tieneSubmenus = ($item["submenu"] == "Si");
+					$subMenuAbierto = false;
 
-				// Verifica si algún submenú está activo
-				foreach ($submenus as $submenu) {
-					if (strpos($currentUrl, $submenu['url_submenu']) !== false) {
-						$subMenuAbierto = true;
-						break;
-					}
-				}
-
-				$menuHtml .= '<li class="nav-item' . ($subMenuAbierto ? ' menu-is-opening menu-open' : '') . '">';
-				if ($tieneSubmenus) {
-					$menuHtml .= '<a href="javascript:;" class="nav-link' . (strpos($currentUrl, $submenu['url_submenu']) !== false ? ' active' : '') . '">
-									<i class="' . $item['icono_menu'] . '"></i>
-									<p>
-										' . $item['nombre_menu'] . '
-										<i class="right fas fa-angle-left"></i>
-									</p>
-								</a>
-								<ul class="nav nav-treeview" style="' . ($subMenuAbierto ? 'display: block;' : '') . '">';
+					// Verifica si algún submenú está activo
 					foreach ($submenus as $submenu) {
-						if ($submenu["visibilidad_submenu"] != "Ocultar") {
-							$menuHtml .= '<li class="nav-item">
-											<a href="' . rtrim($_ENV["BASE_URL"], '/') . $submenu['url_submenu'] . '" class="nav-link' . (strpos($currentUrl, $submenu['url_submenu']) !== false ? ' active' : '') . '">
-												<i class="' . $submenu['icono_submenu'] . '"></i>
-												<p>' . $submenu['nombre_submenu'] . '</p>
-											</a>
-										</li>';
+						if (strpos($currentUrl, $submenu['url_submenu']) !== false) {
+							$subMenuAbierto = true;
+							break;
 						}
 					}
-					$menuHtml .= '</ul>';
-				} else {
-					$menuHtml .= '<a href="' . rtrim($_ENV["BASE_URL"], '/') . $item['url_menu'] . '" class="nav-link' . (strpos($currentUrl, $item['url_menu']) !== false ? ' active' : '') . '">
-									<i class="' . $item['icono_menu'] . '"></i>
-									<p>' . $item['nombre_menu'] . '</p>
-								</a>';
+
+					$menuHtml .= '<li class="nav-item' . ($subMenuAbierto ? ' menu-is-opening menu-open' : '') . '">';
+					if ($tieneSubmenus) {
+						$menuHtml .= '<a href="javascript:;" class="nav-link' . (strpos($currentUrl, $submenu['url_submenu']) !== false ? ' active' : '') . '">
+										<i class="' . $item['icono_menu'] . '"></i>
+										<p>
+											' . $item['nombre_menu'] . '
+											<i class="right fas fa-angle-left"></i>
+										</p>
+									</a>
+									<ul class="nav nav-treeview" style="' . ($subMenuAbierto ? 'display: block;' : '') . '">';
+						foreach ($submenus as $submenu) {
+							if ($submenu["visibilidad_submenu"] != "Ocultar") {
+								$menuHtml .= '<li class="nav-item">
+												<a href="' . rtrim($_ENV["BASE_URL"], '/') . $submenu['url_submenu'] . '" class="nav-link' . (strpos($currentUrl, $submenu['url_submenu']) !== false ? ' active' : '') . '">
+													<i class="' . $submenu['icono_submenu'] . '"></i>
+													<p>' . $submenu['nombre_submenu'] . '</p>
+												</a>
+											</li>';
+							}
+						}
+						$menuHtml .= '</ul>';
+					} else {
+						$menuHtml .= '<a href="' . rtrim($_ENV["BASE_URL"], '/') . $item['url_menu'] . '" class="nav-link' . (strpos($currentUrl, $item['url_menu']) !== false ? ' active' : '') . '">
+										<i class="' . $item['icono_menu'] . '"></i>
+										<p>' . $item['nombre_menu'] . '</p>
+									</a>';
+					}
+					$menuHtml .= '</li>';
 				}
-				$menuHtml .= '</li>';
 			}
+
+			$menuHtml .= '</ul>
+						</nav>';
+
+			// Retorna el HTML del menú
+			echo json_encode([$menuHtml]);
 		}
-
-		$menuHtml .= '</ul>
-					</nav>';
-
-		// Retorna el HTML del menú
-		echo json_encode([$menuHtml]);
 	}
 
 
