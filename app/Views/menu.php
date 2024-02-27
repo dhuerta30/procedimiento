@@ -117,6 +117,15 @@ $(document).on("pdocrud_after_submission", function(event, obj, data){
     let json = JSON.parse(data);
 
     if(json.message){
+
+		$.ajax({
+			url: "<?=$_ENV["BASE_URL"]?>home/refrescarMenu",
+			dataType: "json",
+			success: function(response){
+				$('.menu_generator').html(response);
+			}
+		});
+
         $('.pdocrud-back').click();
 		sortable();
 		sortableSubmenu();
