@@ -60,19 +60,14 @@ class DB {
 		return $pdocrud->sendEmail($to, $subject, $message, $from, $altMessage, $cc, $bcc, $attachments, $mode, $smtp, $isHTML);
 	}
 
-	public static function performPagination($registros_por_pagina, $pagina_actual, $tabla, $id)
+	public static function performPagination($registros_por_pagina, $pagina_actual, $tabla, $id, $parametro)
     {
         $pdomodel = DB::PDOModel();
-        $maxQueryResult = $pdomodel->executeQuery("SELECT $id as max FROM $tabla WHERE $id > :id_actual ORDER BY $id ASC LIMIT 1", [':id_actual' => $pagina_actual]);
-        $minQueryResult = $pdomodel->executeQuery("SELECT $id as min FROM $tabla WHERE $id < :id_actual ORDER BY $id DESC LIMIT 1", [':id_actual' => $pagina_actual]);
-
-        $urlNext = (isset($maxQueryResult[0]["max"]) ? $maxQueryResult[0]["max"] : null);
-        $urlPrev = (!empty($minQueryResult) ? $minQueryResult[0]["min"] : null);
 
         $totalRegistros = $pdomodel->executeQuery("SELECT COUNT(*) as total FROM $tabla");
-        $pagination = $pdomodel->simplepagination($pagina_actual, $totalRegistros[0]["total"], $registros_por_pagina, 'index.php', $urlPrev, $urlNext);
+        $pagination = $pdomodel->simplepagination($pagina_actual, $totalRegistros[0]["total"], $registros_por_pagina, 'index.php', $parametro);
     
-        $inicio = ($pagina_actual - 1) * $registros_por_pagina;
+        $inicio = max(0, ($pagina_actual - 1) * $registros_por_pagina); 
         $query = "SELECT * FROM $tabla LIMIT $inicio, $registros_por_pagina";
         $resultados = $pdomodel->executeQuery($query);
 		
