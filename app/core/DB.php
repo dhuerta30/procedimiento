@@ -67,7 +67,7 @@ class DB {
         $totalRegistros = $pdomodel->executeQuery("SELECT COUNT(*) as total FROM $tabla");
         $pagination = $pdomodel->simplepagination($pagina_actual, $totalRegistros[0]["total"], $registros_por_pagina, 'index.php', $parametro);
     
-        $inicio = max(0, ($pagina_actual - 1) * $registros_por_pagina); 
+        $inicio = max(0, ($pagina_actual - 1) * $registros_por_pagina);
         $query = "SELECT * FROM $tabla LIMIT $inicio, $registros_por_pagina";
         $resultados = $pdomodel->executeQuery($query);
 		
