@@ -581,7 +581,7 @@ class HomeController
 			$nombre = isset($motivo_egreso[0]["nombre"]) ? $motivo_egreso[0]["nombre"] : '';
 
 			$fecha = date('d/m/Y', strtotime($data[0]["fecha"]));
-			$data_fecha = ($fecha != "01/01/1970") ? $fecha : 'Sin Fecha';
+			$data_fecha = ($fecha != "01/01/1970" && $fecha != "31/12/1969") ? $fecha : 'Sin Fecha';
 
 			if($data[0]["fecha_solicitud"] != "0000-00-00 00:00:00") {
 				$obt = date('d/m/Y', strtotime($data[0]["fecha_solicitud"]));
@@ -1807,7 +1807,7 @@ class HomeController
 		foreach ($data as $row) {
 
 			$fecha = date('d/m/Y', strtotime($row["fecha"]));
-			$data_fecha = ($fecha != "01/01/1970") ? $fecha : '<div class="badge badge-danger">Sin Fecha</div>';
+			$data_fecha = ($fecha != "01/01/1970" && $fecha != "31/12/1969") ? $fecha : '<div class="badge badge-danger">Sin Fecha</div>';
 
 			$codigos = explode(',', $row["codigo"]);
 
@@ -2869,7 +2869,7 @@ class HomeController
 				foreach ($data as $row) {
 
 					$fecha = date('d/m/Y', strtotime($row["fecha"]));
-					$data_fecha = ($fecha != "01/01/1970") ? $fecha : '<div class="badge badge-danger">Sin Fecha</div>';
+					$data_fecha = ($fecha != "01/01/1970" && $fecha != "31/12/1969") ? $fecha : '<div class="badge badge-danger">Sin Fecha</div>';
 		
 					$codigos = explode(',', $row["codigo"]);
 		
