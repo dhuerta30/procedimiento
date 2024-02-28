@@ -2476,20 +2476,10 @@ class HomeController
 			$pdocrud = DB::PDOCrud();
 			$pdomodel = $pdocrud->getPDOModelObj();
 	
+			$pdomodel->where("tipo_de_examen", "%$tipo_examen%", "LIKE");
 			$pdomodel->where("glosa", "%$query%", "LIKE", "AND");
-	
-			if ($tipo_examen == "Radiografía") {
-				$pdomodel->openBrackets = "(";
-				$pdomodel->where("glosa", "%Mamografía%", "LIKE");
-				$pdomodel->andOrOperator = "OR";
-				$pdomodel->where("glosa", "%Radiografía%", "LIKE");
-				$pdomodel->closedBrackets = ")";
-			} else {
-				$pdomodel->where("glosa", "%$tipo_examen%", "LIKE");
-			}
-	
 			$result = $pdomodel->select("prestaciones");
-	
+			
 			$glosas = [];
 			$codigosFonasa = [];
 	
