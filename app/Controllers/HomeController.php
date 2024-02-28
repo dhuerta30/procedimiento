@@ -1367,9 +1367,9 @@ class HomeController
 		$fecha_registro = date('Y-m-d H:i:s');
 		$fecha_solicitud = date('Y-m-d');
 
-		/*
-		Ejemplo de como usar el paginador simple
-		$registros_por_pagina = 10;
+		
+		//Ejemplo de como usar el paginador simple
+		/*$registros_por_pagina = 10;
 		$parametro = "pagina";
 		$pagina_actual = isset($_GET[$parametro]) ? $_GET[$parametro] : 1; // Suponiendo que la página actual está en la URL.
 
