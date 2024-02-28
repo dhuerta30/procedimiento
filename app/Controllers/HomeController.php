@@ -1371,7 +1371,7 @@ class HomeController
 		Ejemplo de como usar el paginador simple
 		$registros_por_pagina = 10;
 		$parametro = "pagina";
-		$pagina_actual = isset($_GET['pagina']) ? $_GET['pagina'] : 1; // Suponiendo que la página actual está en la URL.
+		$pagina_actual = isset($_GET[$parametro]) ? $_GET[$parametro] : 1; // Suponiendo que la página actual está en la URL.
 
 		// Llama a la función performPagination
 		$paginationResult = DB::performPagination($registros_por_pagina, $pagina_actual, 'prestaciones', 'id_prestaciones', $parametro);
