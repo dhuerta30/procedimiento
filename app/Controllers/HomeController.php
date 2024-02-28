@@ -2466,7 +2466,7 @@ class HomeController
 		);
 	}
 
-	public function buscar_examenes_prestacion(){
+	public function buscar_examenes_prestacion() {
 		$request = new Request();
 	
 		if ($request->getMethod() === 'POST') {
@@ -2475,17 +2475,19 @@ class HomeController
 	
 			$pdocrud = DB::PDOCrud();
 			$pdomodel = $pdocrud->getPDOModelObj();
-			
-			if($tipo_examen == "Radiografía"){
-				$tipo_examen = "Radiografía";
-				$tipo_examen .= "Mamografía";
-				$pdomodel->where("glosa", "%$query%", "LIKE", "AND");
+	
+			$pdomodel->where("glosa", "%$query%", "LIKE", "AND");
+	
+			if ($tipo_examen == "Radiografía") {
+				$pdomodel->openBrackets = "(";
+				$pdomodel->where("glosa", "%Mamografía%", "LIKE");
+				$pdomodel->andOrOperator = "OR";
+				$pdomodel->where("glosa", "%Radiografía%", "LIKE");
+				$pdomodel->closedBrackets = ")";
+			} else {
 				$pdomodel->where("glosa", "%$tipo_examen%", "LIKE");
 			}
-
-			$pdomodel->where("glosa", "%$query%", "LIKE", "AND");
-			$pdomodel->where("glosa", "%$tipo_examen%", "LIKE");
-
+	
 			$result = $pdomodel->select("prestaciones");
 	
 			$glosas = [];
@@ -2509,7 +2511,7 @@ class HomeController
 	
 			echo json_encode($response, JSON_UNESCAPED_UNICODE);
 		}
-	}
+	}	
 	
 
 	public function buscar_codigos_crud_daga(){
