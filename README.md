@@ -5,6 +5,10 @@ Artify es un framework creado para facilitar el uso y agilizar el desarrollo web
 - Ejecución de comandos por consola para crear controladores, modelos, vistas, crud, etc.
 - Migraciones de base de datos con comandos por consola
 - Api Rest para conectar aplicaciones con seguridad de Tokens
+
+## Autor
+- **Nombre del Autor:** [Daniel Huerta]
+- **Correo Electrónico:** [daniel.telematico@gmail.com]
 # Para crear controladores use el comando por consola
 
 ```cmd
