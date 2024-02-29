@@ -1,5 +1,5 @@
 # PHP Artify Framework
-Artify es un framework creado para facilitar el uso y agilizar el desarrollo web, esta equipado con muchas funciones que facilitaran y daramen menor tiempo al desarrollo algunas caracteristicas son:
+Artify es un framework creado para facilitar el uso y agilizar el desarrollo web, esta equipado con muchas funciones que facilitaran el tiempo de desarrollo. Algunas caracteristicas son:
 - Generador de Módulos
 - Generador de PDF con la clase Xinvoice
 - Ejecución de comandos por consola para crear controladores, modelos, vistas, crud, etc.
