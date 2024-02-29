@@ -20,6 +20,11 @@ php artify make:view nombre_vista
 ```cmd
 php artify create:table nombre_tabla "columna1 INT, columna2 VARCHAR(255), columna3 DATE"
 ```
+# Para eliminar una Tabla en la DB use el comando por consola
+
+```cmd
+php artify drop:table nombre_tabla
+```
 # Para crear Crud use el comando por consola
 
 ```cmd
