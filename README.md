@@ -30,6 +30,11 @@ php artify drop:table nombre_tabla
 ```cmd
 php artify create:crud nombre_tabla "columna1 INT, columna2 VARCHAR(255), columna3 DATE" nombre_vista
 ```
+# Para crear una migración de BD use el comando por consola
+
+```cmd
+php artify database:migrate
+```
 # Estructura de los controladores
 
 ```PHP
