@@ -14,7 +14,7 @@
 
 # Estructura de los controladores
 
-```
+```PHP
 <?php
 
 namespace App\Controllers;
@@ -34,10 +34,10 @@ class HomeController
 {
 
 }
-?>
+?>```
 
 # Archivo de configuraciones de la BD y mas .env
-```
+```env
 # DB config #
 DB_HOST=localhost
 DB_USER=root
