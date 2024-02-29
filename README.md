@@ -3,17 +3,22 @@
 # Para crear controladores use el comando por consola
 
 ```cmd
-php artify make:controller nombrecontrolador (ejemplo: demo sin usar .php)
+php artify make:controller NombreControlador
 ```
 # Para crear modelos use el comando por consola
 
 ```cmd
-php artify make:model nombremodelo (ejemplo: demo sin usar .php)
+php artify make:model NombreModelo
 ```
 # Para crear Vistas use el comando por consola
 
 ```cmd
-php artify make:view nombrevista (ejemplo: demo sin usar .php)
+php artify make:view nombre_vista
+```
+# Para crear Crud use el comando por consola
+
+```cmd
+php artify create:crud nombre_tabla "columna1 INT, columna2 VARCHAR(255), columna3 DATE" nombre_vista
 ```
 # Estructura de los controladores
 
