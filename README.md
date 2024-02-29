@@ -45,6 +45,11 @@ php artify create:crud nombre_tabla "columna1 INT, columna2 VARCHAR(255), column
 ```cmd
 php artify database:migrate
 ```
+# Para listar todos los comandos disponibles use el comando por consola
+
+```cmd
+php artify list
+```
 # Estructura de los controladores
 
 ```PHP
