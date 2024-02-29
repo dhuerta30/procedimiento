@@ -71,16 +71,16 @@ class NombreModel
   private $tabla;
 
   function __construct() {
-		
-		$this->tabla = "nombre_tabla";
-	}
+	
+	$this->tabla = "nombre_tabla";
+  }
 
   public function MiMetodo($param){
-		$pdomodel = DB::PDOModel();
-		$pdomodel->where("rut", $param);
-		$data = $pdomodel->select($this->tabla);
-		return $data;
-	}
+	$pdomodel = DB::PDOModel();
+	$pdomodel->where("rut", $param);
+	$data = $pdomodel->select($this->tabla);
+	return $data;
+  }
 
 }
 ?>
