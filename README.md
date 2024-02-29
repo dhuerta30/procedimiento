@@ -60,6 +60,31 @@ class HomeController
 ?>
 ```
 
+# Estructura de los Modelos
+```PHP
+<?php
+namespace App\Models;
+use App\core\DB;
+
+class NombreModel
+{
+  private $tabla;
+
+  function __construct() {
+		
+		$this->tabla = "nombre_tabla";
+	}
+
+  public function MiMetodo($param){
+		$pdomodel = DB::PDOModel();
+		$pdomodel->where("rut", $param);
+		$data = $pdomodel->select($this->tabla);
+		return $data;
+	}
+
+}
+?>
+```
 # Archivo de configuraciones de la BD y mas .env
 ```env
 # DB config #
