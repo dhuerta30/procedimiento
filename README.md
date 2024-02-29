@@ -50,7 +50,7 @@ DB_PASS=
 # Set the database type to be used. Available values are "mysql", "pgsql", "sqlite" and "sqlserver".
 DB_TYPE=mysql
 
-BASE_URL=/procedimiento/
+BASE_URL=/procedimiento/  // url base del directorio principal de tu proyecto
 
 URL_PDOCRUD=/procedimiento/app/libs/
 UPLOAD_URL=app/libs/script/uploads/
