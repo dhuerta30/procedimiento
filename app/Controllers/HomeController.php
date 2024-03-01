@@ -15,6 +15,7 @@ use App\Models\PageModel;
 use App\Models\UsuarioMenuModel;
 use App\Models\UserModel;
 use App\Models\ProcedimientoModel;
+use App\Models\UsuarioSubMenuModel;
 
 class HomeController
 {
@@ -174,8 +175,11 @@ class HomeController
                 $html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span>';
                 $html .= '<ul class="list-none">';
 
-                $submenus = HomeController::submenuDB($item['id_menu']);
-                foreach ($submenus as $submenu) {
+                $usuario_submenu = new UsuarioSubMenuModel();
+				$data_usuario_submenu = $usuario_submenu->Obtener_submenu_por_id_menu($item["id_menu"], $userId);
+
+                foreach ($data_usuario_submenu as $submenu) {
+
                     $isCheckedSubmenu = ($submenu['visibilidad_submenu'] == 'Mostrar' && $submenu['id_usuario'] ? 'checked' : ''); // Verificar si el submenu está asignado al usuario
                     $html .= '<li>';
                     $html .= '<input type="checkbox" ' . $isCheckedSubmenu . ' id="' . $submenu['id_submenu'] . '" class="submenu-checkbox-pr mr-2">';
