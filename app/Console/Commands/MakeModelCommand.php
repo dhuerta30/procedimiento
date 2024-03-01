@@ -31,18 +31,18 @@ class MakeModelCommand extends Command
         
         class " . $name . "Model
         {
-            private $table;
+            private \$table;
 
             public function __construct()
             {
-                $this->table = '';
+                \$this->table = '';
             }
 
-            public function mi_metodo($data = array())
+            public function mi_metodo(\$data = array())
             {
-                $pdomodel = DB::PDOModel();
-                $pdomodel->insert($this->table, $data);
-                return $pdomodel;
+                \$pdomodel = DB::PDOModel();
+                \$pdomodel->insert(\$this->table, \$data);
+                return \$pdomodel;
             }
 
         }";

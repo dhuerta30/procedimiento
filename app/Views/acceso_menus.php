@@ -23,8 +23,7 @@
 
                                         <div class="menu_list">
                                             <ul class="list-none">
-                                                <?php foreach ($menu as $item): ?>
-                                                    <?php if (($_SESSION["usuario"][0]["idrol"] == 1 || $item["nombre_menu"] != "usuarios") && $item["visibilidad_menu"] != "Ocultar" ): ?>
+                                                <?php foreach ($menu as $item): ?>                                                 
                                                         <?php
                                                             // Obtiene submenús
                                                             $submenus = App\Controllers\HomeController::submenuDB($item['id_menu']);
@@ -45,13 +44,11 @@
                                                                     <span><i class="<?= $item['icono_menu'] ?>"></i> <?= $item['nombre_menu'] ?></span>
                                                                 <ul class="list-none">
                                                                     <?php foreach ($submenus as $submenu): ?>
-                                                                        <?php if($submenu["visibilidad_submenu"] != "Ocultar"): ?>
                                                                         <li>
                                                                             <input type="checkbox" id="<?= $submenu['id_submenu'] ?>" class="submenu-checkbox">
                                                                                 <span><i class="<?= $submenu['icono_submenu'] ?>"></i> <?= $submenu['nombre_submenu'] ?></span>
         
-                                                                        </li>
-                                                                        <?php endif; ?>
+                                                                        </li>                                                                  
                                                                     <?php endforeach; ?>
                                                                 </ul>
                                                             <?php else: ?>
@@ -59,7 +56,6 @@
                                                                     <span><i class="<?= $item['icono_menu'] ?>"></i> <?= $item['nombre_menu'] ?></span>
                                                             <?php endif; ?>
                                                         </li>
-                                                    <?php endif; ?>
                                                 <?php endforeach; ?>
                                             </ul>
                                         </div>

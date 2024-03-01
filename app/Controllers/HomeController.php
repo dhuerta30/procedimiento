@@ -144,66 +144,66 @@ class HomeController
 	}
 
 	public function obtener_menu_usuario()
-	{
-		$request = new Request();
-	
-		if ($request->getMethod() === 'POST') {
-			$userId = $request->post('userId');
-	
-			$usuario_menu = new UsuarioMenuModel();
-			$data_usuario_menu = $usuario_menu->Obtener_menu_por_id_usuario($userId);
+{
+    $request = new Request();
 
-			$usuario = new UserModel();
-			$data_user = $usuario->obtener_usuario_porId($userId);
-	
-			$html = '<ul class="list-none">
-				<li>
-					<input type="checkbox" value="select-all" name="select_all" class="select-all">
-					<span>Marcar Todos / Desmarcar Todos</span>
-				</li>
-			</ul>';
-			$html .= '<ul class="list-none">';
-			$html .= '<span>Menus Asignados a '.$data_user[0]["nombre"].'</span><br><br>';
+    if ($request->getMethod() === 'POST') {
+        $userId = $request->post('userId');
 
-			foreach ($data_usuario_menu as $item) {
+        $usuario_menu = new UsuarioMenuModel();
+        $data_usuario_menu = $usuario_menu->Obtener_menu_por_id_usuario($userId);
 
-				$html .= '<li>';
-				
-				if ($item["submenu"] == "Si") {
-					$isChecked = ($item['id_usuario'] ? 'checked' : ''); // Verificar si el menú está asignado al usuario
-					$html .= '<input type="checkbox" ' . $isChecked . ' id="' . $item['id_menu'] . '" class="menu-checkbox-pr mr-2">';
-					$html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span>';
-					$html .= '<ul class="list-none">';
+        $usuario = new UserModel();
+        $data_user = $usuario->obtener_usuario_porId($userId);
 
-					$submenus = HomeController::submenuDB($item['id_menu']);
-					foreach ($submenus as $submenu) {
-						$isCheckedSubmenu = ($submenu['id_submenu'] ? 'checked' : ''); // Verificar si el submenu está asignado al usuario
-						$html .= '<li>';
-						$html .= '<input type="checkbox" ' . $isCheckedSubmenu . ' id="' . $submenu['id_submenu'] . '" class="submenu-checkbox-pr mr-2">';
-						$html .= '<span><i class="' . $submenu['icono_submenu'] . '"></i> ' . $submenu['nombre_submenu'] . '</span>';
-						$html .= '</li>';
-					}
+        $html = '<ul class="list-none">
+            <li>
+                <input type="checkbox" value="select-all" name="select_all" class="select-all">
+                <span>Marcar Todos / Desmarcar Todos</span>
+            </li>
+        </ul>';
+        $html .= '<ul class="list-none">';
+        $html .= '<span>Menus Asignados a ' . $data_user[0]["nombre"] . '</span><br><br>';
 
-					$html .= '</ul>';
-				} else {
-					$isChecked = ($item['id_usuario'] ? 'checked' : ''); // Verificar si el menú está asignado al usuario
-					$html .= '<input type="checkbox" ' . $isChecked . ' id="' . $item['id_menu'] . '" class="menu-checkbox-pr mr-2">';
-					$html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span>';
-				}
-	
-				$html .= '</li>';
-			}
-	
-			$html .= '<div class="row mt-4">
-						<div class="col-md-12">
-							<a href="javascript:;" title="Actualizar" class="btn btn-success btn-sm asignar_menu_usuario" data-id="' . $userId . '"><i class="far fa-save"></i> Actualizar</a>
-						</div>
-					</div>';
-			$html .= '</ul>';
-			$checkbox =  $html;
-			HomeController::modal("menus", "<i class='far fa-eye'></i> Actualizar Menus Asignados", $checkbox);
-		}
-	}
+        foreach ($data_usuario_menu as $item) {
+            $html .= '<li>';
+
+            if ($item["submenu"] == "Si") {
+                $isChecked = ($item['visibilidad_menu'] == 'Mostrar' && $item['id_usuario'] ? 'checked' : ''); // Verificar si el menú está asignado al usuario
+                $html .= '<input type="checkbox" ' . $isChecked . ' id="' . $item['id_menu'] . '" class="menu-checkbox-pr mr-2">';
+                $html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span>';
+                $html .= '<ul class="list-none">';
+
+                $submenus = HomeController::submenuDB($item['id_menu']);
+                foreach ($submenus as $submenu) {
+                    $isCheckedSubmenu = ($submenu['visibilidad_submenu'] == 'Mostrar' && $submenu['id_usuario'] ? 'checked' : ''); // Verificar si el submenu está asignado al usuario
+                    $html .= '<li>';
+                    $html .= '<input type="checkbox" ' . $isCheckedSubmenu . ' id="' . $submenu['id_submenu'] . '" class="submenu-checkbox-pr mr-2">';
+                    $html .= '<span><i class="' . $submenu['icono_submenu'] . '"></i> ' . $submenu['nombre_submenu'] . '</span>';
+                    $html .= '</li>';
+                }
+
+                $html .= '</ul>';
+            } else {
+                $isChecked = ($item['visibilidad_menu'] == 'Mostrar' && $item['id_usuario'] ? 'checked' : ''); // Verificar si el menú está asignado al usuario
+                $html .= '<input type="checkbox" ' . $isChecked . ' id="' . $item['id_menu'] . '" class="menu-checkbox-pr mr-2">';
+                $html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span>';
+            }
+
+            $html .= '</li>';
+        }
+
+        $html .= '<div class="row mt-4">
+                    <div class="col-md-12">
+                        <a href="javascript:;" title="Actualizar" class="btn btn-success btn-sm asignar_menu_usuario" data-id="' . $userId . '"><i class="far fa-save"></i> Actualizar</a>
+                    </div>
+                </div>';
+        $html .= '</ul>';
+        $checkbox =  $html;
+        HomeController::modal("menus", "<i class='far fa-eye'></i> Actualizar Menus Asignados", $checkbox);
+    }
+}
+
 	
 	public function refrescarMenu()
 	{
