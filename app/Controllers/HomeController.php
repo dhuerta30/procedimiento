@@ -302,38 +302,30 @@ class HomeController
 						->where('id_usuario', $userId)
 						->select('usuario_menu');
 
-						switch ($checked) {
-							case "true":
-								if (empty($exist)) {
-									$pdomodel->insert('usuario_menu', array(
-										"id_usuario" => $userId,
-										"id_menu" => $menuId,
-										"visibilidad_menu" => "Mostrar"
-									));
-									$menuMarcado = true;
-								}
-								break;
-		
-							case "false":
-								if (empty($exist)) {
-									$pdomodel->insert('usuario_menu', array(
-										"id_usuario" => $userId,
-										"id_menu" => $menuId,
-										"visibilidad_menu" => "Ocultar"
-									));
-									$menuDesmarcado = true;
-								} else {
-									$pdomodel->where('id_usuario', $userId)
-										->where('id_menu', $menuId)
-										->update('usuario_menu', array("visibilidad_menu" => "Mostrar"));
-									$menuDesmarcado = true;
-								}
-								break;
-		
-							default:
+					switch ($checked) {
+						case "true":
+							if (!$exist) {
+								$pdomodel->insert('usuario_menu', array(
+									"id_usuario" => $userId,
+									"id_menu" => $menuId,
+									"visibilidad_menu" => "Mostrar"
+								));
+								$menuMarcado = true;
+							} else {
+								$pdomodel->where('id_usuario', $userId)
+									->where('id_menu', $menuId)
+									->update('usuario_menu', array("visibilidad_menu" => "Mostrar"));
+								$menuMarcado = true;
+							}
+							break;
+	
+						case "false":
+								$pdomodel->where('id_usuario', $userId)
+									->where('id_menu', $menuId)
+									->update('usuario_menu', array("visibilidad_menu" => "Ocultar"));
 								$menuDesmarcado = true;
-								break;
-						}
+							break;
+					}
 				}
 
 				$response = [];

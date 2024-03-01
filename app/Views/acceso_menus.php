@@ -108,6 +108,8 @@
                         return checkbox.checked;
                     });
 
+                    console.log(selectedMenus);
+
                     if (selectedMenus.length > 0) {
                         //Envía datos al servidor usando Ajax
                         $.ajax({
