@@ -291,39 +291,54 @@ class HomeController
 				$pdocrud = DB::PDOCrud();
 				$pdomodel = $pdocrud->getPDOModelObj();
 
-				$menuAsignado = false;
+				$menuMarcado = false;
 				$menuDesmarcado = false;
 
 				foreach ($selectedMenus as $menu) {
 					$menuId = $menu["menuId"];
 					$checked = $menu["checked"];
 
-					// Verificar si ya existe la asignación
 					$exist = $pdomodel->where('id_menu', $menuId)
 						->where('id_usuario', $userId)
 						->select('usuario_menu');
 
-					if ($checked === "false") {
-						// Eliminar menú
-						$pdomodel->where('id_usuario', $userId)
-							->where('id_menu', $menuId)
-							->delete('usuario_menu');
-						$menuDesmarcado = true;
-					} elseif (empty($exist)) {
-						// Insertar nueva asignación
-						$usuarioMenuSql = array(
-							'id_usuario' => $userId,
-							'id_menu' => $menuId
-						);
-
-						$pdomodel->insert('usuario_menu', $usuarioMenuSql);
-						$menuAsignado = true;
-					}
+						switch ($checked) {
+							case "true":
+								if (empty($exist)) {
+									$pdomodel->insert('usuario_menu', array(
+										"id_usuario" => $userId,
+										"id_menu" => $menuId,
+										"visibilidad_menu" => "Mostrar"
+									));
+									$menuMarcado = true;
+								}
+								break;
+		
+							case "false":
+								if (empty($exist)) {
+									$pdomodel->insert('usuario_menu', array(
+										"id_usuario" => $userId,
+										"id_menu" => $menuId,
+										"visibilidad_menu" => "Ocultar"
+									));
+									$menuDesmarcado = true;
+								} else {
+									$pdomodel->where('id_usuario', $userId)
+										->where('id_menu', $menuId)
+										->update('usuario_menu', array("visibilidad_menu" => "Mostrar"));
+									$menuDesmarcado = true;
+								}
+								break;
+		
+							default:
+								$menuDesmarcado = true;
+								break;
+						}
 				}
 
 				$response = [];
 
-				if ($menuAsignado) {
+				if ($menuMarcado) {
 					$response['success'][] = 'Menús asignados correctamente';
 				}
 
@@ -331,7 +346,7 @@ class HomeController
 					$response['success'][] = 'Menús Actualizados correctamente';
 				}
 
-				if (!$menuDesmarcado) {
+				if (!$menuMarcado && !$menuDesmarcado) {
 					$response['error'][] = 'Todos los menús ya fueron asignados previamente';
 				}
 
