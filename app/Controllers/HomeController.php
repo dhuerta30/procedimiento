@@ -150,13 +150,19 @@ class HomeController
 		return $data_usuario_menu;
 	}
 
+	public static function Obtener_submenu_por_id_menu($id_menu, $id_usuario){
+		$usuario_submenu = new UsuarioSubMenuModel();
+		$data_usuario_submenu = $usuario_submenu->Obtener_submenu_por_id_menu($id_menu, $id_usuario);
+		return $data_usuario_submenu;
+	}
+
 	public function obtener_menu_usuario()
 	{
 		$request = new Request();
 
 		if ($request->getMethod() === 'POST') {
 			$userId = $request->post('userId');
-			
+
 			$data_usuario_menu = HomeController::obtener_menu_por_id_usuario($userId);
 
 			$usuario = new UserModel();
@@ -180,8 +186,7 @@ class HomeController
 					$html .= '<span><i class="' . $item['icono_menu'] . '"></i> ' . $item['nombre_menu'] . '</span>';
 					$html .= '<ul class="list-none">';
 
-					$usuario_submenu = new UsuarioSubMenuModel();
-					$data_usuario_submenu = $usuario_submenu->Obtener_submenu_por_id_menu($item["id_menu"], $userId);
+					$data_usuario_submenu = HomeController::Obtener_submenu_por_id_menu($item["id_menu"], $userId);
 
 					foreach ($data_usuario_submenu as $submenu) {
 
