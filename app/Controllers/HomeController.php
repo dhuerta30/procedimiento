@@ -272,10 +272,12 @@ class HomeController
 						}
 						$menuHtml .= '</ul>';
 					} else {
+						if($item["visibilidad_menu"] != "Ocultar"){
 						$menuHtml .= '<a href="' . rtrim($_ENV["BASE_URL"], '/') . $item['url_menu'] . '" class="nav-link' . (strpos($currentUrl, $item['url_menu']) !== false ? ' active' : '') . '">
 										<i class="' . $item['icono_menu'] . '"></i>
 										<p>' . $item['nombre_menu'] . '</p>
 									</a>';
+						}
 					}
 					$menuHtml .= '</li>';
 				}
