@@ -22,7 +22,7 @@
                                             </li>
                                         </ul>
 
-                                        <div class="menu_list" data-intro='Seleccione un menu para continuar!'>
+                                        <div class="menu_list" data-intro='Selecciona al menos un menu antes de guardar'>
                                             <ul class="list-none">
                                                 <?php foreach ($menu as $item): ?>                                                 
                                                         <?php
@@ -160,7 +160,10 @@
                             }
                         });
                     } else {
-                        introJs().start();
+                        introJs().setOptions({
+                            doneLabel: 'Finalizado', // Personaliza el texto del botón "Done"
+                            showStepNumbers: false,    // Puedes ocultar los números de paso si lo deseas
+                        }).start();
                         /*Swal.fire({
                             title: "Atención!",
                             text: 'Selecciona al menos un menu de la izquierda antes de guardar',
