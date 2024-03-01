@@ -581,12 +581,6 @@ function formatTableMenu($data, $obj){
     if($data){
         for ($i = 0; $i < count($data); $i++) {
 
-            if($data[$i]["visibilidad_menu"] == "Mostrar"){
-                $data[$i]["visibilidad_menu"] = "<div class='badge badge-success'>".$data[$i]["visibilidad_menu"]."</div>";
-            } else {
-                $data[$i]["visibilidad_menu"] = "<div class='badge badge-danger'>".$data[$i]["visibilidad_menu"]."</div>";
-            }
-
             if($data[$i]["submenu"] == "No"){
                 $data[$i]["submenu"] = "<div class='badge badge-danger'>".$data[$i]["submenu"]."</div>";
             } else {

@@ -80,6 +80,16 @@
         </div>
         <script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>
         <script>
+            function refrechMenu(){
+                $.ajax({
+                    type: "POST",
+                    url: "<?=$_ENV["BASE_URL"]?>home/refrescarMenu",
+                    dataType: "json",
+                    success: function(response){
+                        $('.menu_generator').html(response);
+                    }
+                });
+            }
             $(document).ready(function () {
                 $('.pdocrud-select-all').change(function () {
                     $('.menu-checkbox, .submenu-checkbox').prop('checked', $(this).prop('checked'));
@@ -130,6 +140,7 @@
                                     $('.menu-checkbox').prop('checked', false);
                                     $('.submenu-checkbox').prop('checked', false);
                                     $('#menus').modal('hide');
+                                    refrechMenu();
                                     Swal.fire({
                                         title: "Genial!",
                                         text: response['success'],

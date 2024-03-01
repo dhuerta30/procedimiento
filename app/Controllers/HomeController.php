@@ -226,9 +226,10 @@ class HomeController
 		if ($request->getMethod() === 'POST') {
 			// Obtén la URL actual
 			$currentUrl = $_SERVER['REQUEST_URI'];
+			$id_sesion_usuario = $_SESSION["usuario"][0]["id"];
 
 			// Obtén el menú y submenús utilizando funciones existentes
-			$menu = HomeController::menuDB();
+			$menu = HomeController::obtener_menu_por_id_usuario($id_sesion_usuario);
 
 			// Estructura para almacenar el menú
 			$menuHtml = '<nav class="mt-2">
@@ -237,7 +238,7 @@ class HomeController
 			foreach ($menu as $item) {
 				if ($_SESSION["usuario"][0]["idrol"] == 1 || $item["nombre_menu"] != "usuarios" && $item["visibilidad_menu"] != "Ocultar") {
 					// Obtiene submenús
-					$submenus = HomeController::submenuDB($item['id_menu']);
+					$submenus = HomeController::Obtener_submenu_por_id_menu($item['id_menu'], $id_sesion_usuario);
 					$tieneSubmenus = ($item["submenu"] == "Si");
 					$subMenuAbierto = false;
 
@@ -3764,7 +3765,7 @@ class HomeController
 		$attr = array("title"=>"Arrastra para Reordenar Fila");
 		$pdocrud->enqueueBtnActions("url btn btn-primary btn-sm reordenar_fila", $action, "url",$text,"orden_menu", $attr);
 		$pdocrud->multiTableRelationDisplay("tab", "Menu");
-		$pdocrud->setSearchCols(array("nombre_menu","url_menu", "visibilidad_menu", "icono_menu", "submenu", "orden_menu"));
+		$pdocrud->setSearchCols(array("nombre_menu","url_menu", "icono_menu", "submenu", "orden_menu"));
 		$pdocrud->fieldHideLable("orden_menu");
 		$pdocrud->fieldDataAttr("orden_menu", array("style"=>"display:none"));
 		$pdocrud->fieldHideLable("submenu");
@@ -3778,9 +3779,7 @@ class HomeController
 		$pdocrud->fieldCssClass("icono_menu", array("icono_menu"));
 		$pdocrud->fieldCssClass("submenu", array("submenu"));
 		$pdocrud->fieldGroups("Name", array("nombre_menu", "url_menu"));
-		$pdocrud->fieldGroups("Name2", array("visibilidad_menu", "icono_menu"));
-		$pdocrud->fieldTypes("visibilidad_menu", "select");
-		$pdocrud->fieldDataBinding("visibilidad_menu", array("Mostrar" => "Mostrar", "Ocultar" => "Ocultar"), "", "", "array");
+		$pdocrud->fieldGroups("Name2", array("icono_menu"));
 		$pdocrud->crudRemoveCol(array("id_menu"));
 		$pdocrud->setSettings("printBtn", false);
 		$pdocrud->setSettings("pdfBtn", false);
