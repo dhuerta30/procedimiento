@@ -1,20 +1,58 @@
 # PHP Artify Framework
+Artify es un framework creado para facilitar el uso y agilizar el desarrollo web, esta equipado con muchas funciones que facilitaran el tiempo de desarrollo. Algunas caracteristicas son:
+- Generador de Módulos
+- Generador de PDF con la clase Xinvoice
+- Ejecución de comandos por consola para crear controladores, modelos, vistas, crud, etc.
+- Migraciones de base de datos con comandos por consola
+- Api Rest para conectar aplicaciones con seguridad de Tokens
+- Mantenedores Crud con menos código o por comandos de CMD
 
+## Autor
+- **Nombre del Autor:** [Daniel Huerta]
+- **Correo Electrónico:** [daniel.telematico@gmail.com]
 # Para crear controladores use el comando por consola
 
-```php artify make:controller nombrecontrolador (ejemplo: demo sin usar .php)```
-
+```cmd
+php artify make:controller NombreControlador
+```
 # Para crear modelos use el comando por consola
 
-```php artify make:model nombremodelo (ejemplo: demo sin usar .php)```
-
+```cmd
+php artify make:model NombreModelo
+```
 # Para crear Vistas use el comando por consola
 
-```php artify make:view nombrevista (ejemplo: demo sin usar .php)```
+```cmd
+php artify make:view nombre_vista
+```
+# Para crear una Tabla en la DB use el comando por consola
 
+```cmd
+php artify create:table nombre_tabla "columna1 INT, columna2 VARCHAR(255), columna3 DATE"
+```
+# Para eliminar una Tabla en la DB use el comando por consola
+
+```cmd
+php artify drop:table nombre_tabla
+```
+# Para crear Crud use el comando por consola
+
+```cmd
+php artify create:crud nombre_tabla "columna1 INT, columna2 VARCHAR(255), columna3 DATE" nombre_vista
+```
+# Para crear una migración de BD use el comando por consola
+
+```cmd
+php artify database:migrate
+```
+# Para listar todos los comandos disponibles use el comando por consola
+
+```cmd
+php artify list
+```
 # Estructura de los controladores
 
-```
+```PHP
 <?php
 
 namespace App\Controllers;
@@ -35,9 +73,35 @@ class HomeController
 
 }
 ?>
-
-# Archivo de configuraciones de la BD y mas .env
 ```
+
+# Estructura de los Modelos
+```PHP
+<?php
+namespace App\Models;
+use App\core\DB;
+
+class NombreModel
+{
+  private $tabla;
+
+  function __construct() {
+	
+	$this->tabla = "nombre_tabla";
+  }
+
+  public function MiMetodo($param){
+	$pdomodel = DB::PDOModel();
+	$pdomodel->where("rut", $param);
+	$data = $pdomodel->select($this->tabla);
+	return $data;
+  }
+
+}
+?>
+```
+# Archivo de configuraciones de la BD y mas .env
+```env
 # DB config #
 DB_HOST=localhost
 DB_USER=root
@@ -46,7 +110,7 @@ DB_PASS=
 # Set the database type to be used. Available values are "mysql", "pgsql", "sqlite" and "sqlserver".
 DB_TYPE=mysql
 
-BASE_URL=/procedimiento/
+BASE_URL=/procedimiento/  // url base del directorio principal de tu proyecto
 
 URL_PDOCRUD=/procedimiento/app/libs/
 UPLOAD_URL=app/libs/script/uploads/
