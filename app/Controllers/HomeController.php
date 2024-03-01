@@ -144,15 +144,20 @@ class HomeController
 		);
 	}
 
+	public static function obtener_menu_por_id_usuario($id){
+		$usuario_menu = new UsuarioMenuModel();
+		$data_usuario_menu = $usuario_menu->Obtener_menu_por_id_usuario($id);
+		return $data_usuario_menu;
+	}
+
 	public function obtener_menu_usuario()
 	{
 		$request = new Request();
 
 		if ($request->getMethod() === 'POST') {
 			$userId = $request->post('userId');
-
-			$usuario_menu = new UsuarioMenuModel();
-			$data_usuario_menu = $usuario_menu->Obtener_menu_por_id_usuario($userId);
+			
+			$data_usuario_menu = HomeController::obtener_menu_por_id_usuario($userId);
 
 			$usuario = new UserModel();
 			$data_user = $usuario->obtener_usuario_porId($userId);
