@@ -26,7 +26,8 @@
 
          <?php
             $current_url = $_SERVER['REQUEST_URI'];
-            $menu = App\Controllers\HomeController::menuDB();
+            $id_usuario = $_SESSION["usuario"][0]["id"];
+            $menu = App\Controllers\HomeController::obtener_menu_por_id_usuario($id_usuario);
             ?>
 
             <div class="menu_generator">
@@ -37,7 +38,7 @@
                         <?php if (($_SESSION["usuario"][0]["idrol"] == 1 || $item["nombre_menu"] != "usuarios") && $item["visibilidad_menu"] != "Ocultar" ): ?>
                             <?php
                                 // Obtiene submenús
-                                $submenus = App\Controllers\HomeController::submenuDB($item['id_menu']);
+                                $submenus = App\Controllers\HomeController::Obtener_submenu_por_id_menu($item['id_menu'], $id_usuario);
                                 $tieneSubmenus = ($item["submenu"] == "Si");
                                 $subMenuAbierto = false;
 
