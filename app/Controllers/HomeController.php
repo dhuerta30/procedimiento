@@ -144,9 +144,9 @@ class HomeController
 		);
 	}
 
-	public static function obtener_menu_por_id_usuario($id){
+	public static function obtener_menu_por_id_usuario($id_usuario){
 		$usuario_menu = new UsuarioMenuModel();
-		$data_usuario_menu = $usuario_menu->Obtener_menu_por_id_usuario($id);
+		$data_usuario_menu = $usuario_menu->Obtener_menu_por_id_usuario($id_usuario);
 		return $data_usuario_menu;
 	}
 
