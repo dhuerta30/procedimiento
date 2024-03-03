@@ -3781,7 +3781,6 @@ class HomeController
 		$pdocrud->fieldCssClass("icono_menu", array("icono_menu"));
 		$pdocrud->fieldCssClass("submenu", array("submenu"));
 		$pdocrud->fieldGroups("Name", array("nombre_menu", "url_menu"));
-		$pdocrud->fieldGroups("Name2", array("icono_menu"));
 		$pdocrud->crudRemoveCol(array("id_menu"));
 		$pdocrud->setSettings("printBtn", false);
 		$pdocrud->setSettings("pdfBtn", false);
@@ -3809,7 +3808,6 @@ class HomeController
 		$submenu->addCallback("before_insert", "insertar_submenu");
 		$submenu->addCallback("before_update", "modificar_submenu");
 		$submenu->fieldGroups("Name", array("nombre_submenu", "url_submenu"));
-		$submenu->fieldGroups("Name2", array("icono_submenu"));
 		$submenu->formFieldValue("orden_submenu", $newOrdenSubMenu);
 		$submenu->setSettings("template", "submenu");
 		$submenu->setSettings("printBtn", false);

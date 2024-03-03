@@ -12,7 +12,7 @@
                                 <h5>Accesos Usuarios a Menus</h5>
                                 <hr>
 
-                                <div class="row">
+                                <div class="row no-gutters">
                                     <div class="col-md-3 m-auto">
 
                                         <ul class="list-none">
