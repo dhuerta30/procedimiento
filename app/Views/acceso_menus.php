@@ -113,23 +113,25 @@
                         var isSubMenu = $(this).hasClass('submenu-checkbox');
                         var parentMenuId = isSubMenu ? $(this).data('parent') : null;
 
-                        if (isSubMenu && parentMenuId) {
-                            // Si es un submenú, asocia el submenú al menú principal
-                            if (!checkboxValues[parentMenuId]) {
-                                checkboxValues[parentMenuId] = {
-                                    checked: isChecked, // Puedes cambiarlo a isChecked si deseas que los submenús también tengan su propio estado checked
-                                    menuId: parentMenuId,
-                                    submenuIds: [] // Almacena los IDs de submenús asociados al menú principal
+                        if (isChecked) {
+                            if (isSubMenu && parentMenuId) {
+                                // Si es un submenú, asocia el submenú al menú principal
+                                if (!checkboxValues[parentMenuId]) {
+                                    checkboxValues[parentMenuId] = {
+                                        checked: isChecked, // Puedes cambiarlo a isChecked si deseas que los submenús también tengan su propio estado checked
+                                        menuId: parentMenuId,
+                                        submenuIds: [] // Almacena los IDs de submenús asociados al menú principal
+                                    };
+                                }
+                                checkboxValues[parentMenuId].submenuIds.push(checkboxId);
+                            } else {
+                                // Si es un menú, almacénalo en checkboxValues
+                                checkboxValues[checkboxId] = {
+                                    checked: isChecked,
+                                    menuId: checkboxId,
+                                    submenuIds: [] // Un menú puede tener varios submenús asociados
                                 };
                             }
-                            checkboxValues[parentMenuId].submenuIds.push(checkboxId);
-                        } else {
-                            // Si es un menú, almacénalo en checkboxValues
-                            checkboxValues[checkboxId] = {
-                                checked: isChecked,
-                                menuId: checkboxId,
-                                submenuIds: [] // Un menú puede tener varios submenús asociados
-                            };
                         }
                     });
 
