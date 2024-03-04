@@ -113,7 +113,7 @@
                         var isSubMenu = $(this).hasClass('submenu-checkbox') || $(this).hasClass('submenu-checkbox-pr');
                         var parentMenuId = isSubMenu ? $(this).data('parent') : null;
 
-                        if (isChecked) {
+                        
                             if (isSubMenu && parentMenuId) {
                                 // Si es un submenú, asocia el submenú al menú principal
                                 if (!checkboxValues[parentMenuId]) {
@@ -123,7 +123,7 @@
                                         submenuIds: [] // Almacena los IDs de submenús asociados al menú principal
                                     };
                                 }
-                                checkboxValues[parentMenuId].submenuIds.push(checkboxId);
+                                checkboxValues[parentMenuId].submenuIds.push({ id: checkboxId, checked: isChecked });
                             } else {
                                 // Si es un menú, almacénalo en checkboxValues
                                 checkboxValues[checkboxId] = {
@@ -132,15 +132,17 @@
                                     submenuIds: [] // Un menú puede tener varios submenús asociados
                                 };
                             }
-                        }
+                        
                     });
 
                     // Obtener IDs de menús y submenús
+                    var allMenus = Object.values(checkboxValues);
+
                     var selectedMenus = Object.values(checkboxValues).filter(function (checkbox) {
                         return checkbox.checked;
                     });
 
-                    console.log(selectedMenus);
+                    console.log(allMenus);
 
                     if (selectedMenus.length > 0) {
                         //Envía datos al servidor usando Ajax
@@ -150,7 +152,7 @@
                             dataType: "json",
                             data: {
                                 userId: userId,
-                                selectedMenus: checkboxValues
+                                selectedMenus: allMenus
                             },
                             beforeSend: function() {
                                 $("#pdocrud-ajax-loader").show();

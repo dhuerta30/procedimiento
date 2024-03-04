@@ -309,7 +309,8 @@ class HomeController
 
 				foreach ($selectedMenus as $menu) {
 					$menuId = $menu["menuId"];
-					$submenuIds = isset($menu["submenuIds"]) ? $menu["submenuIds"] : [];
+					$submenuIds = isset($menu["submenuIds"]) ? array("submenuIds" => $menu["submenuIds"]) : [];
+				
 					$checked = $menu["checked"];
 
 					// Procesar el menú principal
@@ -341,38 +342,6 @@ class HomeController
 							$menuDesmarcado = true;
 							break;
 					}
-
-					// Procesar los submenús asociados al menú principal
-					if (!empty($submenuIds)) {
-						foreach ($submenuIds as $submenuId) {
-							$existSubmenu = $pdomodel->where('id_submenu', $submenuId)
-								->where('id_usuario', $userId)
-								->select('usuario_submenu');
-
-							switch ($checked) {
-								case "true":
-									if (!$existSubmenu) {
-										$pdomodel->insert('usuario_submenu', array(
-											"id_usuario" => $userId,
-											"id_submenu" => $submenuId,
-											"id_menu" => $menuId,
-											"visibilidad_submenu" => "Mostrar"
-										));
-									} else {
-										$pdomodel->where('id_usuario', $userId)
-											->where('id_submenu', $submenuId)
-											->update('usuario_submenu', array("visibilidad_submenu" => "Mostrar"));
-									}
-									break;
-
-								case "false":
-									$pdomodel->where('id_usuario', $userId)
-										->where('id_submenu', $submenuId)
-										->update('usuario_submenu', array("visibilidad_submenu" => "Ocultar"));
-									break;
-							}
-						}
-					}
 				}
 
 				$response = [];
@@ -395,7 +364,6 @@ class HomeController
 			}
 		}
 	}
-
 
 
 	public function acceso_menus(){
