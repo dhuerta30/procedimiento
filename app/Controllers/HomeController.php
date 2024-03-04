@@ -309,15 +309,17 @@ class HomeController
 
 				foreach ($selectedMenus as $menu) {
 					$menuId = $menu["menuId"];
+					$submenuIds = isset($menu["submenuIds"]) ? $menu["submenuIds"] : [];
 					$checked = $menu["checked"];
 
-					$exist = $pdomodel->where('id_menu', $menuId)
+					// Procesar el menú principal
+					$existMenu = $pdomodel->where('id_menu', $menuId)
 						->where('id_usuario', $userId)
 						->select('usuario_menu');
 
 					switch ($checked) {
 						case "true":
-							if (!$exist) {
+							if (!$existMenu) {
 								$pdomodel->insert('usuario_menu', array(
 									"id_usuario" => $userId,
 									"id_menu" => $menuId,
@@ -331,13 +333,45 @@ class HomeController
 								$menuMarcado = true;
 							}
 							break;
-	
+
 						case "false":
-								$pdomodel->where('id_usuario', $userId)
-									->where('id_menu', $menuId)
-									->update('usuario_menu', array("visibilidad_menu" => "Ocultar"));
-								$menuDesmarcado = true;
+							$pdomodel->where('id_usuario', $userId)
+								->where('id_menu', $menuId)
+								->update('usuario_menu', array("visibilidad_menu" => "Ocultar"));
+							$menuDesmarcado = true;
 							break;
+					}
+
+					// Procesar los submenús asociados al menú principal
+					if (!empty($submenuIds)) {
+						foreach ($submenuIds as $submenuId) {
+							$existSubmenu = $pdomodel->where('id_submenu', $submenuId)
+								->where('id_usuario', $userId)
+								->select('usuario_submenu');
+
+							switch ($checked) {
+								case "true":
+									if (!$existSubmenu) {
+										$pdomodel->insert('usuario_submenu', array(
+											"id_usuario" => $userId,
+											"id_submenu" => $submenuId,
+											"id_menu" => $menuId,
+											"visibilidad_submenu" => "Mostrar"
+										));
+									} else {
+										$pdomodel->where('id_usuario', $userId)
+											->where('id_submenu', $submenuId)
+											->update('usuario_submenu', array("visibilidad_submenu" => "Mostrar"));
+									}
+									break;
+
+								case "false":
+									$pdomodel->where('id_usuario', $userId)
+										->where('id_submenu', $submenuId)
+										->update('usuario_submenu', array("visibilidad_submenu" => "Ocultar"));
+									break;
+							}
+						}
 					}
 				}
 
@@ -361,6 +395,7 @@ class HomeController
 			}
 		}
 	}
+
 
 
 	public function acceso_menus(){
