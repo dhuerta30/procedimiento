@@ -24,6 +24,7 @@ foreach ($data as $rows) {
     $rowCount++;
 }
 ?>
+<div class="table-responsive">
 <table class="table pdocrud-left-join responsive">
     <thead>
         <tr>
@@ -34,3 +35,4 @@ foreach ($data as $rows) {
         <?php if (isset($body)) echo $body; ?>
     </tbody>
 </table>
+</div>
