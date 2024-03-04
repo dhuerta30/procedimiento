@@ -24,40 +24,40 @@
 
                                         <div class="menu_list" data-intro='Selecciona al menos un menu antes de guardar'>
                                             <ul class="list-none">
-                                                <?php foreach ($menu as $item): ?>                                                 
-                                                        <?php
-                                                            // Obtiene submenús
-                                                            $submenus = App\Controllers\HomeController::submenuDB($item['id_menu']);
-                                                            $tieneSubmenus = ($item["submenu"] == "Si");
-                                                            $subMenuAbierto = false;
+                                            <?php foreach ($menu as $item): ?>                                                 
+                                                <?php
+                                                    // Obtiene submenús
+                                                    $submenus = App\Controllers\HomeController::submenuDB($item['id_menu']);
+                                                    $tieneSubmenus = ($item["submenu"] == "Si");
+                                                    $subMenuAbierto = false;
 
-                                                            // Verifica si algún submenú está activo
-                                                            foreach ($submenus as $submenu) {
-                                                                if (strpos($current_url, $submenu['url_submenu']) !== false) {
-                                                                    $subMenuAbierto = true;
-                                                                    break;
-                                                                }
-                                                            }
-                                                        ?>
-                                                        <li>
-                                                            <?php if ($tieneSubmenus): ?>
-                                                                <input type="checkbox" id="<?= $item['id_menu'] ?>" class="menu-checkbox">
-                                                                    <span><i class="<?= $item['icono_menu'] ?>"></i> <?= $item['nombre_menu'] ?></span>
-                                                                <ul class="list-none">
-                                                                    <?php foreach ($submenus as $submenu): ?>
-                                                                        <li>
-                                                                            <input type="checkbox" id="<?= $submenu['id_submenu'] ?>" class="submenu-checkbox">
-                                                                                <span><i class="<?= $submenu['icono_submenu'] ?>"></i> <?= $submenu['nombre_submenu'] ?></span>
-        
-                                                                        </li>                                                                  
-                                                                    <?php endforeach; ?>
-                                                                </ul>
-                                                            <?php else: ?>
-                                                                <input type="checkbox" id="<?= $item['id_menu'] ?>" class="menu-checkbox">
-                                                                    <span><i class="<?= $item['icono_menu'] ?>"></i> <?= $item['nombre_menu'] ?></span>
-                                                            <?php endif; ?>
-                                                        </li>
-                                                <?php endforeach; ?>
+                                                    // Verifica si algún submenú está activo
+                                                    foreach ($submenus as $submenu) {
+                                                        if (strpos($current_url, $submenu['url_submenu']) !== false) {
+                                                            $subMenuAbierto = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                ?>
+                                                <li>
+                                                    <?php if ($tieneSubmenus): ?>
+                                                        <input type="checkbox" id="<?= $item['id_menu'] ?>" class="menu-checkbox" data-type="menu">
+                                                        <span><i class="<?= $item['icono_menu'] ?>"></i> <?= $item['nombre_menu'] ?></span>
+                                                        <ul class="list-none">
+                                                            <?php foreach ($submenus as $submenu): ?>
+                                                                <li>
+                                                                    <input type="checkbox" id="<?= $submenu['id_submenu'] ?>" class="submenu-checkbox" data-type="submenu" data-parent="<?= $item['id_menu'] ?>">
+                                                                    <span><i class="<?= $submenu['icono_submenu'] ?>"></i> <?= $submenu['nombre_submenu'] ?></span>
+                                                                </li>                                                                  
+                                                            <?php endforeach; ?>
+                                                        </ul>
+                                                    <?php else: ?>
+                                                        <input type="checkbox" id="<?= $item['id_menu'] ?>" class="menu-checkbox" data-type="menu">
+                                                        <span><i class="<?= $item['icono_menu'] ?>"></i> <?= $item['nombre_menu'] ?></span>
+                                                    <?php endif; ?>
+                                                </li>
+                                            <?php endforeach; ?>
+
                                             </ul>
                                         </div>
 
@@ -92,6 +92,7 @@
                     }
                 });
             }
+
             $(document).ready(function () {
                 $('.pdocrud-select-all').change(function () {
                     $('.menu-checkbox, .submenu-checkbox').prop('checked', $(this).prop('checked'));
@@ -106,16 +107,33 @@
                     var checkboxValues = {};
 
                     // Iterar sobre las casillas marcadas y recopilar datos
-                    $('.menu-checkbox, .menu-checkbox-pr, .submenu-checkbox, .submenu-checkbox-pr').each(function () {
+                    $('.menu-checkbox, .submenu-checkbox, .menu-checkbox-pr, .submenu-checkbox-pr').each(function () {
                         var checkboxId = $(this).attr('id');
                         var isChecked = $(this).prop('checked');
+                        var isSubMenu = $(this).hasClass('submenu-checkbox');
+                        var parentMenuId = isSubMenu ? $(this).data('parent') : null;
 
-                        checkboxValues[checkboxId] = {
-                            checked: isChecked,
-                            menuId: checkboxId
-                        };
+                        if (isSubMenu && parentMenuId) {
+                            // Si es un submenú, asocia el submenú al menú principal
+                            if (!checkboxValues[parentMenuId]) {
+                                checkboxValues[parentMenuId] = {
+                                    checked: isChecked, // Puedes cambiarlo a isChecked si deseas que los submenús también tengan su propio estado checked
+                                    menuId: parentMenuId,
+                                    submenuIds: [] // Almacena los IDs de submenús asociados al menú principal
+                                };
+                            }
+                            checkboxValues[parentMenuId].submenuIds.push(checkboxId);
+                        } else {
+                            // Si es un menú, almacénalo en checkboxValues
+                            checkboxValues[checkboxId] = {
+                                checked: isChecked,
+                                menuId: checkboxId,
+                                submenuIds: [] // Un menú puede tener varios submenús asociados
+                            };
+                        }
                     });
 
+                    // Obtener IDs de menús y submenús
                     var selectedMenus = Object.values(checkboxValues).filter(function (checkbox) {
                         return checkbox.checked;
                     });

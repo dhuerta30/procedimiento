@@ -299,6 +299,8 @@ class HomeController
 		if ($request->getMethod() === 'POST') {
 			$userId = $request->post("userId");
 			$selectedMenus = $request->post("selectedMenus");
+			print_r($selectedMenus);
+			die();
 
 			if (is_array($selectedMenus)) {
 				$pdocrud = DB::PDOCrud();
