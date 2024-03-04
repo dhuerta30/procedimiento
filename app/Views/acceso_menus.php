@@ -110,7 +110,7 @@
                     $('.menu-checkbox, .submenu-checkbox, .menu-checkbox-pr, .submenu-checkbox-pr').each(function () {
                         var checkboxId = $(this).attr('id');
                         var isChecked = $(this).prop('checked');
-                        var isSubMenu = $(this).hasClass('submenu-checkbox');
+                        var isSubMenu = $(this).hasClass('submenu-checkbox') || $(this).hasClass('submenu-checkbox-pr');
                         var parentMenuId = isSubMenu ? $(this).data('parent') : null;
 
                         if (isChecked) {
