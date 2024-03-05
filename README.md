@@ -181,3 +181,6 @@ SMTP_KEEP_ALIVE=true
 ```
 # Asignar menus a usuarios
 ![Asignar menus a usuarios](https://github.com/dhuerta30/procedimiento/blob/main/Screenshot_21.png)
+
+# Mantenedor de Menus
+![Mantenedor de Menus](https://github.com/dhuerta30/procedimiento/blob/main/Screenshot_22.png)
