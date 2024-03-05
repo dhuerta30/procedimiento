@@ -120,6 +120,26 @@ class ApiController
     {
           $this->secretKey = $_ENV['CSRF_SECRET'];
     }
+
+    // ejemplo con validación de token
+    public function listar()
+    {
+        $request = new RequestApi(); // se instancia la request de esta forma
+
+        if ($request->getMethod() === 'GET') {
+
+            $token = $request->get('token'); // se usa igual que la request normal
+
+            $usuario = new UserModel();
+            $data = $usuario->select_userBy_token($token);
+
+            if ($data && !empty($token) && $this->validarToken($token)) {
+                echo json_encode(['data' => $data]);
+            } else {
+                echo json_encode(['error' => 'Token inválido no tiene permisos para acceder a esta Api']);
+            }
+        }
+    }
 }
 ?>
 ```
