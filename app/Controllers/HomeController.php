@@ -1284,6 +1284,10 @@ class HomeController
 		$pdocrud->formDisplayInPopup();
 		$pdocrud->crudRemoveCol(array("id"));
 		$pdocrud->setSettings("viewbtn", false);
+		$pdocrud->setSettings("printBtn", false);
+		$pdocrud->setSettings("pdfBtn", false);
+		$pdocrud->setSettings("csvBtn", false);
+		$pdocrud->setSettings("excelBtn", false);
 		$pdocrud->buttonHide("submitBtnSaveBack");
 		$render = $pdocrud->dbTable("codigo")->render();
 
@@ -2518,6 +2522,10 @@ class HomeController
 		$crud->setSettings("template", "prestaciones");
 		$crud->colRename("id_prestaciones", "ID");
 		$crud->buttonHide("submitBtnSaveBack");
+		$crud->setSettings("printBtn", false);
+		$crud->setSettings("pdfBtn", false);
+		$crud->setSettings("csvBtn", false);
+		$crud->setSettings("excelBtn", false);
 		$render2 = $crud->dbTable("prestaciones")->render();
 		View::render(
 			"carga_masiva_prestaciones",[
