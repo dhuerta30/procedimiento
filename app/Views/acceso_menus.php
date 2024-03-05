@@ -142,8 +142,6 @@
                         return checkbox.checked;
                     });
 
-                    console.log(allMenus);
-
                     if (selectedMenus.length > 0) {
                         //Envía datos al servidor usando Ajax
                         $.ajax({
@@ -186,12 +184,6 @@
                             doneLabel: 'Finalizado', // Personaliza el texto del botón "Done"
                             showStepNumbers: false,    // Puedes ocultar los números de paso si lo deseas
                         }).start();
-                        /*Swal.fire({
-                            title: "Atención!",
-                            text: 'Selecciona al menos un menu de la izquierda antes de guardar',
-                            icon: "warning",
-                            confirmButtonText: "Aceptar"
-                        });*/
                     }
                 });
 
