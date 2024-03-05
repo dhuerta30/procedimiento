@@ -100,6 +100,29 @@ class NombreModel
 }
 ?>
 ```
+# Estructura de la Api
+```PHP
+<?php
+
+namespace App\Controllers;
+
+use App\core\DB;
+use App\core\RequestApi; // request para leer datos json en postman
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+use App\Models\UserModel;
+
+class ApiController
+{
+    private $secretKey;
+
+    public function __construct()
+    {
+          $this->secretKey = $_ENV['CSRF_SECRET'];
+    }
+}
+?>
+```
 # Archivo de configuraciones de la BD y mas .env
 ```env
 # DB config #
