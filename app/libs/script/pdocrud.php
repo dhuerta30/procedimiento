@@ -599,13 +599,6 @@ function formatTableMenu($data, $obj){
 function formatTableSubMenu($data, $obj){
     if($data){
         for ($i = 0; $i < count($data); $i++) {
-
-            if($data[$i]["visibilidad_submenu"] == "Mostrar"){
-                $data[$i]["visibilidad_submenu"] = "<div class='badge badge-success'>".$data[$i]["visibilidad_submenu"]."</div>";
-            } else {
-                $data[$i]["visibilidad_submenu"] = "<div class='badge badge-danger'>".$data[$i]["visibilidad_submenu"]."</div>";
-            }
-
             $data[$i]["orden_submenu"] = "<div class='badge badge-success'>".$data[$i]["orden_submenu"]."</div>";
 
             $data[$i]["icono_submenu"] = "<i style='font-size: 20px;' class='".$data[$i]["icono_submenu"]."'></i>";
