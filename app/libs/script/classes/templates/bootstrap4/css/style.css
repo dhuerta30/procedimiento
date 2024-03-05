@@ -3553,7 +3553,7 @@
     display: -ms-flexbox;
     display: flex;
     -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     -ms-flex-align: stretch;
     align-items: stretch;
     width: 100%;
