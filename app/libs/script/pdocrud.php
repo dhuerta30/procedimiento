@@ -150,30 +150,35 @@ function before_sql_data_estat($data, $obj){
 
 function editar_procedimientos($data, $obj){
     $id_datos_paciente = $data['datos_paciente']['id_datos_paciente'];
-    $fecha = $data["diagnostico_antecedentes_paciente"]["fecha"];
-    $estado = $data["diagnostico_antecedentes_paciente"]["estado"];
-    //$estado = $_POST['estado'];
+    $estado = $data["detalle_de_solicitud"]["estado"];
+    $fecha = $data["detalle_de_solicitud"]["fecha"];
+    $fundamento = $data['diagnostico_antecedentes_paciente']['fundamento'];
+    $adjuntar = $data['diagnostico_antecedentes_paciente']['adjuntar'];
+    $id_detalle_de_solicitud = $data["detalle_de_solicitud"]["id_detalle_de_solicitud"];
+    $id_diagnostico_antecedentes_paciente = $data["diagnostico_antecedentes_paciente"]["id_diagnostico_antecedentes_paciente"];
  
-    /*$pdomodel = $obj->getPDOModelObj();
-    $pdomodel->where("estado", $estado, "!=", "AND");
-    $pdomodel->where("id_datos_paciente", $id_datos_paciente, "=");
-    $data_estado = $pdomodel->select("datos_paciente");
+    $pdomodel = $obj->getPDOModelObj();
+    $pdomodel->where("id_detalle_de_solicitud", $id_detalle_de_solicitud, "=");
+    $data_detalle = $pdomodel->select("detalle_de_solicitud");
 
-    if($data_estado){
-        $pdomodel->where("id_datos_paciente", $id_datos_paciente);
-        $pdomodel->update("datos_paciente", array("estado" => $estado));
+    $pdomodel->where("id_diagnostico_antecedentes_paciente", $id_diagnostico_antecedentes_paciente, "=");
+    $data_diagnostico = $pdomodel->select("diagnostico_antecedentes_paciente");
+    
+    if($data_detalle && $data_diagnostico){
+        $pdomodel->where("id_detalle_de_solicitud", $id_detalle_de_solicitud);
+        $pdomodel->update("detalle_de_solicitud", array("fecha" => $fecha, "estado" => $estado));
+
+        $pdomodel->where("id_diagnostico_antecedentes_paciente", $id_diagnostico_antecedentes_paciente);
+        $pdomodel->update("diagnostico_antecedentes_paciente", array("fundamento" => $fundamento, "adjuntar" => basename($adjuntar)));
 
         $success = array("message" => "Operación realizada con éxito", "error" => [], "redirectionurl" => "");
         die(json_encode($success));
-    }*/
+    }
 
     $newdata = array();
     $newdata['datos_paciente']['id_datos_paciente'] = $id_datos_paciente;
-    $newdata['diagnostico_antecedentes_paciente']['fecha'] = $fecha;
     $newdata['diagnostico_antecedentes_paciente']['estado'] = $estado;
     $newdata['diagnostico_antecedentes_paciente']['diagnostico'] = $data['diagnostico_antecedentes_paciente']['diagnostico'];
-    $newdata['diagnostico_antecedentes_paciente']['fundamento'] = $data['diagnostico_antecedentes_paciente']['fundamento'];
-    $newdata['diagnostico_antecedentes_paciente']['adjuntar'] = basename($data['diagnostico_antecedentes_paciente']['adjuntar']);
 
     return $newdata;
 }
@@ -419,6 +424,23 @@ function editar_perfil($data, $obj){
     $clave  = $data["usuario"]["password"];
     $rol    = $data["usuario"]["idrol"];
 
+    if(empty($nombre)){
+        $error_msg = array("message" => "", "error" => "El campo Nombre Completo es obligatorio", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    } else if(empty($email)){
+        $error_msg = array("message" => "", "error" => "El campo Correo Electrónico es obligatorio", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    } else if(empty($user)){
+        $error_msg = array("message" => "", "error" => "El campo Usuario es obligatorio", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    } else if(empty($clave)){
+        $error_msg = array("message" => "", "error" => "El campo Clave de acceso es obligatorio", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    } else if(empty($rol)){
+        $error_msg = array("message" => "", "error" => "El campo Rol es obligatorio", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    }
+
     $pdomodel = $obj->getPDOModelObj();
     $result = $pdomodel->executeQuery("SELECT * FROM usuario WHERE (usuario = :user OR email = :email) AND id != :id", [':user' => $user, ':email' => $email, ':id' => $id]);
 
@@ -460,6 +482,24 @@ function insetar_usuario($data, $obj){
     $user   = $data["usuario"]["usuario"];
     $clave  = $data["usuario"]["password"];
     $rol    = $data["usuario"]["idrol"];
+    $avatar = $data["usuario"]["avatar"];
+
+    if(empty($nombre)){
+        $error_msg = array("message" => "", "error" => "El campo Nombre Completo es obligatorio", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    } else if(empty($email)){
+        $error_msg = array("message" => "", "error" => "El campo Correo Electrónico es obligatorio", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    } else if(empty($user)){
+        $error_msg = array("message" => "", "error" => "El campo Usuario es obligatorio", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    } else if(empty($clave)){
+        $error_msg = array("message" => "", "error" => "El campo Clave de acceso es obligatorio", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    } else if(empty($rol)){
+        $error_msg = array("message" => "", "error" => "El campo Rol es obligatorio", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    }
 
     $pdomodel = $obj->getPDOModelObj();
     $result = $pdomodel->executeQuery("SELECT * FROM usuario WHERE usuario = '$user' OR email = '$email'");
@@ -472,7 +512,12 @@ function insetar_usuario($data, $obj){
         $newdata["usuario"]["nombre"] = $nombre;
         $newdata["usuario"]["usuario"] = $user;
         $newdata["usuario"]["email"] = $email;
-        $newdata["usuario"]["avatar"] = basename($data["usuario"]["avatar"]);
+        if (empty($avatar)) {
+            $image = PDOCrudABSPATH . 'uploads/1710162578_user.png';
+            $newdata["usuario"]["avatar"] =  basename($image);
+        } else {
+            $newdata["usuario"]["avatar"] = basename($avatar);
+        }
         $newdata["usuario"]["password"] = password_hash($clave, PASSWORD_DEFAULT);
         $newdata["usuario"]["token"] = $token;
         $newdata["usuario"]["expiration_token"] = 0;
@@ -497,6 +542,24 @@ function editar_usuario($data, $obj){
     $clave  = $data["usuario"]["password"];
     $user   = $data["usuario"]["usuario"];
     $rol    = $data["usuario"]["idrol"];
+
+    
+    if(empty($nombre)){
+        $error_msg = array("message" => "", "error" => "El campo Nombre Completo es obligatorio", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    } else if(empty($email)){
+        $error_msg = array("message" => "", "error" => "El campo Correo Electrónico es obligatorio", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    } else if(empty($user)){
+        $error_msg = array("message" => "", "error" => "El campo Usuario es obligatorio", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    } else if(empty($clave)){
+        $error_msg = array("message" => "", "error" => "El campo Clave de acceso es obligatorio", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    } else if(empty($rol)){
+        $error_msg = array("message" => "", "error" => "El campo Rol es obligatorio", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    }
 
     $pdomodel = $obj->getPDOModelObj();
     $result = $pdomodel->executeQuery("SELECT * FROM usuario WHERE (usuario = :user OR email = :email) AND id != :id", [':user' => $user, ':email' => $email, ':id' => $id]);

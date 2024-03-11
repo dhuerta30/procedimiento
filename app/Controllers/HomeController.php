@@ -621,7 +621,7 @@ class HomeController
 				"fecha_egreso",
 				"observacion",
 				"GROUP_CONCAT(DISTINCT fecha_solicitud) as fecha_solicitud",
-				"diagnostico_antecedentes_paciente.estado",
+				"detalle_de_solicitud.estado",
 				"GROUP_CONCAT(DISTINCT codigo_fonasa) AS codigo",
 				"GROUP_CONCAT(DISTINCT examen SEPARATOR ' - ') AS Examen",
 				"GROUP_CONCAT(DISTINCT detalle_de_solicitud.fecha) as fecha", 
@@ -1310,6 +1310,7 @@ class HomeController
 			$pdocrud->fieldGroups("Name",array("nombre","email"));
 			$pdocrud->fieldGroups("Name2",array("usuario","password"));
 			$pdocrud->fieldGroups("Name3",array("idrol","avatar"));
+			$pdocrud->setSettings("required", false);
 			$pdocrud->setSettings("checkboxCol", false);
 			$pdocrud->setSettings("deleteMultipleBtn", false);
 			$pdocrud->colRename("id", "ID");
@@ -1834,7 +1835,7 @@ class HomeController
 			"dp.apellido_materno",
 			"dp.edad",
 			"GROUP_CONCAT(DISTINCT fecha_solicitud) as fecha_solicitud",
-			"dg_p.estado",
+			"GROUP_CONCAT(DISTINCT ds.estado) AS estado",
 			"GROUP_CONCAT(DISTINCT codigo_fonasa) AS Codigo",
 			"GROUP_CONCAT(DISTINCT examen SEPARATOR ' - ') AS Examen",
 			"GROUP_CONCAT(DISTINCT ds.fecha) as fecha", 
@@ -2016,47 +2017,38 @@ class HomeController
 			$pdocrud->fieldAddOnInfo("fecha", "after", '<div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span></div>');
 			$pdocrud->fieldCssClass("fecha", array("fecha"));
 			$pdocrud->fieldHideLable("id_datos_paciente");
+			$pdocrud->fieldHideLable("id_detalle_de_solicitud");
+			$pdocrud->fieldHideLable("id_diagnostico_antecedentes_paciente");
 			$pdocrud->fieldRenameLable("estado", "Cambiar Estado");
 			$pdocrud->fieldTypes("estado", "select");
 			$pdocrud->fieldDataBinding("estado", "estado_procedimiento", "nombre as estado_procedimiento", "nombre", "db");
 			$pdocrud->fieldDataAttr("id_datos_paciente", array("style"=>"display:none"));
+			/*$pdocrud->formStaticFields("fecha", "html", "
+				<div class='form-group'>
+					<label class='control-label col-form-label'>Fecha</label> 
+					<div class='input-group'>
+						<input type='text' class='form-control pdocrud-form-control pdocrud-text fecha' name='fecha'>                
+						<div class='input-group-append'>
+							<span class='input-group-text'>
+								<i class='fa fa-calendar'></i>
+							</span>
+						</div>
+					</div>   
+				</div>
+			");*/
+			$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 			$pdocrud->joinTable("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 			$pdocrud->setPK("id_datos_paciente");
 			$pdocrud->fieldRenameLable("diagnostico", "Diagnóstico CIE-10");
-			$pdocrud->fieldDisplayOrder(array("id_datos_paciente", "estado","fecha","diagnostico", "fundamento", "adjuntar"));
+			$pdocrud->fieldDisplayOrder(array("id_datos_paciente", "estado", "fecha","diagnostico", "fundamento", "adjuntar"));
 			$pdocrud->fieldTypes("adjuntar", "FILE_NEW");
 			$pdocrud->setSettings("hideAutoIncrement", false);
 			$pdocrud->setSettings("encryption", false);
-			$pdocrud->formFields(array("id_datos_paciente", "fecha", "diagnostico", "fundamento", "adjuntar", "estado"));
+			$pdocrud->fieldDataAttr("id_detalle_de_solicitud", array("style"=>"display:none"));
+			$pdocrud->fieldDataAttr("id_diagnostico_antecedentes_paciente", array("style"=>"display:none"));
+			$pdocrud->formFields(array("id_datos_paciente", "fecha", "id_detalle_de_solicitud", "id_diagnostico_antecedentes_paciente", "diagnostico", "fundamento", "adjuntar", "estado"));
 
 			$id = $request->post('id');
-
-			//$pdomodel = $pdocrud->getPDOModelObj();
-			//$estado = $pdomodel->select("estado_procedimiento");
-
-			/*$pdomodel->where("id_datos_paciente", $id);
-			$datos_paciente = $pdomodel->select("datos_paciente");
-
-			$option = "";
-			foreach($estado as $estados){
-				if($estados['nombre'] == $datos_paciente[0]["estado"]){
-					$option .= "<option selected value='".$estados['nombre']."'>".$estados['nombre']."</option>";
-				} else {
-					$option .= "<option value='".$estados['nombre']."'>".$estados['nombre']."</option>";
-				}
-			}*/
-
-			/*$pdocrud->formStaticFields("campo_estado", "html", "
-				<div class='row'>
-					<div class='col-md-12'>
-						<label>Cambiar Estado</label>
-						<select class='form-control' name='estado'>
-							<option>Seleccionar</option>
-							'".$option."'
-						</select>
-					</div>
-				</div>
-			");*/
 			
 			$pdocrud->addCallback("before_update", "editar_procedimientos");
 			$render = $pdocrud->dbTable("datos_paciente")->render("editform", array("id" => $id));
@@ -2118,7 +2110,7 @@ class HomeController
 				"fecha_egreso",
 				"observacion",
 				"GROUP_CONCAT(DISTINCT fecha_solicitud) as fecha_solicitud",
-				"diagnostico_antecedentes_paciente.estado",
+				"detalle_de_solicitud.estado",
 				"GROUP_CONCAT(DISTINCT codigo_fonasa) AS codigo",
 				"GROUP_CONCAT(DISTINCT examen SEPARATOR ' - ') AS Examen",
 				"GROUP_CONCAT(DISTINCT detalle_de_solicitud.fecha) as fecha", 
@@ -2846,7 +2838,7 @@ class HomeController
 				"dp.apellido_materno",
 				"dp.edad",
 				"GROUP_CONCAT(DISTINCT fecha_solicitud) as fecha_solicitud",
-				"dg_p.estado",
+				"ds.estado",
 				"GROUP_CONCAT(DISTINCT codigo_fonasa) AS Codigo",
 				"GROUP_CONCAT(DISTINCT examen SEPARATOR ' - ') AS Examen",
 				"GROUP_CONCAT(DISTINCT ds.fecha) as fecha", 
@@ -2888,7 +2880,7 @@ class HomeController
 			}
 
 			if (!empty($estado)) {
-				$pdomodel->where("dg_p.estado", $estado);
+				$pdomodel->where("ds.estado", $estado);
 			}
 
 			if (!empty($prestacion)) {
@@ -3178,102 +3170,132 @@ class HomeController
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
 
-			if(
-				!empty($sexo) && 
-				!empty($fecha_nacimiento) && 
-				!empty($edad) && 
-				!empty($rut) && 
-				!empty($nombres) && 
-				!empty($direccion) && 
-				!empty($apellido_paterno) && 
-				!empty($apellido_materno) && 
-				!empty($fecha_y_hora_ingreso) && 
-				!empty($especialidad) && 
-				!empty($profesional) && 
-				!empty($diagnostico) && 
-				!empty($sintomas_principales) && 
-				!empty($diagnostico_libre)
-			){
-				
-				if (!self::validaRut($rut)) {
-					echo json_encode(['error' => 'RUT inválido']);
-					return;
-				}
+			if (empty($rut)) {
+				$mensaje = 'El campo Rut es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if (!self::validaRut($rut)) {
+				echo json_encode(['error' => 'RUT inválido']);
+				return;
+			} else if(empty($nombres)){
+				$mensaje = 'El campo Nombres es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($apellido_paterno)){
+				$mensaje = 'El campo Apellido paterno es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($apellido_materno)){
+				$mensaje = 'El campo Apellido materno es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($fecha_nacimiento)){
+				$mensaje = 'El campo Fecha nacimiento es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($edad)){
+				$mensaje = 'El campo Edad es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($direccion)){
+				$mensaje = 'El campo Dirección es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($sexo)){
+				$mensaje = 'El campo Sexo es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($especialidad)){
+				$mensaje = 'El campo Especialidad es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($fecha_nacimiento)){
+				$mensaje = 'El campo Profesional es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($fecha_nacimiento)){
+				$mensaje = 'El campo Diagnóstico CIE-10 es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($sintomas_principales)){
+				$mensaje = 'El campo Síntomas Principales es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($diagnostico_libre)){
+				$mensaje = 'El campo Diagnóstico Libre es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} 
 
-				$pdomodel->where("rut", $rut, "=", "AND");
-				$pdomodel->where("nombres", $nombres, "=", "AND");
-				$pdomodel->where("apellido_paterno", $apellido_paterno, "=", "AND");
-				$pdomodel->where("apellido_materno", $apellido_materno, "=", "AND");
-				$pdomodel->where("fecha_nacimiento", $fecha_nacimiento, "=", "AND");
-				$pdomodel->where("edad", $edad, "=", "AND");
-				$pdomodel->where("direccion", $direccion, "=", "AND");
-				$pdomodel->where("sexo", $sexo);
-				$datos_paciente_exists = $pdomodel->select("datos_paciente");
+			$pdomodel->where("rut", $rut, "=", "AND");
+			$pdomodel->where("nombres", $nombres, "=", "AND");
+			$pdomodel->where("apellido_paterno", $apellido_paterno, "=", "AND");
+			$pdomodel->where("apellido_materno", $apellido_materno, "=", "AND");
+			$pdomodel->where("fecha_nacimiento", $fecha_nacimiento, "=", "AND");
+			$pdomodel->where("edad", $edad, "=", "AND");
+			$pdomodel->where("direccion", $direccion, "=", "AND");
+			$pdomodel->where("sexo", $sexo);
+			$datos_paciente_exists = $pdomodel->select("datos_paciente");
 
-				// Verificar si el paciente existe en la tabla datos_paciente
-				if (!empty($datos_paciente_exists)) {
-					// El paciente ya existe, obtener el id_datos_paciente
-					$id = $datos_paciente_exists[0]['id_datos_paciente'];
-				} else {
-					$pdomodel->insert("datos_paciente", array(
-						"rut" => $rut,
-						"nombres" => $nombres,
-						"apellido_paterno" => $apellido_paterno,
-						"apellido_materno" => $apellido_materno,
-						"fecha_nacimiento" => $fecha_nacimiento,
-						"edad" => $edad,
-						"direccion" => $direccion,
-						"sexo" => $sexo,
-						"fecha_y_hora_ingreso" => $fecha_y_hora_ingreso,
-						"estado" => "Ingresado"
-					));
-
-					$id = $pdomodel->lastInsertId;
-				}
-
-				$pdomodel->insert("diagnostico_antecedentes_paciente", array(
-					"id_datos_paciente" => $id,
-					"especialidad" => $especialidad,
-					"profesional" => $profesional,
-					"diagnostico" => $diagnostico,
-					"estado" => "Ingresado",
-					"sintomas_principales" => $sintomas_principales,
-					"diagnostico_libre" => $diagnostico_libre
+			// Verificar si el paciente existe en la tabla datos_paciente
+			if (!empty($datos_paciente_exists)) {
+				// El paciente ya existe, obtener el id_datos_paciente
+				$id = $datos_paciente_exists[0]['id_datos_paciente'];
+			} else {
+				$pdomodel->insert("datos_paciente", array(
+					"rut" => $rut,
+					"nombres" => $nombres,
+					"apellido_paterno" => $apellido_paterno,
+					"apellido_materno" => $apellido_materno,
+					"fecha_nacimiento" => $fecha_nacimiento,
+					"edad" => $edad,
+					"direccion" => $direccion,
+					"sexo" => $sexo,
+					"fecha_y_hora_ingreso" => $fecha_y_hora_ingreso
 				));
 
-				if(isset($_SESSION['detalle_de_solicitud'])){
-
-					$sql = array();
-					foreach ($_SESSION['detalle_de_solicitud'] as $sesionVal) {
-						$sql['id_datos_paciente'] = $id;
-						$sql['codigo_fonasa'] = $sesionVal['codigo_fonasa'];
-						$sql['tipo_solicitud'] = $sesionVal['tipo_solicitud'];
-						$sql['fecha_solicitud'] = $sesionVal['fecha_solicitud'];
-						$sql['tipo_examen'] = $sesionVal['tipo_examen'];
-						$sql['examen'] = $sesionVal['examen'];
-						$sql['plano'] = $sesionVal['plano'];
-						$sql['extremidad'] = $sesionVal['extremidad'];
-						$sql['observacion'] = $sesionVal['observacion'];
-						$sql['contraste'] = $sesionVal['contraste'];
-						$sql['creatinina'] = $sesionVal['creatinina'];
-						$pdomodel->insertBatch("detalle_de_solicitud", array($sql));
-					}
-					unset($_SESSION['detalle_de_solicitud']);
-
-					$detalle_solicitud = DB::PDOCrud(true);
-					$detalle_solicitud->where("id_datos_paciente", "null");
-					$render3 = $detalle_solicitud->dbTable("detalle_de_solicitud")->render();
-
-					echo json_encode(['success' => 'Datos Ingresados con éxito', 'render3' => $render3]);
-					return;
-				} else {
-					echo json_encode(['error' => 'Ingrese al menos 1 Detalle de Solicitud']);
-					return;
-				}
-
-			} else {
-				echo json_encode(['error' => 'Todos los campos son obligatorios']);
+				$id = $pdomodel->lastInsertId;
 			}
+
+			$pdomodel->insert("diagnostico_antecedentes_paciente", array(
+				"id_datos_paciente" => $id,
+				"especialidad" => $especialidad,
+				"profesional" => $profesional,
+				"diagnostico" => $diagnostico,
+				"sintomas_principales" => $sintomas_principales,
+				"diagnostico_libre" => $diagnostico_libre
+			));
+
+			if(isset($_SESSION['detalle_de_solicitud'])){
+
+				$sql = array();
+				foreach ($_SESSION['detalle_de_solicitud'] as $sesionVal) {
+					$sql['id_datos_paciente'] = $id;
+					$sql['codigo_fonasa'] = $sesionVal['codigo_fonasa'];
+					$sql['tipo_solicitud'] = $sesionVal['tipo_solicitud'];
+					$sql['fecha_solicitud'] = $sesionVal['fecha_solicitud'];
+					$sql['tipo_examen'] = $sesionVal['tipo_examen'];
+					$sql['examen'] = $sesionVal['examen'];
+					$sql['plano'] = $sesionVal['plano'];
+					$sql['extremidad'] = $sesionVal['extremidad'];
+					$sql['observacion'] = $sesionVal['observacion'];
+					$sql['contraste'] = $sesionVal['contraste'];
+					$sql['creatinina'] = $sesionVal['creatinina'];
+					$sql['estado'] = $sesionVal['estado'];
+					$pdomodel->insertBatch("detalle_de_solicitud", array($sql));
+				}
+				unset($_SESSION['detalle_de_solicitud']);
+
+				$detalle_solicitud = DB::PDOCrud(true);
+				$detalle_solicitud->where("id_datos_paciente", "null");
+				$render3 = $detalle_solicitud->dbTable("detalle_de_solicitud")->render();
+
+				echo json_encode(['success' => 'Datos Ingresados con éxito', 'render3' => $render3]);
+				return;
+			} else {
+				echo json_encode(['error' => 'Ingrese al menos 1 Detalle de Solicitud']);
+			}
+
 		}
 	}
 
@@ -3293,7 +3315,7 @@ class HomeController
 			$observacion = $request->post('observacion');
 			$contraste = $request->post('contraste');
 			$contrasteValue = isset($contraste) ? (array)$contraste : [];
-			$creatinina = $request->post('creatinina') ?? null; 
+			$creatinina = $request->post('creatinina') ?? null;
 
 			// Validar que los campos no estén vacíos
 			$requiredFields = ['tipo_solicitud' => 'Tipo de Solicitud', 'tipo_examen' => 'Tipo Exámen', 'examen' => 'Exámen', 'observacion' => 'Observación'];
@@ -3322,6 +3344,17 @@ class HomeController
 					break;
 				}
 			}
+
+			$pdocrud = DB::PDOCrud();
+			$pdomodel = $pdocrud->getPDOModelObj();
+			//$pdomodel->where("id_datos_paciente", $paciente, "=", "AND");
+			$pdomodel->where("examen", $examen, "=", "AND");
+			$pdomodel->where("fecha_solicitud", $fecha_solicitud);
+			$result = $pdomodel->select("detalle_de_solicitud");
+
+			print_r($result);
+			die();
+
 	
 			if ($duplicateSolicitud) {
 				echo json_encode(['error' => 'El paciente no puede poseer mas de una solicitud activa con esta prestación']);
@@ -3338,7 +3371,8 @@ class HomeController
 					"extremidad" => $extremidad,
 					"observacion" => $observacion,
 					"contraste" => implode(", ", $contrasteValue),
-					"creatinina" => $creatinina
+					"creatinina" => $creatinina,
+					"estado" => "Ingresado"
 				];
 	
 				// Agregar la solicitud a la sesión
@@ -3377,6 +3411,13 @@ class HomeController
 			if (empty($searchCriteria)) {
 				echo json_encode(['error' => 'Debe proporcionar al menos un dato para buscar']);
 			} else {
+				 // Validar el RUT
+				 $rut = $request->post('rut');
+				 if (!self::validaRut($rut)) {
+					 echo json_encode(['error' => 'RUT inválido']);
+					 return;
+				 } 
+ 
 				// Apply WHERE conditions based on the provided search criteria
 				foreach ($searchCriteria as $field => $value) {
 					$pdomodel->where($field, $value);
@@ -3392,65 +3433,6 @@ class HomeController
 					echo json_encode(['error' => 'No se encontraron resultados para los datos buscados']);
 				}
 			}
-			
-			/*$pdocrud->relatedData('sexo','sexo','id_sexo','nombre');
-			$pdocrud->addCallback("format_table_data", "formatTable_datos_paciente");  
-			$pdocrud->colRename("id_datos_paciente", "ID");
-			$pdocrud->setSettings("actionbtn", false);
-			$pdocrud->setSettings("addbtn", false);
-			$pdocrud->setSettings("searchbox", false);
-			$pdocrud->setSettings("checkboxCol", false);
-			$pdocrud->setSettings("deleteMultipleBtn", false);
-			$pdocrud->setSettings("printBtn", false);
-			$pdocrud->setSettings("pdfBtn", false);
-			$pdocrud->setSettings("csvBtn", false);
-			$pdocrud->setSettings("excelBtn", false);
-			$pdocrud->setLangData("no_data", "No se encontraron datos");
-			if (!empty($_POST['edad'])) {
-				$edad = $_POST['edad'];
-				$pdocrud->where("edad", "%$edad%", "LIKE");
-			}
-
-			if (!empty($_POST['rut'])) {
-				$rut = $_POST['rut'];
-				$pdocrud->where("rut", "%$rut%", "LIKE");
-			}
-
-			if (!empty($_POST['nombres'])) {
-				$nombres = $_POST['nombres'];
-				$pdocrud->where("nombres", "%$nombres%", "LIKE");
-			}
-
-			if (!empty($_POST['direccion'])) {
-				$direccion = $_POST['direccion'];
-				$pdocrud->where("direccion", "%$direccion%", "LIKE");
-			}
-
-			if (!empty($_POST['sexo'])) {
-				$sexo = $_POST['sexo'];
-				$pdocrud->where("sexo", "%$sexo%", "LIKE");
-			}
-
-			if (!empty($_POST['apellido_paterno'])) {
-				$apellido_paterno = $_POST['apellido_paterno'];
-				$pdocrud->where("apellido_paterno", "%$apellido_paterno%", "LIKE");
-			}
-
-			if (!empty($_POST['apellido_materno'])) {
-				$apellido_materno = $_POST['apellido_materno'];
-				$pdocrud->where("apellido_materno", "%$apellido_materno%", "LIKE");
-			}
-
-			if (!empty($_POST['fecha_y_hora_ingreso'])) {
-				$fecha_y_hora_ingreso = $_POST['fecha_y_hora_ingreso'];
-				$pdocrud->where("fecha_y_hora_ingreso", "%$fecha_y_hora_ingreso%", "LIKE");
-			}
-
-			if (isset($edad) || isset($nombres) || isset($rut) || isset($sexo) || isset($direccion) || isset($apellido_materno) || isset($apellido_paterno) || isset($fecha_y_hora_ingreso)){
-				echo $pdocrud->dbTable("datos_paciente")->render();
-			} else {
-				echo "<div class='alert alert-danger text-center'>Ingrese datos a Buscar</div>";
-			}*/
 		}
 	}
 
