@@ -333,7 +333,7 @@
                 success: function(data){
                     $("#pdocrud-ajax-loader").hide();
                     if(data['success']){
-                       
+                       $('.agregar_paciente').hide();
                         $('.limpiar').removeClass('d-none');
                         $(".rut").val(data["data"][0]["rut"]);
                         $(".nombres").val(data["data"][0]["nombres"]);
