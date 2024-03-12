@@ -1911,8 +1911,8 @@ class HomeController
 					<td>
 						<a href="javascript:;" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-file-o"></i></a>
 						<a href="javascript:;" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-arrow-right"></i></a>
-						<a href="javascript:;" class="btn btn-info btn-sm ver_logs" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-exclamation"></i></a>
-						<a href="javascript:;" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-file-pdf"></i></a>
+						<a href="javascript:;" class="btn btn-info btn-sm ver_logs" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-exclamation"></i></a>
+						<a href="javascript:;" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-pdf"></i></a>
 						<a href="javascript:;" class="btn btn-primary btn-sm procedimientos" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-folder"></i></a>
 					</td>
 				</tr>
@@ -2096,6 +2096,7 @@ class HomeController
 
     	if ($request->getMethod() === 'POST') {
 			$id = $request->post('id');
+			$fecha_solicitud = $request->post('fecha_solicitud');
 
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
@@ -2113,7 +2114,7 @@ class HomeController
 				"fecha_egreso",
 				"observacion",
 				"GROUP_CONCAT(DISTINCT fecha_solicitud) as fecha_solicitud",
-				"detalle_de_solicitud.estado",
+				"GROUP_CONCAT(DISTINCT detalle_de_solicitud.estado) AS estado",
 				"GROUP_CONCAT(DISTINCT codigo_fonasa) AS codigo",
 				"GROUP_CONCAT(DISTINCT examen SEPARATOR ' - ') AS Examen",
 				"GROUP_CONCAT(DISTINCT detalle_de_solicitud.fecha) as fecha", 
@@ -2124,9 +2125,12 @@ class HomeController
 			$pdomodel->joinTables("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 			$pdomodel->joinTables("profesional", "profesional.id_profesional = diagnostico_antecedentes_paciente.profesional", "INNER JOIN");
 			$pdomodel->where("datos_paciente.id_datos_paciente", $id);
+			$pdomodel->where("detalle_de_solicitud.fecha_solicitud", $fecha_solicitud);
 
 			$pdomodel->groupByCols = array("id_datos_paciente", "rut", "edad", "detalle_de_solicitud.fecha", "fecha_solicitud");
 			$data = $pdomodel->select("datos_paciente");
+
+			print_r($data);
 
 			$pdomodel->where("id_causal_salida", $data[0]["motivo_egreso"]);
 			$motivo_egreso = $pdomodel->select("causal_salida");
@@ -2970,8 +2974,8 @@ class HomeController
 							<td>
 								<a href="javascript:;" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-file-o"></i></a>
 								<a href="javascript:;" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-arrow-right"></i></a>
-								<a href="javascript:;" class="btn btn-info btn-sm ver_logs" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-exclamation"></i></a>
-								<a href="javascript:;" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-file-pdf"></i></a>
+								<a href="javascript:;" class="btn btn-info btn-sm ver_logs" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-exclamation"></i></a>
+								<a href="javascript:;" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-pdf"></i></a>
 								<a href="javascript:;" class="btn btn-primary btn-sm procedimientos" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-folder"></i></a>
 							</td>
 						</tr>
