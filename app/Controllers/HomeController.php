@@ -1503,6 +1503,7 @@ class HomeController
 				<div class='col-md-9 mt-4'>
 					<a href='javascript:;' class='btn btn-primary buscar mt-3'><i class='fa fa-search'></i> Buscar</a>
 					<a href='javascript:;' class='btn btn-danger limpiar d-none mt-3'><i class='fas fa-eraser'></i> Limpiar</a>
+					<a href='javascript:;' class='btn btn-primary agregar_paciente mt-3'><i class='fa fa-save'></i> Agregar Paciente</a>
 				</div>
 			</div>               
 		");
@@ -3143,6 +3144,93 @@ class HomeController
         }
     }
 
+	public function agregar_paciente(){
+		$request = new Request();
+
+		if ($request->getMethod() === 'POST') {
+
+			$sexo = $request->post('sexo');
+			$fecha_nacimiento = $request->post("fecha_nacimiento");
+			$edad = $request->post('edad');
+			$rut = $request->post('rut');
+			$nombres = $request->post('nombres');
+			$direccion = $request->post('direccion');
+			$apellido_paterno = $request->post('apellido_paterno');
+			$apellido_materno = $request->post('apellido_materno');
+			$fecha_y_hora_ingreso = $request->post('fecha_y_hora_ingreso');
+
+			$pdocrud = DB::PDOCrud(true);
+			$pdomodel = $pdocrud->getPDOModelObj();
+
+			if (empty($rut)) {
+				$mensaje = 'El campo Rut es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if (!self::validaRut($rut)) {
+				echo json_encode(['error' => 'RUT inválido']);
+				return;
+			} else if(empty($nombres)){
+				$mensaje = 'El campo Nombres es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($apellido_paterno)){
+				$mensaje = 'El campo Apellido paterno es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($apellido_materno)){
+				$mensaje = 'El campo Apellido materno es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($fecha_nacimiento)){
+				$mensaje = 'El campo Fecha nacimiento es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($edad)){
+				$mensaje = 'El campo Edad es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($direccion)){
+				$mensaje = 'El campo Dirección es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($sexo)){
+				$mensaje = 'El campo Sexo es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} 
+
+			$pdomodel->where("rut", $rut, "=", "AND");
+			$pdomodel->where("nombres", $nombres, "=", "AND");
+			$pdomodel->where("apellido_paterno", $apellido_paterno, "=", "AND");
+			$pdomodel->where("apellido_materno", $apellido_materno, "=", "AND");
+			$pdomodel->where("fecha_nacimiento", $fecha_nacimiento, "=", "AND");
+			$pdomodel->where("edad", $edad, "=", "AND");
+			$pdomodel->where("direccion", $direccion, "=", "AND");
+			$pdomodel->where("sexo", $sexo);
+			$datos_paciente_exists = $pdomodel->select("datos_paciente");
+
+			if (!empty($datos_paciente_exists)) {
+				echo json_encode(['error' => 'El Paciente Agregado ya existe']);
+				return;
+			} else {
+				$pdomodel->insert("datos_paciente", array(
+					"rut" => $rut,
+					"nombres" => $nombres,
+					"apellido_paterno" => $apellido_paterno,
+					"apellido_materno" => $apellido_materno,
+					"fecha_nacimiento" => $fecha_nacimiento,
+					"edad" => $edad,
+					"direccion" => $direccion,
+					"sexo" => $sexo,
+					"fecha_y_hora_ingreso" => $fecha_y_hora_ingreso
+				));
+
+				$id = $pdomodel->lastInsertId;
+				echo json_encode(['success'=> 'Paciente Agregado con éxito', 'id' => $id]);
+			}
+		}
+	}
+
 	public function ingresar_datos_pacientes(){
 
 		SessionManager::startSession();
@@ -3209,11 +3297,11 @@ class HomeController
 				$mensaje = 'El campo Especialidad es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
 				return;
-			} else if(empty($fecha_nacimiento)){
+			} else if(empty($profesional)){
 				$mensaje = 'El campo Profesional es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
 				return;
-			} else if(empty($fecha_nacimiento)){
+			} else if(empty($diagnostico)){
 				$mensaje = 'El campo Diagnóstico CIE-10 es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
 				return;
@@ -3241,7 +3329,7 @@ class HomeController
 			if (!empty($datos_paciente_exists)) {
 				// El paciente ya existe, obtener el id_datos_paciente
 				$id = $datos_paciente_exists[0]['id_datos_paciente'];
-			} else {
+			} /*else {
 				$pdomodel->insert("datos_paciente", array(
 					"rut" => $rut,
 					"nombres" => $nombres,
@@ -3255,7 +3343,7 @@ class HomeController
 				));
 
 				$id = $pdomodel->lastInsertId;
-			}
+			}*/
 
 			$pdomodel->insert("diagnostico_antecedentes_paciente", array(
 				"id_datos_paciente" => $id,

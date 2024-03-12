@@ -675,6 +675,7 @@
 
         $(document).on("click", ".limpiar", function(){
             $('.limpiar').addClass('d-none');
+            $('.agregar_paciente').show();
             $(".rut").val("");
             $(".nombres").val("");
             $(".apellido_paterno").val("");
@@ -876,6 +877,61 @@
                     confirmButtonText: "Aceptar"
                 });
             }
+        });
+
+
+        $(document).on("click", ".agregar_paciente", function(){
+            let rut = $('.rut').val();
+            let nombres = $('.nombres').val();
+            let apellido_paterno = $('.apellido_paterno').val();
+            let apellido_materno = $('.apellido_materno').val();
+            let fecha_nacimiento = $('.fecha_nacimiento').val();
+            let edad = $('.edad').val();
+            let direccion = $('.direccion').val();
+            let sexo = $('.sexo').val();
+            let fecha_y_hora_ingreso = $('.fecha_y_hora_ingreso').val();
+
+            $.ajax({
+                type: "POST",
+                url: "<?=$_ENV["BASE_URL"]?>home/agregar_paciente",
+                dataType: "json",
+                data: {
+                    rut: rut,
+                    nombres: nombres,
+                    apellido_materno: apellido_materno,
+                    apellido_paterno: apellido_paterno,
+                    fecha_nacimiento: fecha_nacimiento,
+                    edad: edad,
+                    direccion: direccion,
+                    sexo: sexo,
+                    fecha_y_hora_ingreso: fecha_y_hora_ingreso
+                },
+                beforeSend: function() {
+                    $("#pdocrud-ajax-loader").show();
+                },
+                success: function(data){
+                    $("#pdocrud-ajax-loader").hide();
+                    if(data['success']){
+                        $('.result_solicitud').html(data['render3']);
+                        $('.paciente').val(data['id']);
+                        $('.agregar_paciente').hide();
+                        Swal.fire({
+                            title: "Genial!",
+                            text: data['success'],
+                            icon: "success",
+                            confirmButtonText: "Aceptar"
+                        });
+
+                    } else {
+                        Swal.fire({
+                            title: "Atención!",
+                            text: data['error'],
+                            icon: "warning",
+                            confirmButtonText: "Aceptar"
+                        });
+                    }
+                }
+            });
         });
     </script>
 <?php require 'layouts/footer.php'; ?>
