@@ -3248,6 +3248,7 @@ class HomeController
 			$apellido_paterno = $request->post('apellido_paterno');
 			$apellido_materno = $request->post('apellido_materno');
 			$fecha_y_hora_ingreso = $request->post('fecha_y_hora_ingreso');
+			$paciente = $request->post('paciente');
 
 			$especialidad = $request->post('especialidad');
 			$profesional = $request->post('profesional');
@@ -3293,6 +3294,10 @@ class HomeController
 				$mensaje = 'El campo Sexo es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
 				return;
+			} else if(empty($paciente)){
+				$mensaje = 'Agregue un Paciente Para continuar';
+				echo json_encode(['error' => $mensaje]);
+				return;
 			} else if(empty($especialidad)){
 				$mensaje = 'El campo Especialidad es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
@@ -3313,7 +3318,7 @@ class HomeController
 				$mensaje = 'El campo Diagnóstico Libre es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
 				return;
-			} 
+			}
 
 			$pdomodel->where("rut", $rut, "=", "AND");
 			$pdomodel->where("nombres", $nombres, "=", "AND");
