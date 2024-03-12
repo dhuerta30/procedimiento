@@ -1503,7 +1503,7 @@ class HomeController
 				<div class='col-md-9 mt-4'>
 					<a href='javascript:;' class='btn btn-primary buscar mt-3'><i class='fa fa-search'></i> Buscar</a>
 					<a href='javascript:;' class='btn btn-danger limpiar d-none mt-3'><i class='fas fa-eraser'></i> Limpiar</a>
-					<a href='javascript:;' class='btn btn-primary agregar_paciente mt-3'><i class='fa fa-save'></i> Agregar Paciente</a>
+					<a href='javascript:;' class='btn btn-primary agregar_paciente mt-3'><i class='fa fa-plus'></i> Agregar Paciente</a>
 				</div>
 			</div>               
 		");
