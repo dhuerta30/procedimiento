@@ -1911,7 +1911,7 @@ class HomeController
 					<td>' . $especialidad . '</td>
 					<td>' . $profesional . '</td>
 					<td>
-						<a href="javascript:;" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-file-o"></i></a>
+						<a href="javascript:;" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-o"></i></a>
 						<a href="javascript:;" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-arrow-right"></i></a>
 						<a href="javascript:;" class="btn btn-info btn-sm ver_logs" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-exclamation"></i></a>
 						<a href="javascript:;" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-pdf"></i></a>
@@ -2074,6 +2074,16 @@ class HomeController
 			$pdocrud = DB::PDOCrud(true);
 
 			$id = $request->post('id');
+			$fecha_solicitud = $request->post('fecha_solicitud');
+
+			$pdomodel = $pdocrud->getPDOModelObj();
+			$pdomodel->columns = array("datos_paciente.id_datos_paciente", "fecha_solicitud", "observacion");
+			$pdomodel->joinTables("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
+
+			$pdomodel->where("datos_paciente.id_datos_paciente", $id, "=", "AND");
+			$pdomodel->where("detalle_de_solicitud.fecha_solicitud", $fecha_solicitud);
+			$id_datos_paciente = $pdomodel->select("datos_paciente");
+
 			$paciente = new DatosPacienteModel();
 			$data = $paciente->PacientePorId($id);
 		
@@ -2084,17 +2094,23 @@ class HomeController
 				");
 			}
 
+			$pdocrud->formFieldValue("observacion", $id_datos_paciente[0]["observacion"]);
+
 			$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 			$pdocrud->setPK("id_datos_paciente");
 			$pdocrud->fieldHideLable("id_datos_paciente");
 			$pdocrud->fieldDataAttr("id_datos_paciente", array("style"=>"display:none"));
-			$pdocrud->addCallback("before_update", "editar_lista_examenes_notas");
+
+			$pdocrud->fieldHideLable("fecha_solicitud");
+			$pdocrud->fieldDataAttr("fecha_solicitud", array("style"=>"display:none"));
+
+			$pdocrud->addCallback("before_select", "editar_lista_examenes_notas");
 			$pdocrud->setSettings("hideAutoIncrement", false);
 			$pdocrud->setSettings("template", "datos_usuario_busqueda");
 			$pdocrud->fieldRenameLable("observacion", "Observación");
-			$pdocrud->formFields(array("id_datos_paciente","observacion"));
+			$pdocrud->formFields(array("id_datos_paciente", "fecha_solicitud", "observacion"));
 
-			$render = $pdocrud->dbTable("datos_paciente")->render("editform", array("id" => $id));
+			$render = $pdocrud->dbTable("datos_paciente")->render("selectform");
 			HomeController::modal("agregar_nota", "<i class='fa fa-file-o'></i> Agregar Nota", $render);
 		}
 	}
@@ -2978,7 +2994,7 @@ class HomeController
 							<td>' . $especialidad . '</td>
 							<td>' . $profesional . '</td>
 							<td>
-								<a href="javascript:;" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-file-o"></i></a>
+								<a href="javascript:;" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-o"></i></a>
 								<a href="javascript:;" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'"><i class="fa fa-arrow-right"></i></a>
 								<a href="javascript:;" class="btn btn-info btn-sm ver_logs" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-exclamation"></i></a>
 								<a href="javascript:;" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-pdf"></i></a>
