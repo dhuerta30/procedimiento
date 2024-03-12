@@ -2094,7 +2094,9 @@ class HomeController
 				");
 			}
 
+			$pdocrud->formFieldValue("id_datos_paciente", $id_datos_paciente[0]["id_datos_paciente"]);
 			$pdocrud->formFieldValue("observacion", $id_datos_paciente[0]["observacion"]);
+			$pdocrud->formFieldValue("fecha_solicitud", $id_datos_paciente[0]["fecha_solicitud"]);
 
 			$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 			$pdocrud->setPK("id_datos_paciente");
@@ -2109,6 +2111,7 @@ class HomeController
 			$pdocrud->setSettings("template", "datos_usuario_busqueda");
 			$pdocrud->fieldRenameLable("observacion", "Observación");
 			$pdocrud->formFields(array("id_datos_paciente", "fecha_solicitud", "observacion"));
+			$pdocrud->setLangData("login", "Guardar");
 
 			$render = $pdocrud->dbTable("datos_paciente")->render("selectform");
 			HomeController::modal("agregar_nota", "<i class='fa fa-file-o'></i> Agregar Nota", $render);

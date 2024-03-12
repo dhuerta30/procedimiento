@@ -274,7 +274,30 @@ function formatTable_datos_paciente($data, $obj){
 }
 
 function editar_lista_examenes_notas($data, $obj){
-   return $data;
+    $id_datos_paciente = $data["datos_paciente"]["id_datos_paciente"];
+    $fecha_solicitud = $data["detalle_de_solicitud"]["fecha_solicitud"];
+    $observacion = $data["detalle_de_solicitud"]["observacion"];
+
+    $pdomodel = $obj->getPDOModelObj();
+    $pdomodel->columns = array("datos_paciente.id_datos_paciente", "fecha_solicitud", "observacion");
+    $pdomodel->joinTables("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
+
+    $pdomodel->where("datos_paciente.id_datos_paciente", $id_datos_paciente, "=", "AND");
+    $pdomodel->where("detalle_de_solicitud.fecha_solicitud", $fecha_solicitud);
+    
+    $pdomodel->where("observacion", $observacion, "=");
+    $result = $pdomodel->select("datos_paciente");
+
+    if ($result) {
+        $error_msg = array("message" => "", "error" => "Modifique los campos para actualizar", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    }
+    
+    $pdomodel->where("id_datos_paciente", $id_datos_paciente);
+    $pdomodel->where("detalle_de_solicitud.fecha_solicitud", $fecha_solicitud);
+    $pdomodel->update("detalle_de_solicitud", array("observacion" => $observacion));
+
+    return $data;
 }
 
 function formatTable_buscar_examenes($data, $obj){
