@@ -185,8 +185,46 @@ function before_sql_data_estat($data, $obj){
 }*/
 
 function editar_procedimientos($data, $obj){
+    $id_datos_paciente = $data["datos_paciente"]["id_datos_paciente"];
+    $estado = $data["detalle_de_solicitud"]["estado"];
+    $fecha = $data["detalle_de_solicitud"]["fecha"];
+    $fecha_solicitud = $data["detalle_de_solicitud"]["fecha_solicitud"];
+    $adjuntar = $data["diagnostico_antecedentes_paciente"]["adjuntar"];
+    $diagnostico = $data["diagnostico_antecedentes_paciente"]["diagnostico"];
+    $fundamento = $data["diagnostico_antecedentes_paciente"]["fundamento"];
+
+    $pdomodel = $obj->getPDOModelObj();
+    $pdomodel->columns = array("fecha", "datos_paciente.id_datos_paciente", "fecha_solicitud", "diagnostico", "fundamento", "adjuntar", "estado");
+    $pdomodel->joinTables("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
+    $pdomodel->joinTables("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
+
+    // Filtrar por ID y Fecha
+    $pdomodel->where("datos_paciente.id_datos_paciente", $id_datos_paciente);
+    $pdomodel->where("detalle_de_solicitud.fecha_solicitud", $fecha_solicitud);
+
+    // Condiciones para verificar si los valores son diferentes
+    $pdomodel->where("detalle_de_solicitud.estado", $estado, "=");
+    $pdomodel->where("detalle_de_solicitud.fecha", $fecha, "=");
+    $pdomodel->where("diagnostico_antecedentes_paciente.diagnostico", $diagnostico, "=");
+    $pdomodel->where("diagnostico_antecedentes_paciente.fundamento", $fundamento, "=");
+    $pdomodel->where("diagnostico_antecedentes_paciente.adjuntar", $adjuntar, "=");
+
+     // Seleccionar para verificar si existen registros con condiciones diferentes
+    $result = $pdomodel->select("datos_paciente");
+    
+    if ($result) {
+        $error_msg = array("message" => "", "error" => "Modifique los campos para actualizar", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    }
+    
+    $pdomodel->where("id_datos_paciente", $id_datos_paciente);
+    $pdomodel->where("detalle_de_solicitud.fecha_solicitud", $fecha_solicitud);
+    $pdomodel->update("detalle_de_solicitud", array("estado" => $estado, "fecha" => $fecha));
+    $pdomodel->update("diagnostico_antecedentes_paciente", array("adjuntar" => $adjuntar, "diagnostico" => $diagnostico, "fundamento" => $fundamento));
+    
     return $data;
 }
+
 
 function editar_egresar_solicitud($data, $obj) {
     $id_datos_paciente = $data['datos_paciente']['id_datos_paciente'];

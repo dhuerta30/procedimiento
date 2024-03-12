@@ -268,13 +268,15 @@ $(document).on("click", ".egresar_solicitud", function(){
 
 $(document).on("click", ".procedimientos", function(){
     let id = $(this).data('id');
+    let fecha_solicitud = $(this).data('fechasolicitud');
 
     $.ajax({
         type: "POST",
         url: "<?=$_ENV["BASE_URL"]?>home/cargar_modal_procedimientos",
         dataType: "html",
         data: {
-            id: id
+            id: id,
+            fecha_solicitud: fecha_solicitud
         },
         beforeSend: function() {
             $("#pdocrud-ajax-loader").show();
