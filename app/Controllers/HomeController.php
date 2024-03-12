@@ -2045,9 +2045,11 @@ class HomeController
 			$pdocrud->fieldTypes("adjuntar", "FILE_NEW");
 			$pdocrud->setSettings("hideAutoIncrement", false);
 			$pdocrud->setSettings("encryption", false);
+			$pdocrud->fieldHideLable("fecha_solicitud");
+			$pdocrud->fieldDataAttr("fecha_solicitud", array("style"=>"display:none"));
 			$pdocrud->fieldDataAttr("id_detalle_de_solicitud", array("style"=>"display:none"));
 			$pdocrud->fieldDataAttr("id_diagnostico_antecedentes_paciente", array("style"=>"display:none"));
-			$pdocrud->formFields(array("id_datos_paciente", "fecha", "id_detalle_de_solicitud", "fecha_solicitud", "id_diagnostico_antecedentes_paciente", "diagnostico", "fundamento", "adjuntar", "estado"));
+			$pdocrud->formFields(array("id_datos_paciente", "fecha", "fecha_solicitud", "diagnostico", "fundamento", "adjuntar", "estado"));
 
 			$id = $request->post('id');
 			

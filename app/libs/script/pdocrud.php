@@ -148,7 +148,7 @@ function before_sql_data_estat($data, $obj){
     return $data;
 }
 
-function editar_procedimientos($data, $obj){
+/*function editar_procedimientos($data, $obj){
     $id_datos_paciente = $data['datos_paciente']['id_datos_paciente'];
     $estado = $data["detalle_de_solicitud"]["estado"];
     $fecha = $data["detalle_de_solicitud"]["fecha"];
@@ -161,13 +161,12 @@ function editar_procedimientos($data, $obj){
     $pdomodel = $obj->getPDOModelObj();
     $pdomodel->where("id_detalle_de_solicitud", $id_detalle_de_solicitud, "=");
     $data_detalle = $pdomodel->select("detalle_de_solicitud");
-
+   
     $pdomodel->where("id_diagnostico_antecedentes_paciente", $id_diagnostico_antecedentes_paciente, "=");
     $data_diagnostico = $pdomodel->select("diagnostico_antecedentes_paciente");
     
     if($data_detalle && $data_diagnostico){
         $pdomodel->where("id_detalle_de_solicitud", $id_detalle_de_solicitud, "=", "AND");
-        $pdomodel->where("fecha_solicitud", $fecha_solicitud);
         $pdomodel->update("detalle_de_solicitud", array("fecha" => $fecha, "estado" => $estado));
 
         $pdomodel->where("id_diagnostico_antecedentes_paciente", $id_diagnostico_antecedentes_paciente);
@@ -183,8 +182,11 @@ function editar_procedimientos($data, $obj){
     $newdata['diagnostico_antecedentes_paciente']['diagnostico'] = $data['diagnostico_antecedentes_paciente']['diagnostico'];
 
     return $newdata;
-}
+}*/
 
+function editar_procedimientos($data, $obj){
+    return $data;
+}
 
 function editar_egresar_solicitud($data, $obj) {
     $id_datos_paciente = $data['datos_paciente']['id_datos_paciente'];
