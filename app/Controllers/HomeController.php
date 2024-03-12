@@ -2279,7 +2279,6 @@ class HomeController
 			$fecha_solicitud = $request->post('fecha_solicitud');
 
 			$pdocrud = DB::PDOCrud(true);
-
 			$pdomodel = $pdocrud->getPDOModelObj();
 			$pdomodel->columns = array("datos_paciente.id_datos_paciente", "fecha_solicitud", "motivo_egreso", "fecha_egreso", "observacion");
 			$pdomodel->joinTables("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
