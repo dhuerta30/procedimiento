@@ -2046,7 +2046,7 @@ class HomeController
 			$pdocrud->setSettings("encryption", false);
 			$pdocrud->fieldDataAttr("id_detalle_de_solicitud", array("style"=>"display:none"));
 			$pdocrud->fieldDataAttr("id_diagnostico_antecedentes_paciente", array("style"=>"display:none"));
-			$pdocrud->formFields(array("id_datos_paciente", "fecha", "id_detalle_de_solicitud", "id_diagnostico_antecedentes_paciente", "diagnostico", "fundamento", "adjuntar", "estado"));
+			$pdocrud->formFields(array("id_datos_paciente", "fecha", "id_detalle_de_solicitud", "fecha_solicitud", "id_diagnostico_antecedentes_paciente", "diagnostico", "fundamento", "adjuntar", "estado"));
 
 			$id = $request->post('id');
 			
@@ -3287,6 +3287,7 @@ class HomeController
 				unset($_SESSION['detalle_de_solicitud']);
 
 				$detalle_solicitud = DB::PDOCrud(true);
+				$detalle_solicitud->crudRemoveCol(array("id_detalle_de_solicitud", "id_datos_paciente"));
 				$detalle_solicitud->where("id_datos_paciente", "null");
 				$render3 = $detalle_solicitud->dbTable("detalle_de_solicitud")->render();
 
@@ -3316,16 +3317,37 @@ class HomeController
 			$contraste = $request->post('contraste');
 			$contrasteValue = isset($contraste) ? (array)$contraste : [];
 			$creatinina = $request->post('creatinina') ?? null;
-
+	
 			// Validar que los campos no estén vacíos
-			$requiredFields = ['tipo_solicitud' => 'Tipo de Solicitud', 'tipo_examen' => 'Tipo Exámen', 'examen' => 'Exámen', 'observacion' => 'Observación'];
-
+			$requiredFields = [
+				'tipo_solicitud' => 'Tipo de Solicitud',
+				'tipo_examen' => 'Tipo Exámen',
+				'examen' => 'Exámen',
+				'observacion' => 'Observación'
+			];
+	
 			foreach ($requiredFields as $fieldName => $fieldLabel) {
 				if (empty($$fieldName)) {
 					$campo = str_replace('_', ' ', $fieldLabel);
 					echo json_encode(['error' => "El campo $campo es obligatorio"]);
-        			return;
+					return;
 				}
+			}
+	
+			$fecha_formateada = date('Y-m-d', strtotime($fecha_solicitud));
+	
+			$pdocrud = DB::PDOCrud();
+			$pdomodel = $pdocrud->getPDOModelObj();
+			if(!empty($paciente)){
+				$pdomodel->where("id_datos_paciente", $paciente, "=", "AND");
+			}
+			$pdomodel->where("examen", $examen, "=", "AND");
+			$pdomodel->where("fecha_solicitud", $fecha_formateada);
+			$result = $pdomodel->select("detalle_de_solicitud");
+	
+			if ($result) {
+				echo json_encode(['error' => 'El paciente no puede poseer más de una solicitud activa con esta prestación']);
+				return;
 			}
 
 			if (!isset($_SESSION['detalle_de_solicitud']) || !is_array($_SESSION['detalle_de_solicitud'])) {
@@ -3344,20 +3366,9 @@ class HomeController
 					break;
 				}
 			}
-
-			$pdocrud = DB::PDOCrud();
-			$pdomodel = $pdocrud->getPDOModelObj();
-			//$pdomodel->where("id_datos_paciente", $paciente, "=", "AND");
-			$pdomodel->where("examen", $examen, "=", "AND");
-			$pdomodel->where("fecha_solicitud", $fecha_solicitud);
-			$result = $pdomodel->select("detalle_de_solicitud");
-
-			print_r($result);
-			die();
-
 	
 			if ($duplicateSolicitud) {
-				echo json_encode(['error' => 'El paciente no puede poseer mas de una solicitud activa con esta prestación']);
+				echo json_encode(['error' => 'El paciente no puede poseer más de una solicitud activa con esta prestación']);
 				return;
 			} else {
 				$detalle_de_solicitud = [
@@ -3374,19 +3385,19 @@ class HomeController
 					"creatinina" => $creatinina,
 					"estado" => "Ingresado"
 				];
-	
+		
 				// Agregar la solicitud a la sesión
 				$_SESSION['detalle_de_solicitud'][] = $detalle_de_solicitud;
-	
+		
 				$response = [
 					'success' => 'Datos Guardados con éxito Temporalmente',
 					'data' => $_SESSION['detalle_de_solicitud']
 				];
-	
+		
 				echo json_encode($response);
 			}
 		}
-	}
+	}	
 	
 
 	public function buscar_datos_pacientes(){

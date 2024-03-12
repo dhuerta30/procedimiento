@@ -152,6 +152,7 @@ function editar_procedimientos($data, $obj){
     $id_datos_paciente = $data['datos_paciente']['id_datos_paciente'];
     $estado = $data["detalle_de_solicitud"]["estado"];
     $fecha = $data["detalle_de_solicitud"]["fecha"];
+    $fecha_solicitud = $data["detalle_de_solicitud"]["fecha_solicitud"];
     $fundamento = $data['diagnostico_antecedentes_paciente']['fundamento'];
     $adjuntar = $data['diagnostico_antecedentes_paciente']['adjuntar'];
     $id_detalle_de_solicitud = $data["detalle_de_solicitud"]["id_detalle_de_solicitud"];
@@ -165,7 +166,8 @@ function editar_procedimientos($data, $obj){
     $data_diagnostico = $pdomodel->select("diagnostico_antecedentes_paciente");
     
     if($data_detalle && $data_diagnostico){
-        $pdomodel->where("id_detalle_de_solicitud", $id_detalle_de_solicitud);
+        $pdomodel->where("id_detalle_de_solicitud", $id_detalle_de_solicitud, "=", "AND");
+        $pdomodel->where("fecha_solicitud", $fecha_solicitud);
         $pdomodel->update("detalle_de_solicitud", array("fecha" => $fecha, "estado" => $estado));
 
         $pdomodel->where("id_diagnostico_antecedentes_paciente", $id_diagnostico_antecedentes_paciente);

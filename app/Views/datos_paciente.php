@@ -433,6 +433,7 @@
                         });
 
                         $('.rut').val("");
+                        $('.paciente').val("");
                         $('.nombres').val("");
                         $('.apellido_paterno').val("");
                         $('.apellido_materno').val("");
@@ -588,7 +589,7 @@
                         });
 
                         $('.codigo_fonasa').val("");
-                        $('.paciente').val("");
+                        //$('.paciente').val("");
 
                         $('.tipo_solicitud').val("");
 
