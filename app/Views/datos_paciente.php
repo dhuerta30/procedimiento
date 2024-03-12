@@ -424,6 +424,8 @@
                 success: function(data){
                     $("#pdocrud-ajax-loader").hide();
                     if(data['success']){
+                        $('.agregar_paciente').show();
+                        $('.limpiar').addClass('d-none');
                         $('.result_solicitud').html(data['render3']);
                         Swal.fire({
                             title: "Genial!",
