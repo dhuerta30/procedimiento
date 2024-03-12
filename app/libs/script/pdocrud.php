@@ -188,6 +188,8 @@ function editar_procedimientos($data, $obj){
 
 function editar_egresar_solicitud($data, $obj) {
     $id_datos_paciente = $data['datos_paciente']['id_datos_paciente'];
+    $fecha_egreso = $data['diagnostico_antecedentes_paciente']['fecha_egreso'];
+    $motivo_egreso = $data['diagnostico_antecedentes_paciente']['motivo_egreso'];
     $observacion = $_POST['observacion'];
 
     $pdomodel = $obj->getPDOModelObj();
@@ -205,8 +207,8 @@ function editar_egresar_solicitud($data, $obj) {
 
     $newdata = array();
     $newdata['datos_paciente']['id_datos_paciente'] = $id_datos_paciente;
-    $newdata['diagnostico_antecedentes_paciente']['fecha_egreso'] = $data['diagnostico_antecedentes_paciente']['fecha_egreso'];
-    $newdata['diagnostico_antecedentes_paciente']['motivo_egreso'] = $data['diagnostico_antecedentes_paciente']['motivo_egreso'];
+    $newdata['diagnostico_antecedentes_paciente']['fecha_egreso'] = $fecha_egreso;
+    $newdata['diagnostico_antecedentes_paciente']['motivo_egreso'] = $motivo_egreso;
 
     return $newdata;
 }
