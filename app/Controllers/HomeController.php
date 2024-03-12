@@ -604,6 +604,7 @@ class HomeController
 		
 			$request = new Request();
 			$id = $request->get('id');
+			$fecha_solicitud = $request->get('fecha_solicitud');
 
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
@@ -632,6 +633,7 @@ class HomeController
 			$pdomodel->joinTables("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 			$pdomodel->joinTables("profesional", "profesional.id_profesional = diagnostico_antecedentes_paciente.profesional", "INNER JOIN");
 			$pdomodel->where("datos_paciente.id_datos_paciente", $id);
+			$pdomodel->where("detalle_de_solicitud.fecha_solicitud", $fecha_solicitud);
 
 			$pdomodel->groupByCols = array("id_datos_paciente", "rut", "edad", "detalle_de_solicitud.fecha", "fecha_solicitud");
 			$data = $pdomodel->select("datos_paciente");

@@ -385,7 +385,8 @@ $(document).on("click", ".ver_logs", function(){
 
 $(document).on('click', '.imprimir_solicitud', function () {
     let id = $(this).data('id');
-    window.open("<?=$_ENV["BASE_URL"]?>home/imprimir_solicitud/id/" + id);
+    let fecha_solicitud = $(this).data('fechasolicitud');
+    window.open("<?=$_ENV["BASE_URL"]?>home/imprimir_solicitud/id/" + id + "/fecha_solicitud/" + fecha_solicitud);
 });
 
 $(document).on("pdocrud_before_ajax_action", function(event, obj, data){
