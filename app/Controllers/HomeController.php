@@ -2346,18 +2346,18 @@ class HomeController
 			"dp.nombres",
 			"dp.apellido_paterno",
 			"dp.apellido_materno",
-			"dg_p.estado",
+			"ds.estado",
 			"dp.rut",
 			"dp.fecha_y_hora_ingreso",
-			"dg_p.fecha"
+			"ds.fecha"
 		);
 
 		$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
 		$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
 
-		$pdomodel->where("dg_p.fecha", "1970", "!=");
+		$pdomodel->where("ds.fecha", "1970", "!=");
 		$pdomodel->groupByCols = array("dp.nombres", "dp.rut");
-		$pdomodel->orderByCols = array("dg_p.fecha asc");
+		$pdomodel->orderByCols = array("ds.fecha asc");
 		$data = $pdomodel->select("datos_paciente as dp");
 
 		//echo $pdomodel->getLastQuery();
@@ -3815,10 +3815,10 @@ class HomeController
 			"dp.nombres",
 			"dp.apellido_paterno",
 			"dp.apellido_materno",
-			"dg_p.estado",
+			"ds.estado",
 			"dp.rut",
 			"dp.fecha_y_hora_ingreso",
-			"dg_p.fecha"
+			"ds.fecha"
 		);
 
 		$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
@@ -3827,7 +3827,7 @@ class HomeController
 		$pdomodel->groupByCols = array("dp.nombres", "dp.rut");
 		//$pdomodel->where("dg_p.estado", NULL, "=");
 		//$pdomodel->andOrOperator = "AND";
-		$pdomodel->where("dg_p.fecha", "1970", "!=");
+		$pdomodel->where("ds.fecha", "1970", "!=");
 		$data = $pdomodel->select("datos_paciente as dp");
 
 		$html = '
