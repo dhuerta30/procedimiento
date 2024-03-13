@@ -1521,7 +1521,7 @@ class HomeController
 		$diagnostico->addPlugin("chosen");
 		$diagnostico->fieldTypes("profesional", "select");
 		//$diagnostico->fieldDataBinding("profesional", "profesional", "id_profesional", array("nombre_profesional","apellido_profesional"), "db", " ");
-		$diagnostico->fieldAddOnInfo("diagnostico", "after", '<div class="input-group-append"><span class="btn btn-default border eliminar_diagnostico" data-intro="y al presionar este botón podrá borrar más rapido el contenido ingresado por si se equivoca al ingresarlo" id="basic-addon1"><i class="fa fa-trash"></i></span></div>');
+		$diagnostico->fieldAddOnInfo("diagnostico", "after", '<div class="input-group-append"><span class="btn btn-default border eliminar_diagnostico" data-intro="Y al presionar este botón podrá borrar más rápido el contenido ingresado por si se equivoca al ingresarlo." id="basic-addon1"><i class="fa fa-trash"></i></span></div>');
 		$diagnostico->fieldAddOnInfo("profesional", "after", '<div class="input-group-append"><span class="btn btn-default border agregar_profesional" data-intro="Si desea Agregar mas Profesionales que no existan en el listado, puede hacerlo presionando este botón. " id="basic-addon1"><i class="fa fa-plus"></i></span></div>');
 		$diagnostico->formFields(array("especialidad","profesional","diagnostico","sintomas_principales", "diagnostico_libre"));
 		$diagnostico->fieldRenameLable("diagnostico", "Diagnóstico CIE-10");
