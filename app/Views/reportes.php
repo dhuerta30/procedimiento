@@ -34,7 +34,6 @@
                         <?=$mask?>
                         <?=$select2?>
 
-                        <div class="error"></div>
                        <div class="reportes">
                         <?=$render_crud;?>
                        </div>
@@ -57,7 +56,7 @@
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 <script>
-$(document).ready(function(){
+function datatable(){
     $('.tabla_reportes').DataTable({
         searching: false,
         scrollX: true,
@@ -98,7 +97,12 @@ $(document).ready(function(){
             }
         }
     });
+}
+
+$(document).ready(function(){
+    datatable();
 });
+
 $(document).on("click", ".btn_search", function(){
     let ano_desde = $('#ano_desde').val();
     let ano_hasta = $('#ano_hasta').val();
@@ -118,51 +122,13 @@ $(document).on("click", ".btn_search", function(){
             if(data['render']){
                 $("#pdocrud-ajax-loader").hide();
                 $('.reportes').html("<div class='table-responsive'>"+ data['render'] +"</div>");
-                $('.tabla_reportes').DataTable({
-                    searching: false,
-                    scrollX: true,
-                    paging: ($('.tabla_reportes tbody tr').length > 10) ? true : false,
-                    order: [[0, 'desc']],
-                    dom: 'Bfrtip',
-                    buttons: [
-                        {
-                            extend: 'excel',
-                            text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
-                            className: 'btn btn-light',
-                            filename: function(){
-                                return 'reportes';
-                            },
-                            exportOptions: {
-                                columns: [0, 1, 2, 3] // Define las columnas a exportar
-                            }
-                        }
-                    ],
-                    language: {
-                        "decimal": "",
-                        "emptyTable": "No hay información",
-                        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
-                        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-                        "infoPostFix": "",
-                        "thousands": ",",
-                        "lengthMenu": "Mostrar _MENU_ Entradas",
-                        "loadingRecords": "Cargando...",
-                        "processing": "Procesando...",
-                        "search": "Buscar:",
-                        "zeroRecords": "Sin resultados encontrados",
-                        "paginate": {
-                            "first": "Primero",
-                            "last": "Ultimo",
-                            "next": "Siguiente",
-                            "previous": "Anterior"
-                        }
-                    }
-                });
+                datatable();
                 $('.btn_limpiar').removeClass('d-none');
-                $('.error').empty();
             } else {
                 $("#pdocrud-ajax-loader").hide();
-                $('.error').html("<div class='alert alert-danger text-center'>"+ data['error'] +"</div>");
+                $('.reportes').html("<div class='table-responsive'>"+ data['default'] +"</div>");
+                datatable();
+                $('.btn_limpiar').addClass('d-none');
             }
         }
     });
@@ -232,6 +198,9 @@ function ComboAno() {
 window.onload = ComboAno;
 
 $(document).on("click", ".btn_limpiar", function(){
+
+    $('.btn_limpiar').addClass('d-none');
+    
     $('#rut').val("");
     $('.ano_desde').select2('destroy');
     $('.ano_desde').val("");
@@ -243,8 +212,7 @@ $(document).on("click", ".btn_limpiar", function(){
     $('.ano_hasta').select2();
     $('.ano_hasta').html('<option>Seleccionar Año Hasta</option>');
     ComboAno();
-    $('.btn_limpiar').addClass('d-none');
-    $('.error').empty();
+    $('.btn_search').click();
 });
 
 $(document).on("click", ".btn_search", function(){
