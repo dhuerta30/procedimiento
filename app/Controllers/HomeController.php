@@ -2694,6 +2694,8 @@ class HomeController
 					return;
 				}*/
 				$pdomodel->where("dp.rut", $rut, "=");
+				$pdomodel->andOrOperator = "AND";
+				$pdomodel->where("ds.estado", "Agendado", "!=");
 			} 
 			
 			if (!empty($estado)) {
