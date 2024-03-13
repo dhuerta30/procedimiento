@@ -1540,7 +1540,7 @@ class HomeController
 		$diagnostico->buttonHide("submitBtn");
 		$diagnostico->buttonHide("cancel");
 		$diagnostico->fieldAttributes("profesional", array("placeholder"=>"Nombre del Profesional"));
-		$diagnostico->fieldAttributes("diagnostico", array("placeholder"=>"Buscar Diagnóstico", "data-intro"=> "Este campo ofrece autocompletado, lo que significa que a medida que escribe, aparecerá un listado con autosugerencias. Puede buscar por código o nombre del examen."));
+		$diagnostico->fieldAttributes("diagnostico", array("placeholder"=>"Buscar Diagnóstico", "data-intro"=> "Este campo ofrece autocompletado, lo que significa que a medida que escribe, aparecerá un listado con autosugerencias. Puede buscar por código o nombre del examen. y al presionar sobre le dato se rellenará el campo automáticamente."));
 		$diagnostico->fieldAttributes("sintomas_principales", array("placeholder"=>"Síntomas del Paciente"));
 		$diagnostico->fieldAttributes("diagnostico_libre", array("style"=>"min-height: 150px"));
 		$diagnostico->fieldTypes("especialidad", "select");
