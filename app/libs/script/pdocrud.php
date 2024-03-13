@@ -22,6 +22,60 @@ if (isset($_REQUEST["pdocrud_instance"])) {
     $fomplusajax->handleRequest();
 }
 
+function agregar_menu($data, $obj){
+    $id_menu = $data;
+    $id_usuario_session = $_SESSION["usuario"][0]["id"];
+
+    $pdomodel = $obj->getPDOModelObj();
+    $pdomodel->insert("usuario_menu", array("id_menu" => $id_menu, "id_usuario" => $id_usuario_session, "visibilidad_menu" => "Mostrar"));
+
+    return $data;
+}
+
+function despues_insertar_submenu($data, $obj){
+    $id_submenu = $data;
+    $id_usuario_session = $_SESSION["usuario"][0]["id"];
+
+    $pdomodel = $obj->getPDOModelObj();
+    $pdomodel->where("id_submenu", $id_submenu);
+    $id_menu = $pdomodel->select("submenu");
+    $pdomodel->insert("usuario_submenu", array("id_menu" => $id_menu[0]["id_menu"], "id_submenu" => $id_submenu, "id_usuario" => $id_usuario_session, "visibilidad_submenu" => "Mostrar"));
+
+    return $data;
+}
+
+function eliminar_menu($data, $obj){
+    $id_menu = $data["id"];
+    $id_usuario_session = $_SESSION["usuario"][0]["id"];
+    
+    $pdomodel = $obj->getPDOModelObj();
+    $pdomodel->where("id_menu", $id_menu);
+    $pdomodel->where("id_usuario", $id_usuario_session);
+    $pdomodel->delete("usuario_menu");
+
+    return $data;
+}
+
+function eliminar_submenu($data, $obj){
+    $id_submenu = $data["id"];
+    $id_usuario_session = $_SESSION["usuario"][0]["id"];
+
+    $pdomodel = $obj->getPDOModelObj();
+
+    $pdomodel->where("id_submenu", $id_submenu);
+    $id_menu = $pdomodel->select("submenu");
+
+    $pdomodel->where("id_menu", $id_menu[0]["id_menu"]);
+    $pdomodel->update("menu", array("submenu" => "No"));
+
+    $pdomodel->where("id_submenu", $id_submenu);
+    $pdomodel->where("id_usuario", $id_usuario_session);
+    $pdomodel->delete("usuario_submenu");
+
+    return $data;
+}
+
+
 function carga_masiva_prestaciones_insertar($data, $obj){
     $archivo = basename($data["carga_masiva_prestaciones"]["archivo"]);
 

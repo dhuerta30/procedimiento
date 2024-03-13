@@ -3945,6 +3945,8 @@ class HomeController
 		$pdocrud->addPlugin("select2");
 		$pdocrud->dbOrderBy("orden_menu asc");
 		$pdocrud->addCallback("format_table_data", "formatTableMenu");
+		$pdocrud->addCallback("after_insert", "agregar_menu");
+		$pdocrud->addCallback("before_delete", "eliminar_menu");
 		$pdocrud->fieldTypes("icono_menu", "select");
 		$pdocrud->fieldCssClass("icono_menu", array("icono_menu"));
 		$pdocrud->fieldCssClass("submenu", array("submenu"));
@@ -3974,7 +3976,9 @@ class HomeController
 		$submenu->dbOrderBy("orden_submenu asc");
 		$submenu->addCallback("format_table_data", "formatTableSubMenu");
 		$submenu->addCallback("before_insert", "insertar_submenu");
+		$submenu->addCallback("after_insert", "despues_insertar_submenu");
 		$submenu->addCallback("before_update", "modificar_submenu");
+		$submenu->addCallback("before_delete", "eliminar_submenu");
 		$submenu->fieldGroups("Name", array("nombre_submenu", "url_submenu"));
 		$submenu->formFieldValue("orden_submenu", $newOrdenSubMenu);
 		$submenu->setSettings("template", "submenu");
