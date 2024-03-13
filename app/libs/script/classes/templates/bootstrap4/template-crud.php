@@ -35,7 +35,7 @@
                     list($key, $text, $attr, $url, $cssClass) = $action;
                 ?>
                     <div class="btn-group float-right">
-                        <a title="<?php echo strip_tags($text); ?>" class="pdocrud-top-actions pdocrud-button <?php echo $cssClass; ?> pdocrud-button-<?php echo $action_name; ?>" href="<?php echo $url; ?>" data-action="<?php echo $action_name; ?>" data-obj-key="<?php echo $objKey; ?>">
+                        <a title="<?php echo strip_tags($text); ?>" data-intro="Presione este botón para agregar Los Detalles de Solicitud. Puede agregar tantos como desee" class="pdocrud-top-actions pdocrud-button <?php echo $cssClass; ?> pdocrud-button-<?php echo $action_name; ?>" href="<?php echo $url; ?>" data-action="<?php echo $action_name; ?>" data-obj-key="<?php echo $objKey; ?>">
                             <?php echo $text; ?>
                         </a>
                     </div>
