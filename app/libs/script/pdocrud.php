@@ -55,7 +55,7 @@ function eliminar_menu($data, $obj){
 
     $pdomodel->where("id_menu", $id_menu);
     $pdomodel->where("id_usuario", $id_usuario_session);
-    $result = $pdomodel->select("usuario_menu");
+    $result = $pdomodel->select("usuario_submenu");
 
     if($result){
         $pdomodel->where("id_menu", $id_menu);
