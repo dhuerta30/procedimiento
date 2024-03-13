@@ -2,6 +2,7 @@
 <?php require 'layouts/sidebar.php'; ?>
 <link href="<?=$_ENV["BASE_URL"]?>css/sweetalert2.min.css" rel="stylesheet">
 <link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>css/flatpickr.min.css">
+<link href="https://unpkg.com/intro.js/introjs.css" rel="stylesheet">
 <style>
     .chosen-container {
         width: 100% !important;
@@ -48,10 +49,11 @@
             <div class="card-body">
                 
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12" data-intro='Agregue los datos del paciente. Todos los campos son obligatorios, tanto si desea buscar o agregar un nuevo paciente.'>
                         <h5>Formulario de Solicitud de Exámen</h5>
                         <hr>
                         <h5 class="bg-default border w-lg-25 w-md-100 p-2 text-center bg-light">Datos Paciente</h5>
+                        <button class="btn btn-info ayuda"><i class="fas fa-info-circle"></i> Ayuda</button>
                         <?=$render;?>
                         <?=$mask;?>
 
@@ -103,9 +105,19 @@
 </div>
 <script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/flatpickr.js"></script>
+<script src="https://unpkg.com/intro.js/intro.js"></script>
 <script>
         $(document).ready(function(){
            
+            $(document).on("click", ".ayuda", function(){
+                introJs().setOptions({
+                    doneLabel: 'Finalizado', // Personaliza el texto del botón "Done"
+                    nextLabel: 'Siguiente',
+                    prevLabel: 'Anterior',
+                    showStepNumbers: false,    // Puedes ocultar los números de paso si lo deseas
+                }).start();
+            });
+
             $(document).on('click', '.eliminar_dato', function() {
                 var index = $(this).data('id');
 
