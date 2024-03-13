@@ -1507,10 +1507,10 @@ class HomeController
 					</div>
 				<p class='pdocrud_help_block help-block form-text with-errors'></p>                
 				</div>
-				<div class='col-md-9 mt-4' data-intro='Si desea Buscar un Paciente, el botón de Agregar Paciente se ocultará y aparecerá un botón llamado limpiar, que es el encargado de borrar los datos ingresados.'>
-					<a href='javascript:;' class='btn btn-primary buscar mt-3'><i class='fa fa-search'></i> Buscar</a>
+				<div class='col-md-9 mt-4'>
+					<a href='javascript:;' class='btn btn-primary buscar mt-3' data-intro='Si desea Buscar un Paciente, el botón de Agregar Paciente se ocultará y aparecerá un botón llamado limpiar, que es el encargado de borrar los datos ingresados.'><i class='fa fa-search'></i> Buscar</a>
 					<a href='javascript:;' class='btn btn-danger limpiar d-none mt-3'><i class='fas fa-eraser'></i> Limpiar</a>
-					<a href='javascript:;' class='btn btn-primary agregar_paciente mt-3'><i class='fa fa-plus'></i> Agregar Paciente</a>
+					<a href='javascript:;' class='btn btn-primary agregar_paciente mt-3' data-intro='Si desea Agregar un Paciente, el botón de Agregar Paciente también se ocultará y quedarán visibles solo los botones Buscar y Limpiar.'><i class='fa fa-plus'></i> Agregar Paciente</a>
 				</div>
 			</div>               
 		");

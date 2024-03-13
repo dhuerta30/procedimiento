@@ -63,7 +63,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12" data-intro='Luego debe rellenar todos estos Datos que también son obligatorios.'>
                         <hr>
                         <h5 class="bg-default border w-lg-50 w-md-100 p-2 text-center bg-light">Diagnóstico y antecedentes clínicos del paciente</h5>
                         <?=$render2;?>
@@ -75,7 +75,7 @@
                     <div class="col-md-12">
                         <hr>
                         <h5 class="bg-default border w-lg-25 w-md-100 p-2 text-center bg-light">Detalle de Solicitud</h5>
-                        <div class="agregar_detalle">
+                        <div class="agregar_detalle" data-intro='Para poder agregar una solicitud en su totalidad debe por lo menos agregar 1 Detalle de solicitud. Acá los campos obligatorios son los siguientes: Tipo Solicitud, Tipo Exámen, Exámen y Observación'>
                             <?=$render4;?>
                         </div>
 
@@ -90,7 +90,7 @@
 
                 <div class="row">
                     <div class="col-md-12 text-right">
-                        <a href="javascript:;" class="btn btn-primary btn-sm guardar"><i class="fa fa-save"></i> Guardar</a>
+                        <a href="javascript:;" class="btn btn-primary btn-sm guardar" data-intro='Ahora para guardar todos los datos anteriormente ingresados presione este botón'><i class="fa fa-save"></i> Guardar</a>
                     </div>
                 </div>
 
