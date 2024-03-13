@@ -2708,50 +2708,53 @@ class HomeController
 			$data = $pdomodel->select("datos_paciente as dp");
 			//echo $pdomodel->getLastQuery();
 	
-			if (isset($data)) {
-				// If results exist, render the HTML
-				$html = '
-					<table class="table table-striped tabla_reportes text-center" style="width:100%">
-						<thead class="bg-primary">
-							<tr>
-								<th>Código Fonasa</th>
-								<th>Paciente</th>
-								<th>Diagnóstico CIE-10</th>
-								<th>Exámen</th>
-								<th>Estado</th>
-								<th>Tipo de Exámen</th>
-								<th>Año</th>
-								<th>Total</th>
-							</tr>
-						</thead>
-						<tbody>
-				';
-	
-				foreach ($data as $row) {
-					$nombre_completo = $row["nombres"] . ' ' . $row["apellido_paterno"] . ' ' . $row["apellido_materno"];
-					$html .= '
-						<tr>
-							<td>' . $row['codigo_fonasa'] . '</td>
-							<td>' . ucwords($nombre_completo) . '</td>
-							<td>' . $row["diagnostico"] . '</td>
-							<td>' . $row["examen"] . '</td>
-							<td>' . $row["estado"] . '</td>
-							<td>' . $row["tipo_examen"] . '</td>
-							<td>' . date('Y', strtotime($row["fecha"])) . '</td>
-							<td>' . $row["total_examen"] . '</td>
-						</tr>
-					';
-				}
-	
-				$html .= '
-						</tbody>
-					</table>
-				';
-					
-				$html_data = array($html);
-				$render = $pdocrud->render("HTML", $html_data);
-				echo json_encode(['render' => $render]);
+			if (empty($rut) && $estado == 0) {
+				$grilla_ingreso_egreso = $this->crud_ingreso_egreso();
+				echo json_encode(['error' => 'No se encontraron resultados', 'default' => $grilla_ingreso_egreso]);
+            	return;
 			}
+			// If results exist, render the HTML
+			$html = '
+				<table class="table table-striped tabla_reportes text-center" style="width:100%">
+					<thead class="bg-primary">
+						<tr>
+							<th>Código Fonasa</th>
+							<th>Paciente</th>
+							<th>Diagnóstico CIE-10</th>
+							<th>Exámen</th>
+							<th>Estado</th>
+							<th>Tipo de Exámen</th>
+							<th>Año</th>
+							<th>Total</th>
+						</tr>
+					</thead>
+					<tbody>
+			';
+
+			foreach ($data as $row) {
+				$nombre_completo = $row["nombres"] . ' ' . $row["apellido_paterno"] . ' ' . $row["apellido_materno"];
+				$html .= '
+					<tr>
+						<td>' . $row['codigo_fonasa'] . '</td>
+						<td>' . ucwords($nombre_completo) . '</td>
+						<td>' . $row["diagnostico"] . '</td>
+						<td>' . $row["examen"] . '</td>
+						<td>' . $row["estado"] . '</td>
+						<td>' . $row["tipo_examen"] . '</td>
+						<td>' . date('Y', strtotime($row["fecha"])) . '</td>
+						<td>' . $row["total_examen"] . '</td>
+					</tr>
+				';
+			}
+
+			$html .= '
+					</tbody>
+				</table>
+			';
+				
+			$html_data = array($html);
+			$render = $pdocrud->render("HTML", $html_data);
+			echo json_encode(['render' => $render]);
 		}
 	}	
 	

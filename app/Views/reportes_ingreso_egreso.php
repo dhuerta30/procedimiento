@@ -117,20 +117,29 @@ $(document).on("click", ".btn_search", function(){
         },
         success: function(data){   
             $("#pdocrud-ajax-loader").hide();
-            console.log(data);
             if(data['render']){
                 $('.reportes').html("<div class='table-responsive'>"+ data['render'] +"</div>");
                 datatable();
                 $('.btn_limpiar').removeClass('d-none');
+            } else {
+                $('.reportes').html("<div class='table-responsive'>"+ data['default'] +"</div>");
+                datatable();
+                $('.btn_limpiar').addClass('d-none');
             }
         }
     });
 });
 
-$(document).on("click", ".btn_limpiar", function(){
-    $('#rut').val("");
-    $('.estado').val("0");
+$(document).on("click", ".btn_limpiar", function () {
+    // Oculta el botón Limpiar
     $('.btn_limpiar').addClass('d-none');
+
+    // Limpia los campos de búsqueda
+    $('#rut').val("");
+    $('#estado').val("0");
+
+    // Realiza la búsqueda nuevamente
+    $('.btn_search').click();
 });
 </script>
 <?php require 'layouts/footer.php'; ?>
