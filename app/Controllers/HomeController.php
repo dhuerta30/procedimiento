@@ -781,7 +781,7 @@ class HomeController
 				</table>
 			");
 			$xinvoice->setInvoiceSections("before_footer", "
-					<table style='margin:200px auto; width: 50%;'>
+					<table style='margin:100px auto; width: 50%;'>
 						<tr>
 							<td style='text-align:center;'>
 								".ucwords($profesional)."
