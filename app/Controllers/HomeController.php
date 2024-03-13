@@ -2703,6 +2703,7 @@ class HomeController
 			}
 
 			$pdomodel->groupByCols = array("dp.nombres", "dp.rut", "ds.fecha");
+			$pdomodel->where("ds.estado", "Agendado", "!=");
 			$pdomodel->where("ds.fecha", "1970", "!=");
 			$data = $pdomodel->select("datos_paciente as dp");
 			//echo $pdomodel->getLastQuery();
@@ -3828,7 +3829,7 @@ class HomeController
 
 		$pdomodel->groupByCols = array("dp.nombres", "dp.rut", "ds.fecha");
 		$pdomodel->where("ds.estado", "Agendado", "!=");
-		//$pdomodel->andOrOperator = "AND";
+		$pdomodel->andOrOperator = "AND";
 		$pdomodel->where("ds.fecha", "1970", "!=");
 		$data = $pdomodel->select("datos_paciente as dp");
 
