@@ -2676,10 +2676,10 @@ class HomeController
 				"dp.nombres",
 				"dp.apellido_paterno",
 				"dp.apellido_materno",
-				"dg_p.estado",
+				"ds.estado",
 				"dp.rut",
 				"dp.fecha_y_hora_ingreso",
-				"dg_p.fecha"
+				"ds.fecha"
 			);
 	
 			$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
@@ -2697,11 +2697,11 @@ class HomeController
 			} 
 			
 			if (!empty($estado)) {
-				$pdomodel->where("dg_p.estado", $estado, "=");
+				$pdomodel->where("ds.estado", $estado, "=");
 			}
 
 			$pdomodel->groupByCols = array("dp.nombres", "dp.rut");
-			$pdomodel->where("dg_p.fecha", "1970", "!=");
+			$pdomodel->where("ds.fecha", "1970", "!=");
 			$data = $pdomodel->select("datos_paciente as dp");
 			//echo $pdomodel->getLastQuery();
 	
@@ -2772,7 +2772,7 @@ class HomeController
 				"dp.apellido_materno",
 				"dp.rut",
 				"dp.fecha_y_hora_ingreso",
-				"dg_p.fecha"
+				"ds.fecha"
 			);
 	
 			$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
@@ -2782,11 +2782,11 @@ class HomeController
 			$ano_hasta = $request->post('ano_hasta');
 
 			if (!empty($ano_desde) && !empty($ano_hasta)) {
-				$pdomodel->whereYear("dg_p.fecha", $ano_desde);
+				$pdomodel->whereYear("ds.fecha", $ano_desde);
 				$pdomodel->andOrOperator = "OR";
-				$pdomodel->whereYear("dg_p.fecha", $ano_hasta);
+				$pdomodel->whereYear("ds.fecha", $ano_hasta);
 				$pdomodel->andOrOperator = "OR";
-				$pdomodel->whereYearBetween('dg_p.fecha', $ano_desde, $ano_hasta);
+				$pdomodel->whereYearBetween('ds.fecha', $ano_desde, $ano_hasta);
 			}
 
 			/*if (!empty($rut)) {
