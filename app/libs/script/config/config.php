@@ -12,14 +12,14 @@
 /* Configuaration Settings */
 global $config;
 //script url - Enter complete url inside which script folder is placed. Please note that it doesn't include the script folder
-$config["script_url"] = "http://localhost/pdocrud/";
+$config["script_url"] = "";
 /************************ database ************************/
 //Set the host name to connect for database
 $config["hostname"] =  "localhost";
 //Set the database name
-$config["database"] = "pdocrud";
+$config["database"] = "";
 //Set the username for database access
-$config["username"] = "root";
+$config["username"] = "";
 //Set the pwd for the database user
 $config["password"] = "";
 //Set the database type to be used. Available values are "mysql", "pgsql", "sqlite" and "sqlserver".
