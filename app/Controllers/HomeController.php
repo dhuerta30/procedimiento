@@ -2356,7 +2356,7 @@ class HomeController
 		$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
 
 		$pdomodel->where("ds.fecha", "1970", "!=");
-		$pdomodel->groupByCols = array("dp.nombres", "dp.rut");
+		$pdomodel->groupByCols = array("dp.nombres", "dp.rut", "ds.fecha");
 		$pdomodel->orderByCols = array("ds.fecha asc");
 		$data = $pdomodel->select("datos_paciente as dp");
 
@@ -2812,7 +2812,7 @@ class HomeController
 				$pdomodel->whereYear("dg_p.fecha", $ano);	
 			}*/
 	
-			$pdomodel->groupByCols = array("dp.nombres", "dp.rut");
+			$pdomodel->groupByCols = array("dp.nombres", "dp.rut", "ds.fecha");
 			$data = $pdomodel->select("datos_paciente as dp");
 			//echo $pdomodel->getLastQuery();
 			//die();
