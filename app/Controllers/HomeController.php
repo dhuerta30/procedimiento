@@ -1359,8 +1359,13 @@ class HomeController
 		$request = new Request();
 
     	if ($request->getMethod() === 'POST') {
-			$usuario = $_SESSION["usuario"];
-			echo json_encode(['usuario' => $usuario]);
+			$usuario_session = $_SESSION["usuario"][0]["id"];
+			$usuario = new UserModel();
+			$usuariodb = $usuario->obtener_usuario_porId($usuario_session);
+
+			$_SESSION["usuario"] = $usuariodb;
+
+			echo json_encode(['usuario' => $usuariodb]);
 		}
 	}
 

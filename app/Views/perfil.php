@@ -35,7 +35,6 @@
         url: "<?=$_ENV["BASE_URL"]?>home/generar_datos_usuario",
         dataType: "json",
         success: function(response) {
-          console.log(response);
           $('.nombre_usuario').text(response['usuario'][0]["nombre"]);
           $(".avatar").attr('src', "<?=$_ENV["BASE_URL"]?>app/libs/script/uploads/" + response['usuario'][0]['avatar']);
         }
