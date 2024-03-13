@@ -109,6 +109,8 @@ $(document).on("pdocrud_after_ajax_action", function(event, obj, data){
                 });
             }
         });
+	} else if(action == "delete"){
+		refrechMenu();
 	}
 });
 
